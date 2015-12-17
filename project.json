@@ -1,0 +1,1611 @@
+{
+  "version": "0.0.1",
+  "canvas": {
+    "width": 480,
+    "height": 450
+  },
+  "timeline": [
+    {
+      "name": "ball",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 0,
+          "duration": 45,
+          "animType": "transit",
+          "x": 300,
+          "y": 100,
+          "type": "circle",
+          "radiusX": 2.5,
+          "radiusY": 7.5,
+          "fill": "transparent",
+          "stroke": "#040404",
+          "shiftY": {
+            "0": 270
+          },
+          "isShowInit": false,
+          "easing": "cubic.in",
+          "opacity": 0
+        },
+        {
+          "delay": 0,
+          "duration": 958,
+          "animType": "transit",
+          "x": 300,
+          "y": 100,
+          "type": "circle",
+          "radiusX": 2.5,
+          "radiusY": 7.5,
+          "fill": "transparent",
+          "stroke": "#040404",
+          "shiftY": {
+            "0": 270
+          },
+          "isShowInit": false,
+          "easing": "cubic.in",
+          "opacity": 1
+        },
+        {
+          "delay": 0,
+          "duration": 50,
+          "animType": "transit",
+          "type": "circle",
+          "radiusX": {
+            "2.5": 10
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "fill": "transparent",
+          "stroke": "#040404",
+          "shiftY": {
+            "270": 265
+          },
+          "isShowInit": false,
+          "opacity": 1
+        },
+        {
+          "delay": 0,
+          "duration": 65,
+          "animType": "transit",
+          "radiusX": 2.5,
+          "radiusY": 7.5,
+          "shiftY": {
+            "265": 260
+          },
+          "isShowInit": true,
+          "opacity": 1
+        },
+        {
+          "delay": 0,
+          "duration": 666,
+          "animType": "transit",
+          "radiusX": 5,
+          "radiusY": 5,
+          "shiftY": {
+            "260": 100
+          },
+          "isShowInit": true,
+          "opacity": 1,
+          "easing": "cubic.out"
+        },
+        {
+          "delay": 0,
+          "duration": 1030,
+          "animType": "transit",
+          "radiusX": {
+            "5": 2.5
+          },
+          "radiusY": {
+            "5": 7.5
+          },
+          "shiftY": {
+            "100": 260
+          },
+          "isShowInit": true,
+          "opacity": 1,
+          "easing": "cubic.in"
+        },
+        {
+          "delay": 0,
+          "duration": 56,
+          "animType": "transit",
+          "radiusX": 2.5,
+          "radiusY": 7.5,
+          "shiftY": {
+            "260": 265
+          }
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail1",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 0,
+          "duration": 1000,
+          "animType": "transit",
+          "x": 300,
+          "y": 100,
+          "type": "line",
+          "stroke": "#030303",
+          "strokeDasharray": "4 4",
+          "easing": "cubic.in",
+          "isShowInit": true,
+          "isShowEnd": true,
+          "angle": 90,
+          "shiftY": {
+            "0": 135
+          },
+          "radius": {
+            "0": 135
+          },
+          "opacity": 0.49
+        },
+        {
+          "delay": 0,
+          "duration": 790,
+          "animType": "transit",
+          "type": "line",
+          "stroke": "#030303",
+          "strokeDasharray": "4 4",
+          "isShowInit": true,
+          "isShowEnd": false,
+          "shiftY": 135,
+          "radius": 135,
+          "opacity": 0
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail2",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 1100,
+          "duration": 720,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "isShowInit": true,
+          "isShowEnd": true,
+          "easing": "cubic.out",
+          "opacity": 0.5,
+          "radius": {
+            "0": 85
+          },
+          "shiftY": {
+            "0": -85
+          },
+          "type": "line",
+          "stroke": "#050505",
+          "angle": 270,
+          "strokeDasharray": "4 4"
+        },
+        {
+          "delay": 0,
+          "duration": 1000,
+          "animType": "transit",
+          "isShowInit": true,
+          "isShowEnd": false,
+          "opacity": 0,
+          "radius": 85,
+          "shiftY": -85,
+          "type": "line",
+          "stroke": "#050505",
+          "strokeDasharray": "4 4"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail3",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 1820,
+          "duration": 1000,
+          "animType": "transit",
+          "x": 300,
+          "y": 200,
+          "type": "line",
+          "stroke": "#030303",
+          "strokeDasharray": "4 4",
+          "easing": "cubic.in",
+          "isShowInit": true,
+          "isShowEnd": true,
+          "angle": 90,
+          "shiftY": {
+            "0": 85
+          },
+          "radius": {
+            "0": 85
+          },
+          "opacity": 0.49
+        },
+        {
+          "delay": 0,
+          "duration": 860,
+          "animType": "transit",
+          "type": "line",
+          "stroke": "#030303",
+          "strokeDasharray": "4 4",
+          "isShowInit": true,
+          "isShowEnd": false,
+          "shiftY": 85,
+          "radius": 85,
+          "opacity": 0
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail4m",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 2770,
+          "duration": 1400,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "100%",
+          "strokeDashoffset": {
+            "200%": "100%"
+          },
+          "strokeWidth": 4,
+          "stroke": "#eeeeee",
+          "strokeLinecap": "round",
+          "strokeOpacity": 1,
+          "shiftX": 13,
+          "shiftY": 134,
+          "bitPathStr": "M287,235.670827 C187.791726,11.4579344 151.764383,181.797782 155.219461,234.670827",
+          "zIndex": 2,
+          "bitPathType": "path"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail4",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 2830,
+          "duration": 920,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "shiftX": 13,
+          "shiftY": 134,
+          "opacity": 0.51,
+          "bitPathStr": "M287,235.670827 C187.791726,11.4579344 151.764383,181.797782 155.219461,234.670827",
+          "zIndex": 1,
+          "bitPathType": "path"
+        },
+        {
+          "delay": 0,
+          "duration": 720,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "opacity": 0,
+          "shiftX": 13,
+          "shiftY": 134
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail5m",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 4120,
+          "duration": 1400,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "100%",
+          "strokeDashoffset": {
+            "200%": "100%"
+          },
+          "strokeWidth": 4,
+          "stroke": "#eeeeee",
+          "strokeLinecap": "round",
+          "strokeOpacity": 1,
+          "shiftX": 13,
+          "shiftY": 134,
+          "bitPathStr": "M155.219461,234.470827 C256.749214,45.2260249 359.634766,130.155713 357.466797,234.470827",
+          "zIndex": 2,
+          "bitPathType": "path"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail5",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 4140,
+          "duration": 920,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "shiftX": 13,
+          "shiftY": 134,
+          "opacity": 0.51,
+          "bitPathStr": "M155.219461,234.470827 C256.749214,45.2260249 359.634766,130.155713 357.466797,234.470827",
+          "zIndex": 1,
+          "bitPathType": "path"
+        },
+        {
+          "delay": 0,
+          "duration": 720,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "opacity": 0,
+          "shiftX": 13,
+          "shiftY": 134
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail6m",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 5600,
+          "duration": 1400,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "100%",
+          "strokeDashoffset": {
+            "200%": "100%"
+          },
+          "strokeWidth": 4,
+          "stroke": "#eeeeee",
+          "strokeLinecap": "round",
+          "strokeOpacity": 1,
+          "shiftX": 13,
+          "shiftY": 134,
+          "bitPathStr": "M357.447266,234.470827 C211.126953,-18.9175695 208,234.470827 208,234.470827",
+          "zIndex": 2,
+          "bitPathType": "path"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail6",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 5660,
+          "duration": 920,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "shiftX": 13,
+          "shiftY": 134,
+          "opacity": 0.51,
+          "bitPathStr": "M357.447266,234.470827 C211.126953,-18.9175695 208,234.470827 208,234.470827",
+          "zIndex": 1,
+          "bitPathType": "path"
+        },
+        {
+          "delay": 0,
+          "duration": 720,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "opacity": 0,
+          "shiftX": 13,
+          "shiftY": 134
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail7m",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 7060,
+          "duration": 1400,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "100%",
+          "strokeDashoffset": {
+            "200%": "100%"
+          },
+          "strokeWidth": 4,
+          "stroke": "#eeeeee",
+          "strokeLinecap": "round",
+          "strokeOpacity": 1,
+          "shiftX": 13,
+          "shiftY": 134,
+          "bitPathStr": "M208.222656,234.470827 C109,-17 89,234.470827 89,234.470827",
+          "zIndex": 2,
+          "bitPathType": "path"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail7",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 7110,
+          "duration": 920,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "shiftX": 13,
+          "shiftY": 134,
+          "opacity": 0.51,
+          "bitPathStr": "M208.222656,234.470827 C109,-17 89,234.470827 89,234.470827",
+          "zIndex": 1,
+          "bitPathType": "path"
+        },
+        {
+          "delay": 0,
+          "duration": 720,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "opacity": 0,
+          "shiftX": 13,
+          "shiftY": 134
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail8m",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 8520,
+          "duration": 1400,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "100%",
+          "strokeDashoffset": {
+            "200%": "100%"
+          },
+          "strokeWidth": 4,
+          "stroke": "#eeeeee",
+          "strokeLinecap": "round",
+          "strokeOpacity": 1,
+          "shiftX": 13,
+          "shiftY": 134,
+          "bitPathStr": "M89,234.470827 C89,234.470827 209.009766,-25.0815972 240.529297,234.470827",
+          "zIndex": 2,
+          "bitPathType": "path"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "trail8",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 8580,
+          "duration": 920,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "shiftX": 13,
+          "shiftY": 134,
+          "opacity": 0.51,
+          "bitPathStr": "M89,234.470827 C89,234.470827 209.009766,-25.0815972 240.529297,234.470827",
+          "zIndex": 1,
+          "bitPathType": "path"
+        },
+        {
+          "delay": 0,
+          "duration": 720,
+          "animType": "transit",
+          "x": 300,
+          "y": 370,
+          "fill": "transparent",
+          "strokeDasharray": "4 4",
+          "strokeWidth": 2,
+          "stroke": "#060606",
+          "opacity": 0,
+          "shiftX": 13,
+          "shiftY": 134
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "burst",
+      "animType": "burst",
+      "nodes": [
+        {
+          "delay": 1000,
+          "duration": 303,
+          "animType": "burst",
+          "x": 300,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#ff8000",
+          "strokeWidth": 2
+        },
+        {
+          "delay": 1520,
+          "duration": 303,
+          "animType": "burst",
+          "x": 300,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#0080ff",
+          "strokeWidth": 2
+        },
+        {
+          "delay": 1100,
+          "duration": 303,
+          "animType": "burst",
+          "x": 168,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#8080ff",
+          "strokeWidth": 2,
+          "fill": "transparent"
+        },
+        {
+          "delay": 1090,
+          "duration": 303,
+          "animType": "burst",
+          "x": 370,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#8080ff",
+          "strokeWidth": 2,
+          "fill": "transparent"
+        },
+        {
+          "delay": 1070,
+          "duration": 303,
+          "animType": "burst",
+          "x": 220,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#8080ff",
+          "strokeWidth": 2,
+          "fill": "transparent"
+        },
+        {
+          "delay": 1220,
+          "duration": 303,
+          "animType": "burst",
+          "x": 100,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#8080ff",
+          "strokeWidth": 2,
+          "fill": "transparent"
+        },
+        {
+          "delay": 1140,
+          "duration": 303,
+          "animType": "burst",
+          "x": 255,
+          "y": 370,
+          "degree": 180,
+          "angle": 90,
+          "type": "line",
+          "radius": {
+            "10": 25
+          },
+          "stroke": "#8080ff",
+          "strokeWidth": 2,
+          "fill": "transparent"
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "burst",
+      "animType": "burst",
+      "nodes": [
+        {
+          "delay": 4820,
+          "duration": 320,
+          "animType": "burst",
+          "x": 363,
+          "y": 399,
+          "type": "line",
+          "stroke": "#ff00ff",
+          "strokeWidth": 2,
+          "count": 4,
+          "radius": {
+            "10": 25
+          }
+        }
+      ]
+    },
+    {
+      "name": "semicircle",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 1000,
+          "duration": 370,
+          "animType": "transit",
+          "x": 300,
+          "y": 200,
+          "type": "circle",
+          "radius": 15,
+          "fill": "transparent",
+          "stroke": "#ff8040",
+          "angle": 180,
+          "strokeDasharray": "100% 200%",
+          "strokeDashoffset": {
+            "100%": "50%"
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 370,
+          "animType": "transit",
+          "strokeDashoffset": "100%",
+          "angle": 360
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "semicircle",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 11770,
+          "duration": 370,
+          "animType": "transit",
+          "x": 258,
+          "y": 290,
+          "type": "circle",
+          "radius": 15,
+          "fill": "transparent",
+          "stroke": "#ff8040",
+          "angle": 180,
+          "strokeDasharray": "100% 200%",
+          "strokeDashoffset": {
+            "100%": "50%"
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 370,
+          "animType": "transit",
+          "strokeDashoffset": "100%",
+          "angle": 360
+        }
+      ],
+      "disabled": false
+    },
+    {
+      "name": "dot",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 4490,
+          "duration": 1000,
+          "animType": "transit",
+          "x": 147,
+          "y": 297,
+          "type": "circle",
+          "stroke": "#11CDC5",
+          "fill": "transparent",
+          "radius": {
+            "4": 6
+          }
+        }
+      ]
+    },
+    {
+      "name": "circle",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 9250,
+          "duration": 510,
+          "animType": "transit",
+          "x": 410,
+          "y": 328,
+          "type": "circle",
+          "stroke": "#060606",
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100": "0%"
+          },
+          "fill": "transparent",
+          "radius": 4,
+          "isShowEnd": true
+        }
+      ],
+      "disabled": false,
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500
+    },
+    {
+      "name": "circle",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 9900,
+          "duration": 510,
+          "animType": "transit",
+          "x": 60,
+          "y": 328,
+          "type": "circle",
+          "stroke": "#060606",
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100": "0%"
+          },
+          "fill": "transparent",
+          "radius": 4,
+          "isShowEnd": true
+        }
+      ],
+      "disabled": false,
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500
+    },
+    {
+      "name": "circle",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 9250,
+          "duration": 510,
+          "animType": "transit",
+          "x": 410,
+          "y": 348,
+          "type": "circle",
+          "stroke": "#060606",
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100": "0%"
+          },
+          "fill": "transparent",
+          "radius": 4,
+          "isShowEnd": true
+        }
+      ],
+      "disabled": false,
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500
+    },
+    {
+      "name": "circle",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 9900,
+          "duration": 510,
+          "animType": "transit",
+          "x": 60,
+          "y": 348,
+          "type": "circle",
+          "stroke": "#060606",
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100": "0%"
+          },
+          "fill": "transparent",
+          "radius": 4,
+          "isShowEnd": true
+        }
+      ],
+      "disabled": false,
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500
+    },
+    {
+      "name": "motiOn",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 2840,
+          "duration": 2848,
+          "animType": "transit",
+          "x": 300,
+          "y": 365,
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDashoffset": {
+            "50%": "200%"
+          },
+          "strokeDasharray": {
+            "0 100%": "100% 100%"
+          },
+          "shiftX": 285,
+          "shiftY": 365,
+          "bitPathStr": "M-7.46069873e-14,1.31932773 L27.6952293,1.31932773",
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "motiOn",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 2840,
+          "duration": 2818,
+          "animType": "transit",
+          "x": 300,
+          "y": 300,
+          "isShowEnd": true,
+          "strokeDasharray": {
+            "0 100%": "100% 100%"
+          },
+          "shiftX": 265,
+          "shiftY": 300,
+          "bitPathStr": "M16.4498754,17.6682596 L50.4246052,50.5853726 C55.2204437,46.2220917 57.3684211,40.2605437 57.3684211,33.7478992 C57.3684211,20.6322966 46.7646388,10 33.6842105,10 C20.6037822,10 10,20.6322966 10,33.7478992 C10,46.8635017 20.6037822,57.4957983 33.6842105,57.4957983 C40.1148437,57.4957983 45.9468896,54.9260498 50.2146691,50.7548286",
+          "fill": "transparent",
+          "angle": {
+            "90": 0
+          },
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "mOtion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 4210,
+          "duration": 1408,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": {
+            "0 100%": "100% 100%"
+          },
+          "fill": "transparent",
+          "x": 168,
+          "y": 370,
+          "shiftX": 153,
+          "shiftY": 313,
+          "bitPathStr": "M14.4681748,56.4154786 L14.4681748,10.3704254",
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "mOtion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 5630,
+          "duration": 1688,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": {
+            "0 100%": "100% 100%"
+          },
+          "fill": "transparent",
+          "x": 168,
+          "y": 370,
+          "shiftX": 153,
+          "shiftY": 313,
+          "bitPathStr": "M0.152385328,1.68975318 L27.8476147,1.68975318",
+          "bitPathType": "path",
+          "strokeDashoffset": {
+            "50%": "200%"
+          }
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "mOtion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 5620,
+          "duration": 1648,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "fill": "transparent",
+          "x": 168,
+          "y": 370,
+          "shiftX": 140,
+          "shiftY": 318,
+          "bitPathType": "ellipse",
+          "radius": 24,
+          "radiusX": {
+            "0": 24
+          },
+          "type": "circle"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2.8,
+          2.8,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "motioN",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 5630,
+          "duration": 2988,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": {
+            "0 100%": "100% 100%"
+          },
+          "fill": "transparent",
+          "bitPathStr": "M44.3702971,0 L44.3702971,57.6742056 L0.589583337,1.04713547 L8.953906,1.04713547 L44.3702971,47.0406689",
+          "x": 348,
+          "y": 370,
+          "shiftX": {
+            "326": 348
+          },
+          "shiftY": 310,
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "motioN",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 5630,
+          "duration": 2988,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": {
+            "0 100%": "100% 100%"
+          },
+          "fill": "transparent",
+          "bitPathStr": "M44,0.00170809031 L44,56.7160707 L68.8373606,33.1138772",
+          "x": 348,
+          "y": 370,
+          "shiftX": {
+            "326": 304
+          },
+          "shiftY": 310,
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "moTion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 7020,
+          "duration": 2798,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M17.3157895,60.0150887 L17.3157895,2",
+          "x": 202,
+          "shiftX": 202,
+          "y": 310,
+          "shiftY": 310,
+          "strokeDashoffset": {
+            "100%": 0
+          },
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "moTion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 7180,
+          "duration": 2618,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M0,1.31932773 L32.1182043,1.31932773",
+          "x": 202,
+          "shiftX": 202,
+          "y": 310,
+          "shiftY": 310,
+          "strokeDashoffset": {
+            "100%": 0
+          },
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "moTion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 7190,
+          "duration": 2588,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M0,7.31932773 L32.1182043,7.31932773",
+          "x": 202,
+          "shiftX": 202,
+          "y": 310,
+          "shiftY": 310,
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "Motion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 8460,
+          "duration": 2298,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M0.0649285567,58.3490973 L0.0649285567,0.607639314 L43.9350714,37.9133678 L43.9350714,47.0178902 L0.0649285567,9.46407539",
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "shiftY": 310,
+          "y": 310,
+          "x": 100,
+          "shiftX": {
+            "100": 80
+          },
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "Motion",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 8460,
+          "duration": 2268,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M0.0649285567,19.5005026 L21.883712,0.607639314 L21.9123021,58.4931435",
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "shiftY": 310,
+          "y": 310,
+          "x": 100,
+          "shiftX": {
+            "80": 102
+          },
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "motIon",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 9710,
+          "duration": 2078,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M0,24.3193277 L16.2531981,24.3193277",
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "shiftY": 310,
+          "y": 310,
+          "x": 250,
+          "shiftX": 250,
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "motIon",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 10090,
+          "duration": 2108,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M0,29.3193277 L16.2531981,29.3193277",
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "shiftY": 310,
+          "y": 310,
+          "x": 250,
+          "shiftX": 250,
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    },
+    {
+      "name": "motIon",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 9720,
+          "duration": 2078,
+          "animType": "transit",
+          "stroke": "#040404",
+          "isShowEnd": true,
+          "strokeDasharray": "100%",
+          "fill": "transparent",
+          "bitPathStr": "M8.31578947,58.8761456 L8.31578947,-1.50",
+          "shiftY": 310,
+          "y": 310,
+          "x": 250,
+          "shiftX": 250,
+          "strokeDashoffset": {
+            "100%": 0
+          },
+          "easing": "cubic.out",
+          "bitPathType": "path"
+        }
+      ],
+      "stagger": {
+        "zIndex": [
+          1,
+          2,
+          3
+        ],
+        "stroke": [
+          "#11CDC5",
+          "#FC2D79",
+          "#999999"
+        ],
+        "strokeWidth": [
+          2,
+          2,
+          3
+        ]
+      },
+      "delayDelta": 500,
+      "disabled": false
+    }
+  ]
+}
