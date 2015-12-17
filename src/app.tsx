@@ -312,7 +312,10 @@ export class App extends React.Component<{}, {}> implements Timeline {
     }
 
     renderHelpModal() {
-        return this.renderModal('Mojs Editor Help', <p>to be updated...</p>, null, {
+        return this.renderModal('LeMojs Help', <div>
+            <a href="https://github.com/oxyflour/lemojs">Repo Link</a>
+            <p>help content to be updated...</p>
+        </div>, null, {
             ref: 'helpModelDialog',
         })
     }
