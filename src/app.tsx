@@ -264,7 +264,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
             this.updateProject(JSON.parse(localStorage.getItem('mojs-editor-project')))
         }
         catch (e) {
-            console.log(e)
+            $.getJSON('project.json', (proj) => this.updateProject(proj))
         }
     }
 
