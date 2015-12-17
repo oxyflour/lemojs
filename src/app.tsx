@@ -211,7 +211,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
 
     // project
 
-    saveProject(download: boolean) {
+    saveProject() {
         var proj: ProjectObject = {
             version: VERSION_STRING,
             canvasSize: this.state.canvasSize,
@@ -219,12 +219,9 @@ export class App extends React.Component<{}, {}> implements Timeline {
             timelineState: this.state.timelineState,
         }
         var content = JSON.stringify(proj, null, 2)
-        localStorage.setItem('mojs-editor-project', content)
-        if (download) {
-            $(this.refs['saveProjectLink']).attr('href',
-                'data:text/json;charset=utf-8,' + encodeURIComponent(content))
-            $(this.refs['saveModelDialog']).modal('show')
-        }
+        $(this.refs['saveProjectLink']).attr('href',
+            'data:text/json;charset=utf-8,' + encodeURIComponent(content))
+        $(this.refs['saveModelDialog']).modal('show')
     }
 
     loadProject() {
@@ -273,12 +270,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
             onUpdate: (p) => this.setState({ cursorPosition:p * this.tween.getDuration() }),
         })
 
-        try {
-            this.updateProject(JSON.parse(localStorage.getItem('mojs-editor-project')))
-        }
-        catch (e) {
-            $.getJSON('project.json', (proj) => this.updateProject(proj))
-        }
+        $.getJSON('project.json', (proj) => this.updateProject(proj))
     }
 
     // view
@@ -339,10 +331,8 @@ export class App extends React.Component<{}, {}> implements Timeline {
                     <ul className="dropdown-menu">
                         <li><a href="javascript:void(0)" onClick={ e => this.newProject() }>
                                 <span className="glyphicon glyphicon-floppy-disk" />&nbsp;New</a></li>
-                        <li><a href="javascript:void(0)" onClick={ e => this.saveProject(false) }>
-                                <span className="glyphicon glyphicon-floppy-disk" />&nbsp;Save</a></li>
-                        <li><a href="javascript:void(0)" onClick={ e => this.saveProject(true) }>
-                                <span className="glyphicon glyphicon-save" />&nbsp;Save as</a></li>
+                        <li><a href="javascript:void(0)" onClick={ e => this.saveProject() }>
+                                <span className="glyphicon glyphicon-save" />&nbsp;Save</a></li>
                         <li><a href="javascript:void(0)" onClick={ e=> this.loadProject() }>
                                 <span className="glyphicon glyphicon-open" />&nbsp;Load</a></li>
                         <li className="divider"></li>
