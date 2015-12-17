@@ -89,6 +89,7 @@ export class TimelineRow extends React.Component<{
             }, this)}
             {isActive && <span
                 style={ TIMELINE_ADD_NODE_STYLE }
+                title="add node"
                 onMouseDown={ e => e.stopPropagation() }
                 onClick={ e => this.props.timeline.addAnimNode() }>
                 +
