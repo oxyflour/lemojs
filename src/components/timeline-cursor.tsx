@@ -65,6 +65,7 @@ export class TimelineCursor extends React.Component<{
         }, 0)
 
         return <div ref="cursor" style={$.extend({}, TIMELINE_CURSOR_STYLE, { left, marginLeft })}
+            title="drag to move\npress SHIFT and drag to extend/shrink timeline"
             onMouseDown={ e => this.handleMouseDown(e) }></div>
     }
 }
