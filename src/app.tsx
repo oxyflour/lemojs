@@ -13,6 +13,13 @@ import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
 
 const VERSION_STRING = '0.0.1'
 
+interface ProjectObject {
+    version: string,
+    timeline: AnimObject[],
+    canvas: { width:number, height:number },
+    timelineState: boolean[],
+}
+
 export class App extends React.Component<{}, {}> implements Timeline {
     tween = new AnimManager(null)
     state = {
@@ -204,7 +211,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
     // project
 
     saveProject(download: boolean) {
-        var proj = {
+        var proj: ProjectObject = {
             version: VERSION_STRING,
             canvas: this.state.canvasSize,
             timeline: this.state.timeline,
@@ -239,7 +246,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         }).click()
     }
 
-    updateProject(proj) {
+    updateProject(proj: ProjectObject) {
         // compare major version string only
         if (proj.version.replace(/.\w+$/, '') === VERSION_STRING.replace(/.\w+$/, '')) {
             this.setState({
@@ -253,6 +260,15 @@ export class App extends React.Component<{}, {}> implements Timeline {
         else {
             throw 'version mismatch'
         }
+    }
+
+    newProject() {
+        this.updateProject({
+            version: VERSION_STRING,
+            timeline: [ ],
+            canvas: { width:480, height:400 },
+            timelineState: null,
+        })
     }
 
     componentDidMount() {
@@ -321,6 +337,8 @@ export class App extends React.Component<{}, {}> implements Timeline {
                         Project <span className="caret" />
                     </a>
                     <ul className="dropdown-menu">
+                        <li><a href="javascript:void(0)" onClick={ e => this.newProject() }>
+                                <span className="glyphicon glyphicon-floppy-disk" />&nbsp;New</a></li>
                         <li><a href="javascript:void(0)" onClick={ e => this.saveProject(false) }>
                                 <span className="glyphicon glyphicon-floppy-disk" />&nbsp;Save</a></li>
                         <li><a href="javascript:void(0)" onClick={ e => this.saveProject(true) }>
