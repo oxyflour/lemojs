@@ -140,11 +140,11 @@ export class AnimManager {
                 len = Math.max(...keys.map(k => stagger[k].length || 0))
 
             var transits: mojs.Transit[] = [ ]
-            array(len).map((x, i) => {
+            if (node0) array(len).map((x, i) => {
                 var newAnim: AnimObject = JSON.parse(JSON.stringify(anim)),
                     newNode0: mojs.Transit.InitOptions = newAnim.nodes[0]
                 keys.forEach(k => newNode0[k] = stagger[k][i])
-                if (node0 && delay)
+                if (delay)
                     newNode0.delay = node0.delay + delay * i
 
                 // keep positions sync with the first one

@@ -12,11 +12,12 @@ import { TimelineTable } from './components/timeline-table'
 import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
 
 const VERSION_STRING = '0.0.1'
+const CANVAS_SIZE = { width: 320, height: 480 }
 
 interface ProjectObject {
     version: string,
     timeline: AnimObject[],
-    canvas: { width:number, height:number },
+    canvasSize: { width:number, height:number },
     timelineState: boolean[],
 }
 
@@ -28,7 +29,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         cursorPosition: 0,
 
         timeline: [ ] as AnimObject[],
-        canvasSize: { width: 320, height: 480, },
+        canvasSize: CANVAS_SIZE,
         timelineState: null as boolean[ ]
     }
 
@@ -213,7 +214,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
     saveProject(download: boolean) {
         var proj: ProjectObject = {
             version: VERSION_STRING,
-            canvas: this.state.canvasSize,
+            canvasSize: this.state.canvasSize,
             timeline: this.state.timeline,
             timelineState: this.state.timelineState,
         }
@@ -249,13 +250,9 @@ export class App extends React.Component<{}, {}> implements Timeline {
     updateProject(proj: ProjectObject) {
         // compare major version string only
         if (proj.version.replace(/.\w+$/, '') === VERSION_STRING.replace(/.\w+$/, '')) {
-            this.setState({
-                timeline: proj.timeline,
-                canvasSize: proj.canvas,
-                timelineState: proj.timelineState,
-            }, () => {
-                this.state.timeline.forEach(anim => this.refreshAnimObject(anim))
-            })
+            this.state.timeline.forEach(anim => (anim.nodes = [ ]) && this.refreshAnimObject(anim))
+            this.setState(proj)
+            proj.timeline.forEach(anim => this.refreshAnimObject(anim))
         }
         else {
             throw 'version mismatch'
@@ -266,7 +263,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         this.updateProject({
             version: VERSION_STRING,
             timeline: [ ],
-            canvas: { width:480, height:400 },
+            canvasSize: CANVAS_SIZE,
             timelineState: null,
         })
     }
