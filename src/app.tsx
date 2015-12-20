@@ -89,6 +89,10 @@ export class App extends React.Component<{}, {}> implements Timeline {
         timeline.forEach(anim => this.refreshAnimObject(anim))
     }
 
+    getTimeline() {
+        return this.state.timeline
+    }
+
     getAnimObjectFromNode(node: AnimNode) {
         return this.state.timeline.filter(anim => anim.nodes.indexOf(node) >= 0)[0]
     }

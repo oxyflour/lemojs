@@ -74,7 +74,6 @@ export class TimelineRow extends React.Component<{
                 onClick={ e => this.handleClickRowHeader(e) }
                 onMouseDown={ e => this.props.startRowSortting(e) }
                 onDoubleClick= { e => this.props.timeline.cloneActiveAnimObject() }>
-                <span className="text-primary">{ this.props.data.name }</span>
                 <div className="pull-right hover-to-see">
                     <small className="glyphicon glyphicon-eye-open"
                         title="click to show/hide this object\ndouble click to hide/show others"
@@ -83,6 +82,7 @@ export class TimelineRow extends React.Component<{
                         onDoubleClick={ e => this.toggleAnimObjectEnableDisable(e) }
                         onClick={ e=> this.handleShowHideObject(e) }></small>
                 </div>
+                <span className="text-primary">{ this.props.data.name }</span>
             </div>
             {this.props.data.nodes.map(function(node, index) {
                 return <TimelineNode {...this.props} data={ node } key={ index } />

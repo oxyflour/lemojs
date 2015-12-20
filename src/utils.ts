@@ -17,6 +17,14 @@ export class FakeHash {
     get(key: any) {
         return this.vals[this.keys.indexOf(key)]
     }
+
+    key(i: number = undefined) {
+        return typeof i === 'number' ? this.keys[i] : this.keys.slice()
+    }
+
+    val(i: number = undefined) {
+        return typeof i === 'number' ? this.vals[i] : this.vals.slice()
+    }
 }
 
 export function debounce<T extends Function>(func: T, delay: number): T {

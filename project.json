@@ -19,7 +19,7 @@
           "radiusX": 2.5,
           "radiusY": 7.5,
           "fill": "transparent",
-          "stroke": "#040404",
+          "stroke": "#666666",
           "shiftY": {
             "0": 270
           },
@@ -37,7 +37,6 @@
           "radiusX": 2.5,
           "radiusY": 7.5,
           "fill": "transparent",
-          "stroke": "#040404",
           "shiftY": {
             "0": 270
           },
@@ -57,7 +56,6 @@
             "7.5": 2.5
           },
           "fill": "transparent",
-          "stroke": "#040404",
           "shiftY": {
             "270": 265
           },
@@ -108,16 +106,272 @@
         },
         {
           "delay": 0,
-          "duration": 56,
+          "duration": 85,
           "animType": "transit",
-          "radiusX": 2.5,
-          "radiusY": 7.5,
+          "radiusX": {
+            "2.5": 7.5
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "isShowEnd": true,
           "shiftY": {
             "260": 265
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "7.5": 2.5
+          },
+          "radiusY": {
+            "2.5": 7.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 1163,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "2.5": 7.5
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "7.5": 2.5
+          },
+          "radiusY": {
+            "2.5": 7.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 1256,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "2.5": 7.5
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "7.5": 2.5
+          },
+          "radiusY": {
+            "2.5": 7.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 1308,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "2.5": 7.5
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "7.5": 2.5
+          },
+          "radiusY": {
+            "2.5": 7.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 1264,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "2.5": 7.5
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "7.5": 2.5
+          },
+          "radiusY": {
+            "2.5": 7.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 1264,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "2.5": 7.5
+          },
+          "radiusY": {
+            "7.5": 2.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 85,
+          "animType": "transit",
+          "radiusX": {
+            "7.5": 2.5
+          },
+          "radiusY": {
+            "2.5": 7.5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
+          }
+        },
+        {
+          "delay": 0,
+          "duration": 527,
+          "animType": "transit",
+          "radiusX": {
+            "2.5": 5
+          },
+          "radiusY": {
+            "7.5": 5
+          },
+          "isShowEnd": true,
+          "shiftY": {
+            "265": 260
           }
         }
       ],
       "disabled": false
+    },
+    {
+      "name": "path",
+      "animType": "motion-path",
+      "nodes": [
+        {
+          "delay": 2888,
+          "duration": 1310,
+          "animType": "motion-path",
+          "elemName": "ball",
+          "pathName": "trail4m",
+          "angleOffset": 90,
+          "angle": 80,
+          "offsetX": -288,
+          "offsetY": 34
+        },
+        {
+          "delay": 0,
+          "duration": 1470,
+          "animType": "motion-path",
+          "elemName": "ball",
+          "pathName": "trail5m",
+          "angleOffset": 90,
+          "angle": 80,
+          "offsetX": -288,
+          "offsetY": 34
+        },
+        {
+          "delay": 0,
+          "duration": 1470,
+          "animType": "motion-path",
+          "elemName": "ball",
+          "pathName": "trail6m",
+          "angleOffset": 90,
+          "angle": 80,
+          "offsetX": -288,
+          "offsetY": 34
+        },
+        {
+          "delay": 0,
+          "duration": 1430,
+          "animType": "motion-path",
+          "elemName": "ball",
+          "pathName": "trail7m",
+          "angleOffset": 90,
+          "angle": 80,
+          "offsetX": -288,
+          "offsetY": 34
+        },
+        {
+          "delay": 0,
+          "duration": 1450,
+          "animType": "motion-path",
+          "elemName": "ball",
+          "pathName": "trail8m",
+          "angleOffset": 90,
+          "angle": 80,
+          "offsetX": -288,
+          "offsetY": 34
+        },
+        {
+          "delay": 0,
+          "duration": 2032,
+          "animType": "motion-path",
+          "elemName": "ball",
+          "path": "M240.529297,234.470827 L240.529297,57",
+          "pathName": "",
+          "easing": "elastic.out",
+          "pathEnd": 0.4
+        }
+      ]
     },
     {
       "name": "trail1",
@@ -744,11 +998,11 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 11770,
+          "delay": 11060,
           "duration": 370,
           "animType": "transit",
-          "x": 258,
-          "y": 290,
+          "x": 252,
+          "y": 297,
           "type": "circle",
           "radius": 15,
           "fill": "transparent",
@@ -1482,7 +1736,7 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9710,
+          "delay": 9950,
           "duration": 2078,
           "animType": "transit",
           "stroke": "#040404",
@@ -1496,7 +1750,7 @@
           "shiftY": 310,
           "y": 310,
           "x": 250,
-          "shiftX": 250,
+          "shiftX": 245,
           "bitPathType": "path"
         }
       ],
@@ -1539,7 +1793,7 @@
           "shiftY": 310,
           "y": 310,
           "x": 250,
-          "shiftX": 250,
+          "shiftX": 245,
           "bitPathType": "path"
         }
       ],
@@ -1568,7 +1822,7 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9720,
+          "delay": 9950,
           "duration": 2078,
           "animType": "transit",
           "stroke": "#040404",
@@ -1579,7 +1833,7 @@
           "shiftY": 310,
           "y": 310,
           "x": 250,
-          "shiftX": 250,
+          "shiftX": 245,
           "strokeDashoffset": {
             "100%": 0
           },
@@ -1607,5 +1861,6 @@
       "delayDelta": 500,
       "disabled": false
     }
-  ]
+  ],
+  "timelineState": null
 }

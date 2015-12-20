@@ -23,6 +23,7 @@ export interface Timeline {
     toggleAnimObjectEnableDisable(anim: AnimObject)
     shiftAnimObjectToCursor(delta: number)
 
+    getTimeline(): AnimObject[]
     getAnimObjectFromNode(node: AnimNode): AnimObject
     getAnimNodeStart(node: AnimNode): number
 
@@ -81,10 +82,12 @@ export class AnimManager {
         var oldNodes = this.hash.get(anim) as mojs.Timeline[]
         if (oldNodes) oldNodes.forEach(tl => {
             // cleanup
-            var el = tl['el'] as HTMLElement,
-                pt = el && el.parentNode
-            el && pt && pt.removeChild(el)
-            el && el['remove-parent'] && pt && pt.parentNode.removeChild(pt)
+            if (anim.animType !== 'motion-path') {
+                var el = tl['el'] as HTMLElement,
+                    pt = el && el.parentNode
+                el && pt && pt.removeChild(el)
+                el && el['remove-parent'] && pt && pt.parentNode.removeChild(pt)
+            }
             // weird?
             this.tween.remove(tl['timeline'])
             this.tween.remove(tl)
@@ -115,6 +118,11 @@ export class AnimManager {
                 }
 
                 transit = new mojs.Transit(firstOpt = opt)
+
+                // force creating element
+                transit.render()
+                if (transit.el)
+                    transit.el.id = 'anim_obj_' + anim.name.replace(/ /g, '_')
             }
             else {
                 // for nodes other than first, use shiftX/shiftY instead of x/y
@@ -132,14 +140,14 @@ export class AnimManager {
     }
 
     addTransit(anim: AnimObject) {
-        var stagger = anim['stagger']
+        var stagger = anim['stagger'],
+            transits: mojs.Transit[] = [ ]
         if (stagger) {
             var delay = anim['delayDelta'],
                 node0 = anim.nodes[0],
                 keys = Object.keys(stagger),
                 len = Math.max(...keys.map(k => stagger[k].length || 0))
 
-            var transits: mojs.Transit[] = [ ]
             if (node0) array(len).map((x, i) => {
                 var newAnim: AnimObject = JSON.parse(JSON.stringify(anim)),
                     newNode0: mojs.Transit.InitOptions = newAnim.nodes[0]
@@ -153,24 +161,31 @@ export class AnimManager {
                     delete newNode0['shiftX']
                     delete newNode0['shiftY']
                     delete newNode0['angle']
-                    newNode0.onUpdate = () => {
+                    // override onUpdate to sync position
+                    var onUpdate = newNode0.onUpdate
+                    newNode0.onUpdate = (p) => {
+                        onUpdate && onUpdate(p)
                         transits[i].el.style.transform = transits[0].el.style.transform
                     }
                 }
 
                 transits.push(this.getTransit(newAnim))
             })
-
-            this.hash.put(anim, transits)
-            this.tween.add(transits)
         }
         else {
             var transit = this.getTransit(anim)
-            if (!transit) return
-
-            this.hash.put(anim, [transit])
-            this.tween.add(transit)
+            if (transit) transits.push(transit)
         }
+
+        // update connected motion-paths
+        this.hash.key().forEach((a: AnimObject) => {
+            if (a.animType === 'motion-path') {
+                if (a.nodes.some(n => n['elemName'] === anim.name || n['pathName'] === anim.name))
+                    setTimeout(() => this.update(a), 0)
+            }
+        })
+
+        return transits
     }
 
     addBurst(anim: AnimObject) {
@@ -185,21 +200,58 @@ export class AnimManager {
             delay = opt.delay + opt.duration
         })
 
-        this.hash.put(anim, bursts)
-        this.tween.add(bursts)
+        return bursts
+    }
+
+    addMotionPath(anim: AnimObject) {
+        var motionPath: mojs.MotionPath = null,
+            lastOpt: mojs.MotionPath.InitOptions = { }
+        anim.nodes.forEach(node => {
+            var opt: mojs.MotionPath.InitOptions = this.parseOptions(node)
+            Object.keys(lastOpt).forEach(k => {
+                if (opt[k] === undefined)
+                    opt[k] = lastOpt[k]
+            })
+
+            // try to get connected elements
+            if (opt['elemName'])
+                opt.el = $('#anim_obj_' + opt['elemName'].replace(/ /g, '_'))[0]
+            if (opt['pathName'])
+                opt.path = $('#anim_obj_' + opt['pathName'].replace(/ /g, '_')).parent().find('path')[0]
+
+            // create dummy elements so that mojs will not complain
+            if (!opt.el)
+                opt.el = $('<div></div>')[0]
+            if (!opt.path)
+                opt.path = $('<svg><path d="M0,0 L0,0"></path></svg>').find('path')[0]
+
+            if (!motionPath)
+                motionPath = new mojs.MotionPath(opt)
+            else
+                motionPath = motionPath.then(opt)
+
+            lastOpt = opt
+        })
+
+        return motionPath ? [motionPath] : []
     }
 
     update(anim: AnimObject) {
         this.remove(anim)
-        if (anim.disabled)
-            return
+        if (anim.disabled) return
 
+        var objs: mojs.Tweenable[]
         if (anim.animType === 'transit')
-            this.addTransit(anim)
+            objs = this.addTransit(anim)
         else if (anim.animType === 'burst')
-            this.addBurst(anim)
+            objs = this.addBurst(anim)
+        else if (anim.animType === 'motion-path')
+            objs = this.addMotionPath(anim)
         else
             throw 'not implemented'
+
+        this.tween.add(objs)
+        this.hash.put(anim, objs)
 
         // TODO: update and show added animation object
         this.tween.recalcDuration()

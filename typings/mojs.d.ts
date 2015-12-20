@@ -180,31 +180,33 @@ declare module mojs {
 
     module MotionPath {
         interface InitOptions {
-            path: string | SVGPathElement | any
-            curvature: {
+            el?: HTMLElement | string,
+
+            path?: string | SVGPathElement | any
+            curvature?: {
                 x: number | string
                 y: number | string
             }
-            isCompositeLayer: boolean
-            delay: number
-            duration: number
-            easing: string | Function | any[]
-            repeat: number
-            yoyo: boolean
-            offsetX: number
-            offsetY: number
-            angleOffset: number | Function
-            pathStart: number
-            pathEnd: number
-            motionBlur: number
-            transformOrigin: string | Function
-            isAngle: boolean
-            isReverse: boolean
-            isRunLess: boolean
-            isPresetPosition: boolean
-            onStart: Function
-            onComplete: Function
-            onUpdate: Function
+            isCompositeLayer?: boolean
+            delay?: number
+            duration?: number
+            easing?: string | Function | any[]
+            repeat?: number
+            yoyo?: boolean
+            offsetX?: number
+            offsetY?: number
+            angleOffset?: number | Function
+            pathStart?: number
+            pathEnd?: number
+            motionBlur?: number
+            transformOrigin?: string | Function
+            isAngle?: boolean
+            isReverse?: boolean
+            isRunLess?: boolean
+            isPresetPosition?: boolean
+            onStart?: Function
+            onComplete?: Function
+            onUpdate?: Function
         }
     }
 

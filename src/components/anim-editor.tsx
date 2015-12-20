@@ -6,7 +6,7 @@ import * as $ from 'jquery'
 import { AnimNode, AnimObject, Timeline } from '../timeline'
 import { debounce } from '../utils'
 
-const EASING_OPTIONS = ['', 'cubic.in', 'cubic.out', 'sin.in', 'sin.out']
+const EASING_OPTIONS = ['', 'cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
 
 const LINECAP_STYLES = ['', 'normal', 'round']
 
@@ -264,6 +264,29 @@ export class NodeEditor extends BaseEditor {
         // TODO: add child options
     }
 
+    motionPathFields = {
+        easing:                 this.makeSelectInput(EASING_OPTIONS),
+        element: {
+            elemName:           this.makeTextInput('name of element'),
+            pathName:           this.makeTextInput('name of path'),
+        },
+        path: {
+            path:               this.makeTextInput('path d attribute'),
+            isAngle:            this.makeCheckboxInput(),
+            angleOffset:        this.makeNumberInput(0, 360),
+            isReverse:          this.makeCheckboxInput(),
+            pathStart:          this.makeRangeInput(0, 1, 0.01),
+            pathEnd:            this.makeRangeInput(0, 1, 0.01),
+        },
+        align: {
+            x:                  this.makeNumberInput(),
+            y:                  this.makeNumberInput(),
+            offsetX:            this.makeJsonInput('number or json literal'),
+            offsetY:            this.makeJsonInput('number or json literal'),
+            angle:              this.makeNumberInput(0, 360),
+        },
+    }
+
     commonFields = {
         delay: this.makeNumberInput(0),
         duration: this.makeNumberInput(0),
@@ -273,8 +296,17 @@ export class NodeEditor extends BaseEditor {
         var fields = {
                 transit: this.transitFields,
                 burst: this.burstFields,
+                'motion-path': this.motionPathFields,
             }[this.props.data.animType] || { },
             timeline = this.props.timeline
+
+        if (this.props.data.animType === 'motion-path') {
+            var names = ['']
+            this.props.timeline.getTimeline().forEach(anim => names.push(anim.name))
+            fields.element.elemName = this.makeSelectInput(names)
+            fields.element.pathName = this.makeSelectInput(names)
+        }
+
         return <form className="form-horizontal">
             <div className="form-group">
                 <div className="col-xs-12">
@@ -300,27 +332,36 @@ export class NodeEditor extends BaseEditor {
 }
 
 export class ObjectEditor extends BaseEditor {
-    fields = {
+    commonFields = {
         name:       this.makeTextInput('animation name'),
         disabled:   this.makeCheckboxInput(),
+    }
+
+    transitFields = {
         stagger:    this.makeJsonInput('key: attr[]', true),
         delayDelta: this.makeNumberInput(0)
     }
+
     render() {
-        var timeline = this.props.timeline
+        var fields = {
+                transit: this.transitFields,
+            }[this.props.data.animType] || { },
+            timeline = this.props.timeline
+
         return <form className="form-horizontal">
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => timeline.removeActiveAnimNode() }
+                        onClick={ e => timeline.removeActiveAnimObject() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => timeline.cloneActiveAnimNode() }
+                        onClick={ e => timeline.cloneActiveAnimObject() }
                         title="shortcut: Ctrl-C">Clone</a>
                 </div>
             </div>
-            { this.getInputs(this.fields) }
+            { this.getInputs(this.commonFields) }
+            { this.getInputs(fields) }
         </form>
     }
 }
