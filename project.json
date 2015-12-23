@@ -25,7 +25,8 @@
           },
           "isShowInit": false,
           "easing": "cubic.in",
-          "opacity": 0
+          "opacity": 0,
+          "zIndex": 10
         },
         {
           "delay": 0,
@@ -89,7 +90,7 @@
         },
         {
           "delay": 0,
-          "duration": 1030,
+          "duration": 913,
           "animType": "transit",
           "radiusX": {
             "5": 2.5
@@ -135,7 +136,7 @@
           }
         },
         {
-          "delay": 1163,
+          "delay": 727,
           "duration": 85,
           "animType": "transit",
           "radiusX": {
@@ -165,7 +166,7 @@
           }
         },
         {
-          "delay": 1256,
+          "delay": 807,
           "duration": 85,
           "animType": "transit",
           "radiusX": {
@@ -195,7 +196,7 @@
           }
         },
         {
-          "delay": 1308,
+          "delay": 890,
           "duration": 85,
           "animType": "transit",
           "radiusX": {
@@ -225,7 +226,7 @@
           }
         },
         {
-          "delay": 1264,
+          "delay": 877,
           "duration": 85,
           "animType": "transit",
           "radiusX": {
@@ -255,7 +256,7 @@
           }
         },
         {
-          "delay": 1264,
+          "delay": 942,
           "duration": 85,
           "animType": "transit",
           "radiusX": {
@@ -307,19 +308,20 @@
       "animType": "motion-path",
       "nodes": [
         {
-          "delay": 2888,
-          "duration": 1310,
+          "delay": 2778,
+          "duration": 901,
           "animType": "motion-path",
           "elemName": "ball",
           "pathName": "trail4m",
           "angleOffset": 90,
           "angle": 80,
           "offsetX": -288,
-          "offsetY": 34
+          "offsetY": 34,
+          "easing": "bezier 0.240 0.725 0.790 0.395"
         },
         {
           "delay": 0,
-          "duration": 1470,
+          "duration": 983,
           "animType": "motion-path",
           "elemName": "ball",
           "pathName": "trail5m",
@@ -330,7 +332,7 @@
         },
         {
           "delay": 0,
-          "duration": 1470,
+          "duration": 1052,
           "animType": "motion-path",
           "elemName": "ball",
           "pathName": "trail6m",
@@ -341,7 +343,7 @@
         },
         {
           "delay": 0,
-          "duration": 1430,
+          "duration": 1043,
           "animType": "motion-path",
           "elemName": "ball",
           "pathName": "trail7m",
@@ -352,7 +354,7 @@
         },
         {
           "delay": 0,
-          "duration": 1450,
+          "duration": 1128,
           "animType": "motion-path",
           "elemName": "ball",
           "pathName": "trail8m",
@@ -363,7 +365,7 @@
         },
         {
           "delay": 0,
-          "duration": 2032,
+          "duration": 1353,
           "animType": "motion-path",
           "elemName": "ball",
           "path": "M240.529297,234.470827 L240.529297,57",
@@ -441,7 +443,7 @@
         },
         {
           "delay": 0,
-          "duration": 1000,
+          "duration": 930,
           "animType": "transit",
           "isShowInit": true,
           "isShowEnd": false,
@@ -461,7 +463,7 @@
       "nodes": [
         {
           "delay": 1820,
-          "duration": 1000,
+          "duration": 930,
           "animType": "transit",
           "x": 300,
           "y": 200,
@@ -482,7 +484,7 @@
         },
         {
           "delay": 0,
-          "duration": 860,
+          "duration": 451,
           "animType": "transit",
           "type": "line",
           "stroke": "#030303",
@@ -502,7 +504,7 @@
       "nodes": [
         {
           "delay": 2770,
-          "duration": 1400,
+          "duration": 921,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -519,7 +521,8 @@
           "shiftY": 134,
           "bitPathStr": "M287,235.670827 C187.791726,11.4579344 151.764383,181.797782 155.219461,234.670827",
           "zIndex": 2,
-          "bitPathType": "path"
+          "bitPathType": "path",
+          "easing": "bezier 0.240 0.725 0.790 0.395"
         }
       ],
       "disabled": false
@@ -530,7 +533,7 @@
       "nodes": [
         {
           "delay": 2830,
-          "duration": 920,
+          "duration": 511,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -567,8 +570,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 4120,
-          "duration": 1400,
+          "delay": 3711,
+          "duration": 913,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -585,7 +588,8 @@
           "shiftY": 134,
           "bitPathStr": "M155.219461,234.470827 C256.749214,45.2260249 359.634766,130.155713 357.466797,234.470827",
           "zIndex": 2,
-          "bitPathType": "path"
+          "bitPathType": "path",
+          "easing": "bezier 0.240 0.725 0.790 0.395"
         }
       ],
       "disabled": false
@@ -595,8 +599,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 4140,
-          "duration": 920,
+          "delay": 3731,
+          "duration": 569,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -613,7 +617,7 @@
         },
         {
           "delay": 0,
-          "duration": 720,
+          "duration": 584,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -633,8 +637,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 5600,
-          "duration": 1400,
+          "delay": 4685,
+          "duration": 982,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -651,7 +655,8 @@
           "shiftY": 134,
           "bitPathStr": "M357.447266,234.470827 C211.126953,-18.9175695 208,234.470827 208,234.470827",
           "zIndex": 2,
-          "bitPathType": "path"
+          "bitPathType": "path",
+          "easing": "bezier 0.240 0.725 0.790 0.395"
         }
       ],
       "disabled": false
@@ -661,8 +666,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 5660,
-          "duration": 920,
+          "delay": 4765,
+          "duration": 502,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -699,8 +704,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 7060,
-          "duration": 1400,
+          "delay": 5747,
+          "duration": 1013,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -717,7 +722,8 @@
           "shiftY": 134,
           "bitPathStr": "M208.222656,234.470827 C109,-17 89,234.470827 89,234.470827",
           "zIndex": 2,
-          "bitPathType": "path"
+          "bitPathType": "path",
+          "easing": "bezier 0.240 0.725 0.790 0.395"
         }
       ],
       "disabled": false
@@ -727,8 +733,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 7110,
-          "duration": 920,
+          "delay": 5797,
+          "duration": 533,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -765,8 +771,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 8520,
-          "duration": 1400,
+          "delay": 6820,
+          "duration": 1078,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -783,7 +789,8 @@
           "shiftY": 134,
           "bitPathStr": "M89,234.470827 C89,234.470827 209.009766,-25.0815972 240.529297,234.470827",
           "zIndex": 2,
-          "bitPathType": "path"
+          "bitPathType": "path",
+          "easing": "bezier 0.240 0.725 0.790 0.395"
         }
       ],
       "disabled": false
@@ -793,8 +800,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 8580,
-          "duration": 920,
+          "delay": 6880,
+          "duration": 598,
           "animType": "transit",
           "x": 300,
           "y": 370,
@@ -861,7 +868,7 @@
           "strokeWidth": 2
         },
         {
-          "delay": 1100,
+          "delay": 691,
           "duration": 303,
           "animType": "burst",
           "x": 168,
@@ -877,7 +884,7 @@
           "fill": "transparent"
         },
         {
-          "delay": 1090,
+          "delay": 603,
           "duration": 303,
           "animType": "burst",
           "x": 370,
@@ -893,7 +900,7 @@
           "fill": "transparent"
         },
         {
-          "delay": 1070,
+          "delay": 652,
           "duration": 303,
           "animType": "burst",
           "x": 220,
@@ -909,7 +916,7 @@
           "fill": "transparent"
         },
         {
-          "delay": 1220,
+          "delay": 833,
           "duration": 303,
           "animType": "burst",
           "x": 100,
@@ -925,7 +932,7 @@
           "fill": "transparent"
         },
         {
-          "delay": 1140,
+          "delay": 818,
           "duration": 303,
           "animType": "burst",
           "x": 255,
@@ -948,8 +955,8 @@
       "animType": "burst",
       "nodes": [
         {
-          "delay": 4820,
-          "duration": 320,
+          "delay": 4232,
+          "duration": 149,
           "animType": "burst",
           "x": 363,
           "y": 399,
@@ -998,7 +1005,7 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 11060,
+          "delay": 8504,
           "duration": 370,
           "animType": "transit",
           "x": 252,
@@ -1028,8 +1035,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 4490,
-          "duration": 1000,
+          "delay": 4082,
+          "duration": 513,
           "animType": "transit",
           "x": 147,
           "y": 297,
@@ -1047,8 +1054,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9250,
-          "duration": 510,
+          "delay": 7345,
+          "duration": 393,
           "animType": "transit",
           "x": 410,
           "y": 328,
@@ -1088,7 +1095,7 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9900,
+          "delay": 7878,
           "duration": 510,
           "animType": "transit",
           "x": 60,
@@ -1129,8 +1136,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9250,
-          "duration": 510,
+          "delay": 7345,
+          "duration": 393,
           "animType": "transit",
           "x": 410,
           "y": 348,
@@ -1170,7 +1177,7 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9900,
+          "delay": 7878,
           "duration": 510,
           "animType": "transit",
           "x": 60,
@@ -1212,7 +1219,7 @@
       "nodes": [
         {
           "delay": 2840,
-          "duration": 2848,
+          "duration": 1952,
           "animType": "transit",
           "x": 300,
           "y": 365,
@@ -1256,7 +1263,7 @@
       "nodes": [
         {
           "delay": 2840,
-          "duration": 2818,
+          "duration": 1922,
           "animType": "transit",
           "x": 300,
           "y": 300,
@@ -1299,8 +1306,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 4210,
-          "duration": 1408,
+          "delay": 3801,
+          "duration": 921,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1341,8 +1348,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 5630,
-          "duration": 1688,
+          "delay": 4735,
+          "duration": 1270,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1386,8 +1393,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 5620,
-          "duration": 1648,
+          "delay": 4725,
+          "duration": 1230,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1429,8 +1436,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 5630,
-          "duration": 2988,
+          "delay": 4735,
+          "duration": 2183,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1473,8 +1480,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 5630,
-          "duration": 2988,
+          "delay": 4735,
+          "duration": 2183,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1517,8 +1524,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 7020,
-          "duration": 2798,
+          "delay": 5707,
+          "duration": 2089,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1560,8 +1567,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 7180,
-          "duration": 2618,
+          "delay": 5867,
+          "duration": 1909,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1603,8 +1610,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 7190,
-          "duration": 2588,
+          "delay": 5877,
+          "duration": 1879,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1646,8 +1653,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 8460,
-          "duration": 2298,
+          "delay": 6760,
+          "duration": 1976,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1691,8 +1698,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 8460,
-          "duration": 2268,
+          "delay": 6760,
+          "duration": 1946,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1736,8 +1743,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9950,
-          "duration": 2078,
+          "delay": 7928,
+          "duration": 1399,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1779,8 +1786,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 10090,
-          "duration": 2108,
+          "delay": 8069,
+          "duration": 1429,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,
@@ -1822,8 +1829,8 @@
       "animType": "transit",
       "nodes": [
         {
-          "delay": 9950,
-          "duration": 2078,
+          "delay": 7928,
+          "duration": 1399,
           "animType": "transit",
           "stroke": "#040404",
           "isShowEnd": true,

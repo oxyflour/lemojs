@@ -1,4 +1,8 @@
-import { FakeHash } from './utils'
+import { FakeHash, generateBezier } from './utils'
+
+export const EASING_OPTIONS = ['', 'cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
+
+export const LINECAP_STYLES = ['', 'normal', 'round']
 
 export interface AnimNode {
     delay: number,
@@ -67,6 +71,16 @@ export class AnimManager {
         // don't start when added
         opt.isRunLess = true
 
+        if (opt.easing && EASING_OPTIONS.indexOf(opt.easing) < 0) {
+            if (opt.easing.indexOf('bezier') === 0) {
+                opt.easing = generateBezier.apply(null,
+                    opt.easing.split(' ').slice(1).map(parseFloat))
+            }
+            else {
+                console.warn('unsupported easing: ' + opt.easing)
+            }
+        }
+
         opt.parent = this.element
 
         opt.onUpdate = node['onUpdate']
@@ -111,7 +125,7 @@ export class AnimManager {
                         elem = '<ellipse></ellipse>'
                     // NOTE: you can only use svg as root element in jquery
                     var svg = $('<svg>' + elem + '</svg>')
-                        .css(SVG_STYLE).css('z-index', opt['zIndex'] || 0).prependTo(this.element)
+                        .css(SVG_STYLE).css('z-index', opt['zIndex']).prependTo(this.element)
                     opt.bit = svg.children()[0]
                     // remember to remove dynamically created svg
                     opt.bit['remove-parent'] = true
@@ -121,8 +135,10 @@ export class AnimManager {
 
                 // force creating element
                 transit.render()
-                if (transit.el)
+                if (transit.el) {
                     transit.el.id = 'anim_obj_' + anim.name.replace(/ /g, '_')
+                    transit.el.style.zIndex = opt['zIndex'] || 0
+                }
             }
             else {
                 // for nodes other than first, use shiftX/shiftY instead of x/y

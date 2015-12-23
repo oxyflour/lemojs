@@ -3,12 +3,9 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline } from '../timeline'
+import { AnimNode, AnimObject, Timeline,
+    EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 import { debounce } from '../utils'
-
-const EASING_OPTIONS = ['', 'cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
-
-const LINECAP_STYLES = ['', 'normal', 'round']
 
 class Unstringified {
     constructor(public content: string) { }
@@ -114,6 +111,25 @@ class BaseEditor extends React.Component<{
         </select>
     }
 
+    getTextWithSelectInput(holderText: string, values: string[], key: string) {
+        var val = this.props.data[key]
+        return <div className="input-group">
+            <input type="text" className="form-control" placeholder={ holderText }
+                value={ val }
+                onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
+            <div className="input-group-btn">
+                <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span className="caret" />
+                </button>
+                <ul className="dropdown-menu dropdown-menu-right">
+                    {values.map((val, index) => <li key={ index }>
+                        <a onClick={ e => this.handleValueChange(key, val) }>{ val }</a>
+                    </li>)}
+                </ul>
+            </div>
+        </div>
+    }
+
     getJsonValue(val: any) {
         return val instanceof Unstringified ? (val as Unstringified).content : JSON.stringify(val)
     }
@@ -135,16 +151,16 @@ class BaseEditor extends React.Component<{
     }
 
     getColorInput(key: string) {
-        var value = this.props.data[key]
+        var val = this.props.data[key]
         return <div className="input-group" style={{ width:'100%' }}>
             <input type="text" className="form-control" placeholder="color"
-                value={ value }
+                value={ val }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
             {/* http://stackoverflow.com/questions/18954117/input-group-two-inputs-close-to-each-other */}
             <span style={{ width:0, display:"table-cell" }}></span>
             <input type="color" className="form-control"
                 style={{ borderLeft:'none' }}
-                value={ /#[0-9a-fA-F]{6}/.test(value) ? value : null }
+                value={ /#[0-9a-fA-F]{6}/.test(val) ? val : null }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
     }
@@ -169,6 +185,10 @@ class BaseEditor extends React.Component<{
         return this.getNumberRangeInput.bind(this, 'range', min, max, step, holderText)
     }
 
+    makeTextWithSelectInput(values: string[], holderText = '') {
+        return this.getTextWithSelectInput.bind(this, holderText, values)
+    }
+
     makeSelectInput(values: string[]) {
         return this.getSelectInput.bind(this, values)
     }
@@ -188,7 +208,7 @@ export class NodeEditor extends BaseEditor {
 
         repeat:                 this.makeNumberInput(0, 100, 1),
         yoyo:                   this.makeCheckboxInput(),
-        easing:                 this.makeSelectInput(EASING_OPTIONS),
+        easing:                 this.makeTextWithSelectInput(EASING_OPTIONS, 'easing or bezier paramters'),
         svgPathOpt: {
             bitPathType:        this.makeSelectInput(['', 'path', 'ellipse']),
             bitPathStr:         this.makeTextInput('path d attribute'),
@@ -227,7 +247,7 @@ export class NodeEditor extends BaseEditor {
 
         repeat:                 this.makeNumberInput(0, 100, 1),
         yoyo:                   this.makeCheckboxInput(),
-        easing:                 this.makeSelectInput(EASING_OPTIONS),
+        easing:                 this.makeTextWithSelectInput(EASING_OPTIONS, 'easing or bezier paramters'),
         display: {
             count:              this.makeNumberInput(0),
             degree:             this.makeNumberInput(0, 360),
@@ -265,7 +285,7 @@ export class NodeEditor extends BaseEditor {
     }
 
     motionPathFields = {
-        easing:                 this.makeSelectInput(EASING_OPTIONS),
+        easing:                 this.makeTextWithSelectInput(EASING_OPTIONS, 'easing or bezier paramters'),
         element: {
             elemName:           this.makeTextInput('name of element'),
             pathName:           this.makeTextInput('name of path'),
