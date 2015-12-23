@@ -306,10 +306,18 @@ export class App extends React.Component<{}, {}> implements Timeline {
 
     renderHelpModal() {
         return this.renderModal('LeMojs Help', <div>
-            <a href="https://github.com/oxyflour/lemojs">Repo Link</a>
             <p>help content to be updated...</p>
         </div>, null, {
             ref: 'helpModelDialog',
+        })
+    }
+
+    renderAboutModal() {
+        return this.renderModal('LeMojs Help', <div>
+            <p>A Lightweight editor for <a href="https://github.com/legomushroom/mojs">mojs</a></p>
+            <a href="https://github.com/oxyflour/lemojs">Github Repo Link</a>
+        </div>, null, {
+            ref: 'aboutModelDialog',
         })
     }
 
@@ -327,7 +335,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
             <div className="navbar-header">
                 <a href="javascript:void(0)" className="navbar-brand">LeMojs</a>
             </div>
-            <ul className="nav navbar-nav collapse navbar-collapse">
+            <ul className="nav navbar-nav">
                 <li className="dropdown">
                     <a href="javascript:void(0)" className="dropdown-toggle" data-toggle="dropdown">
                         Project <span className="caret" />
@@ -346,6 +354,11 @@ export class App extends React.Component<{}, {}> implements Timeline {
                 </li>
                 <li>
                     <a href="javascript:void(0)" onClick={ e => $(this.refs['helpModelDialog']).modal('show') }>Help</a>
+                </li>
+            </ul>
+            <ul className="nav navbar-nav navbar-right">
+                <li>
+                    <a href="javascript:void(0)" onClick={ e => $(this.refs['aboutModelDialog']).modal('show') }>About</a>
                 </li>
             </ul>
         </div>
@@ -422,6 +435,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
             </div>
             { this.renderSaveModal() }
             { this.renderHelpModal() }
+            { this.renderAboutModal() }
             { this.renderParameterModal() }
         </div>
     }
