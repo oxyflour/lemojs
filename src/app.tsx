@@ -12,12 +12,12 @@ import { TimelineTable } from './components/timeline-table'
 import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
 
 const VERSION_STRING = '0.0.1'
-const CANVAS_SIZE = { width: 320, height: 480 }
+const CANVAS_STYLE = { width:320, height:480, background:'#eee' }
 
 interface ProjectObject {
     version: string,
     timeline: AnimObject[],
-    canvasSize: { width:number, height:number },
+    canvasStyle: { width:number, height:number },
     timelineState: boolean[],
 }
 
@@ -29,7 +29,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         cursorPosition: 0,
 
         timeline: [ ] as AnimObject[],
-        canvasSize: CANVAS_SIZE,
+        canvasStyle: CANVAS_STYLE,
         timelineState: null as boolean[ ]
     }
 
@@ -154,8 +154,8 @@ export class App extends React.Component<{}, {}> implements Timeline {
             this.activeAnimObject = this.state.timeline[index]
         if (!this.activeAnimObject) return
         var animType = this.activeAnimObject.animType,
-            x = this.state.canvasSize.width / 2,
-            y = this.state.canvasSize.height / 2,
+            x = this.state.canvasStyle.width / 2,
+            y = this.state.canvasStyle.height / 2,
             node = { delay:0, duration:1000, animType, x, y }
         this.activeAnimObject.nodes.push(node)
         this.refreshAnimObject(this.activeAnimObject)
@@ -218,7 +218,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
     saveProject() {
         var proj: ProjectObject = {
             version: VERSION_STRING,
-            canvasSize: this.state.canvasSize,
+            canvasStyle: this.state.canvasStyle,
             timeline: this.state.timeline,
             timelineState: this.state.timelineState,
         }
@@ -264,7 +264,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         this.updateProject({
             version: VERSION_STRING,
             timeline: [ ],
-            canvasSize: CANVAS_SIZE,
+            canvasStyle: CANVAS_STYLE,
             timelineState: null,
         })
     }
@@ -412,7 +412,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
                 <div style={{ height:'100%' }}>
                     <div style={{ width:'60%' }}>
                         <CanvasMain ref="canvas" data={ this.getAnimNodesAtCursor() } timeline={ this }
-                            size={ this.state.canvasSize } />
+                            canvasStyle={ this.state.canvasStyle } updateCanvas={ (data) => this.setState({ canvasStyle:data }) } />
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>
                         <Splitter orientation="vertical" />

@@ -29,17 +29,6 @@ class BaseEditor extends React.Component<{
         this.refreshAnimObjectDebounced()
     }
 
-    handleJsonChange(key: string, val: string) {
-        try {
-            val = JSON.parse(val)
-            this.handleValueChange(key, val)
-        }
-        catch (e) {
-            this.props.data[key] = new Unstringified(val)
-            this.props.timeline.forceUpdate()
-        }
-    }
-
     unsetValue(key: string) {
         delete this.props.data[key]
         this.props.timeline.forceUpdate()
@@ -134,6 +123,17 @@ class BaseEditor extends React.Component<{
         return val instanceof Unstringified ? (val as Unstringified).content : JSON.stringify(val)
     }
 
+    handleJsonChange(key: string, val: string) {
+        try {
+            val = JSON.parse(val)
+            this.handleValueChange(key, val)
+        }
+        catch (e) {
+            this.props.data[key] = new Unstringified(val)
+            this.props.timeline.forceUpdate()
+        }
+    }
+
     getJsonInput(holderText: string, key: string) {
         return <div className={ this.props.data[key] instanceof Unstringified ? 'has-error' : '' }>
             <input type="text" className="form-control" placeholder={ holderText }
@@ -156,7 +156,6 @@ class BaseEditor extends React.Component<{
             <input type="text" className="form-control" placeholder="color"
                 value={ val }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
-            {/* http://stackoverflow.com/questions/18954117/input-group-two-inputs-close-to-each-other */}
             <span style={{ width:0, display:"table-cell" }}></span>
             <input type="color" className="form-control"
                 style={{ borderLeft:'none' }}

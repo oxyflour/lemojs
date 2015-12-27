@@ -1,8 +1,9 @@
 {
   "version": "0.0.1",
-  "canvasSize": {
+  "canvasStyle": {
     "width": 480,
-    "height": 450
+    "height": 450,
+    "background": "#ebebeb"
   },
   "timeline": [
     {

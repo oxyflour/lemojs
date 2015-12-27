@@ -27,7 +27,9 @@ export class CanvasMain extends React.Component<{
     }[],
     timeline: Timeline,
     ref: string,
-    size: { width:number, height:number },
+
+    canvasStyle: { width:number, height:number, background:string },
+    updateCanvas: (data: { width:number, height:number, background:string }) => void,
 }, {}> {
     state = {
         showControls: false
@@ -40,11 +42,19 @@ export class CanvasMain extends React.Component<{
         $(this.refs['coords']).text('(' + posX + ', ' + posY + ')')
     }
 
+    updateCanvasData(key: string, value: any) {
+        var data = JSON.parse(JSON.stringify(this.props.canvasStyle))
+        data[key] = value
+        this.props.updateCanvas(data)
+    }
+
     render() {
         return <div style={ CONTAINER_STYLE }
             onMouseMove={ e => this.updateMousePosition(e) }>
             <div>
-                <span>{ this.props.size.width }x{ this.props.size.height }</span>
+                <a href="javascript:void(0)" onClick={ e => $(this.refs['canvas-para']).toggle() }>
+                    { this.props.canvasStyle.width }x{ this.props.canvasStyle.height }
+                </a>
                 &nbsp;
                 <span>@{ Math.floor(this.props.timeline.cursorPosition) }ms</span>
                 &nbsp;
@@ -60,13 +70,37 @@ export class CanvasMain extends React.Component<{
                 </label>
                 */}
             </div>
-            <div style={$.extend({}, CANVAS_STYLE,
-                    { width:this.props.size.width, height:this.props.size.height })}>
+            <form ref="canvas-para" style={{ display:'none' }} className="form-inline">
+                <div className="form-group">
+                    <label className="sr-only" htmlFor="canvasWidth">canvas width</label>
+                    <label className="sr-only" htmlFor="canvasHeight">canvas height</label>
+                    <label className="sr-only" htmlFor="canvasBackground">canvas background</label>
+                    <div className="input-group">
+                        <input type="number" id="canvasWidth" placeholder="Width" className="form-control"
+                            value={ this.props.canvasStyle.width.toString() }
+                            onChange={ e => this.updateCanvasData('width', parseInt(e.target['value'])) } />
+                        <div className="input-group-addon">x</div>
+                        <input type="number" id="canvasHeight" placeholder="Height" className="form-control"
+                            value={ this.props.canvasStyle.height.toString() }
+                            onChange={ e => this.updateCanvasData('height', parseInt(e.target['value'])) } />
+                        <div className="input-group-addon">#</div>
+                        <input type="color" id="canvasBackground" placeholder="background"
+                            className="form-control" style={{ minWidth:45 }}
+                            value={ this.props.canvasStyle.background }
+                            onChange={ e => this.updateCanvasData('background', e.target['value']) } />
+                        <div className="input-group-btn">
+                            <button type="button" className="btn btn-default"
+                                onClick={ e => $(this.refs['canvas-para']).hide() }>OK</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div style={$.extend({}, CANVAS_STYLE, this.props.canvasStyle)}>
                 <div ref="canvas"></div>
-                { this.state.showControls && this.props.data.map((item, index) => {
+                {/* this.state.showControls && this.props.data.map((item, index) => {
                     return <CanvasNode {...this.props} data={ item.anim.nodes[item.index] }
                         anim={ item.anim } index={ item.index } progress={ item.progress } key={ index } />
-                }) }
+                }) */}
             </div>
         </div>
     }
