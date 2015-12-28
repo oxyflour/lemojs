@@ -79,13 +79,14 @@ export class CanvasMain extends React.Component<{
                         <input type="number" id="canvasWidth" placeholder="Width" className="form-control"
                             value={ this.props.canvasStyle.width.toString() }
                             onChange={ e => this.updateCanvasData('width', parseInt(e.target['value'])) } />
-                        <div className="input-group-addon">x</div>
-                        <input type="number" id="canvasHeight" placeholder="Height" className="form-control"
+                        <span style={{ width:0, display:"table-cell" }}></span>
+                        <input type="number" id="canvasHeight" placeholder="Height"
+                            className="form-control" style={{ borderLeft:'none' }}
                             value={ this.props.canvasStyle.height.toString() }
                             onChange={ e => this.updateCanvasData('height', parseInt(e.target['value'])) } />
-                        <div className="input-group-addon">#</div>
+                        <span style={{ width:0, display:"table-cell" }}></span>
                         <input type="color" id="canvasBackground" placeholder="background"
-                            className="form-control" style={{ minWidth:45 }}
+                            className="form-control" style={{ minWidth:45, borderLeft:'none' }}
                             value={ this.props.canvasStyle.background }
                             onChange={ e => this.updateCanvasData('background', e.target['value']) } />
                         <div className="input-group-btn">
