@@ -7,10 +7,6 @@ import { AnimNode, AnimObject, Timeline,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 import { debounce } from '../utils'
 
-class Unstringified {
-    constructor(public content: string) { }
-}
-
 class BaseEditor extends React.Component<{
     data: any,
     timeline: Timeline,
@@ -32,30 +28,31 @@ class BaseEditor extends React.Component<{
     unsetValue(key: string) {
         delete this.props.data[key]
         this.props.timeline.forceUpdate()
-        this.props.timeline.refreshAnimObject(this.props.data)
+        this.refreshAnimObjectDebounced()
     }
 
     getInputs(fields: any) {
         return <div>
-            { Object.keys(fields).map((key, index) =>
-                typeof fields[key] === 'object' ?
-                <div key={ index }>
-                    <h5># { key }</h5>
-                    { this.getInputs(fields[key]) }
-                    <hr />
-                </div> :
-                (key in this.props.data || this.state.showUnsetFields) &&
-                <div className="form-group" key={ index }>
-                    <label className="col-xs-4 control-label"
-                        title="click to unset" style={{ cursor:'pointer' }}
-                        onClick={ e => this.unsetValue(key) }>
-                        { key in this.props.data ? <b>* { key }</b> : key }
-                    </label>
-                    <div className="col-xs-8">
-                        { fields[key].call(this, key) }
+            { Object.keys(fields).map((key, index) => {
+                if (typeof fields[key] === 'object')
+                    return <div key={ index }>
+                        <h5># { key }</h5>
+                        { this.getInputs(fields[key]) }
+                        <hr />
                     </div>
-                </div>
-            ) }
+                else if (key in this.props.data || this.state.showUnsetFields)
+                    return fields[key].asGroup ? fields[key].call(this, key, index) :
+                    <div className="form-group" key={ index }>
+                        <label className="col-xs-4 control-label"
+                            title="click to unset" style={{ cursor:'pointer' }}
+                            onClick={ e => this.unsetValue(key) }>
+                            { key in this.props.data ? <b>* { key }</b> : key }
+                        </label>
+                        <div className="col-xs-8">
+                            { fields[key].call(this, key) }
+                        </div>
+                    </div>
+            }) }
         </div>
     }
 
@@ -120,7 +117,7 @@ class BaseEditor extends React.Component<{
     }
 
     getJsonValue(val: any) {
-        return val instanceof Unstringified ? (val as Unstringified).content : JSON.stringify(val)
+        return val && val.err ? val.err : JSON.stringify(val)
     }
 
     handleJsonChange(key: string, val: string) {
@@ -129,13 +126,14 @@ class BaseEditor extends React.Component<{
             this.handleValueChange(key, val)
         }
         catch (e) {
-            this.props.data[key] = new Unstringified(val)
+            this.props.data[key] = { err:val }
             this.props.timeline.forceUpdate()
         }
     }
 
     getJsonInput(holderText: string, key: string) {
-        return <div className={ this.props.data[key] instanceof Unstringified ? 'has-error' : '' }>
+        var val = this.props.data[key]
+        return <div className={ val && val.err ? 'has-error' : '' }>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.getJsonValue(this.props.data[key]) }
                 onChange={ e => this.handleJsonChange(key, $(e.target).val()) } />
@@ -143,10 +141,70 @@ class BaseEditor extends React.Component<{
     }
 
     getJsonTextarea(holderText: string, key: string) {
-        return <div className={ this.props.data[key] instanceof Unstringified ? 'has-error' : '' }>
+        var val = this.props.data[key]
+        return <div className={ val && val.err ? 'has-error' : '' }>
             <textarea className="form-control" placeholder={ holderText }
                 value={ this.getJsonValue(this.props.data[key]) || '' }
                 onChange={ e => this.handleJsonChange(key, $(e.target).val()) } />
+        </div>
+    }
+
+    getTransitValue(val: any) {
+        if (!val)
+            return ''
+        else if (val.err)
+            return val.err
+        else if (val.substr)
+            return val
+        return (key => key ? key + ':' + val[key] : val)(Object.keys(val)[0])
+    }
+
+    handleTransitValueChange(key: string, type: string, val: any) {
+        var sp = val.split(':')
+        if (sp.length === 1) {
+            var v = type === 'number' ? parseFloat(val) : val
+            if (v == val)
+                return this.handleValueChange(key, v)
+        }
+        else if (sp.length === 2) {
+            var vs = sp
+            if (type === 'number')
+                vs = sp.map(parseFloat)
+            if (vs[0] == sp[0] && vs[1] == sp[1])
+                return this.handleValueChange(key, { [vs[0]]: vs[1] })
+        }
+        this.handleValueChange(key, { err: val })
+    }
+
+    getTransitValueInput(holderText: string, type: string, key: string) {
+        var val = this.props.data[key]
+        return <div className={ val && val.err ? 'has-error' : '' }>
+            <input type="text" className="form-control" placeholder={ holderText }
+                value={ this.getTransitValue(this.props.data[key]) }
+                onChange={ e => this.handleTransitValueChange(key, type, $(e.target).val()) } />
+        </div>
+    }
+
+    getTransitCoordGroup(kx: string, ky: string, key: string, index: number) {
+        var vx = this.props.data[kx],
+            vy = this.props.data[ky]
+        return <div className="form-group" key={ index }>
+            <label className="col-xs-4 control-label"
+                title="click to unset" style={{ cursor:'pointer' }}
+                onClick={ e => void(this.unsetValue(kx), this.unsetValue(ky)) }>
+                { kx in this.props.data || ky in this.props.data ? <b>* { key }</b> : key }
+            </label>
+            <div className="col-xs-8">
+                <div className={ 'input-group ' + ((vx && vx.err) || (vy && vy.err) ? 'has-error' : '') }>
+                    <input type="text" className="form-control" placeholder="x"
+                        value={ this.getTransitValue(vx) }
+                        onChange={ e => this.handleTransitValueChange(kx, 'number', $(e.target).val()) } />
+                    <span style={{ width:0, display:"table-cell" }}></span>
+                    <input type="text" className="form-control" style={{ borderLeft:'none' }} placeholder="y"
+                        value={ this.getTransitValue(this.props.data[ky]) }
+                        onChange={ e => this.handleTransitValueChange(ky, 'number', $(e.target).val()) } />
+                </div>
+            </div>
         </div>
     }
 
@@ -197,6 +255,16 @@ class BaseEditor extends React.Component<{
             this.getJsonTextarea.bind(this, holderText) :
             this.getJsonInput.bind(this, holderText)
     }
+
+    makeTransitValueInput(holderText = '', type = '') {
+        return this.getTransitValueInput.bind(this, holderText, type)
+    }
+
+    makeTransitCoordInput(kx: string, ky: string) {
+        var func = this.getTransitCoordGroup.bind(this, kx, ky)
+        func.asGroup = true
+        return func
+    }
 }
 
 export class NodeEditor extends BaseEditor {
@@ -217,8 +285,8 @@ export class NodeEditor extends BaseEditor {
             stroke:             this.makeColorInput(),
             strokeWidth:        this.makeNumberInput(0, 100, 0.1),
             strokeOpacity:      this.makeRangeInput(0, 1, 0.01),
-            strokeDasharray:    this.makeJsonInput('json literal'),
-            strokeDashoffset:   this.makeJsonInput('json literal'),
+            strokeDasharray:    this.makeTransitValueInput('json literal'),
+            strokeDashoffset:   this.makeTransitValueInput('json literal'),
             strokeLinecap:      this.makeSelectInput(LINECAP_STYLES),
         },
         fill: {
@@ -228,16 +296,13 @@ export class NodeEditor extends BaseEditor {
             opacity:            this.makeRangeInput(0, 1, 0.01),
         },
         align: {
-            x:                  this.makeNumberInput(),
-            y:                  this.makeNumberInput(),
-            shiftX:             this.makeJsonInput('number or json literal'),
-            shiftY:             this.makeJsonInput('number or json literal'),
+            position:           this.makeTransitCoordInput('x', 'y'),
+            shift:              this.makeTransitCoordInput('shiftX', 'shiftY'),
             angle:              this.makeNumberInput(0, 360),
         },
         shape: {
-            radius:             this.makeJsonInput('number or json literal'),
-            radiusX:            this.makeJsonInput('number or json literal'),
-            radiusY:            this.makeJsonInput('number or json literal'),
+            radius:             this.makeTransitValueInput('number or number:number', 'number'),
+            radiusXY:           this.makeTransitCoordInput('radiusX', 'radiusY'),
             sizeGap:            this.makeNumberInput(0),
         },
     }
@@ -258,8 +323,8 @@ export class NodeEditor extends BaseEditor {
             stroke:             this.makeColorInput(),
             strokeWidth:        this.makeNumberInput(0, 100, 0.1),
             strokeOpacity:      this.makeRangeInput(0, 1, 0.01),
-            strokeDasharray:    this.makeJsonInput('json literal'),
-            strokeDashoffset:   this.makeJsonInput('json literal'),
+            strokeDasharray:    this.makeTransitValueInput('json literal'),
+            strokeDashoffset:   this.makeTransitValueInput('json literal'),
             strokeLinecap:      this.makeSelectInput(LINECAP_STYLES),
         },
         fill: {
@@ -268,16 +333,13 @@ export class NodeEditor extends BaseEditor {
             points:             this.makeNumberInput(),
         },
         align: {
-            x:                  this.makeNumberInput(),
-            y:                  this.makeNumberInput(),
-            shiftX:             this.makeJsonInput('number or json literal'),
-            shiftY:             this.makeJsonInput('number or json literal'),
+            position:           this.makeTransitCoordInput('x', 'y'),
+            shift:              this.makeTransitCoordInput('shiftX', 'shiftY'),
             angle:              this.makeNumberInput(0, 360),
         },
         shape: {
-            radius:             this.makeJsonInput('number or json literal'),
-            radiusX:            this.makeJsonInput('number or json literal'),
-            radiusY:            this.makeJsonInput('number or json literal'),
+            radius:             this.makeTransitValueInput('number or number:number', 'number'),
+            radiusXY:           this.makeTransitCoordInput('radiusX', 'radiusY'),
             sizeGap:            this.makeNumberInput(0),
         },
         // TODO: add child options
@@ -298,10 +360,8 @@ export class NodeEditor extends BaseEditor {
             pathEnd:            this.makeRangeInput(0, 1, 0.01),
         },
         align: {
-            x:                  this.makeNumberInput(),
-            y:                  this.makeNumberInput(),
-            offsetX:            this.makeJsonInput('number or json literal'),
-            offsetY:            this.makeJsonInput('number or json literal'),
+            position:           this.makeTransitCoordInput('x', 'y'),
+            offset:             this.makeTransitCoordInput('offsetX', 'offsetY'),
             angle:              this.makeNumberInput(0, 360),
         },
     }
