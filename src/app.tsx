@@ -12,12 +12,12 @@ import { TimelineTable } from './components/timeline-table'
 import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
 
 const VERSION_STRING = '0.0.1'
-const CANVAS_STYLE = { width:320, height:480, background:'#eee' }
+const CANVAS_STYLE = { width:320, height:480, background:'#eeeeee' }
 
 interface ProjectObject {
     version: string,
     timeline: AnimObject[],
-    canvasStyle: { width:number, height:number },
+    canvasStyle: { width:number, height:number, background:string },
     timelineState: boolean[],
 }
 
@@ -29,7 +29,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         cursorPosition: 0,
 
         timeline: [ ] as AnimObject[],
-        canvasStyle: CANVAS_STYLE,
+        canvasStyle: $.extend({}, CANVAS_STYLE),
         timelineState: null as boolean[ ]
     }
 
@@ -264,7 +264,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         this.updateProject({
             version: VERSION_STRING,
             timeline: [ ],
-            canvasStyle: CANVAS_STYLE,
+            canvasStyle: $.extend({}, CANVAS_STYLE),
             timelineState: null,
         })
     }
