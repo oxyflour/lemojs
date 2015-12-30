@@ -131,10 +131,7 @@
           "radiusY": {
             "2.5": 7.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 727,
@@ -146,10 +143,7 @@
           "radiusY": {
             "7.5": 2.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 0,
@@ -161,10 +155,7 @@
           "radiusY": {
             "2.5": 7.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 807,
@@ -176,10 +167,7 @@
           "radiusY": {
             "7.5": 2.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 0,
@@ -191,10 +179,7 @@
           "radiusY": {
             "2.5": 7.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 890,
@@ -206,10 +191,7 @@
           "radiusY": {
             "7.5": 2.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 0,
@@ -221,10 +203,7 @@
           "radiusY": {
             "2.5": 7.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 877,
@@ -236,10 +215,7 @@
           "radiusY": {
             "7.5": 2.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 0,
@@ -251,10 +227,7 @@
           "radiusY": {
             "2.5": 7.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 942,
@@ -266,10 +239,7 @@
           "radiusY": {
             "7.5": 2.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 0,
@@ -281,10 +251,7 @@
           "radiusY": {
             "2.5": 7.5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         },
         {
           "delay": 0,
@@ -296,10 +263,7 @@
           "radiusY": {
             "7.5": 5
           },
-          "isShowEnd": true,
-          "shiftY": {
-            "265": 260
-          }
+          "isShowEnd": true
         }
       ],
       "disabled": false
