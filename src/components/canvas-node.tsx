@@ -17,17 +17,9 @@ const ANIM_NODE_STYLE = {
     border: '2px solid transparent',
 }
 
-function lerp(start, end, fac) {
-    return start * (1 - fac) + end * fac
-}
-
 export class CanvasNode extends React.Component<{
     data: AnimNode,
-    anim: AnimObject,
-    index: number,
-    progress: number,
     timeline: Timeline,
-    key: number,
 }, { }> {
     onMouseMove = this.handleMouseMove.bind(this)
     onMouseUp = this.handleMouseUp.bind(this)
@@ -38,17 +30,16 @@ export class CanvasNode extends React.Component<{
         hasMoved?: boolean,
     }
 
-    getDataValue(key: string, index = this.props.index) {
-        var data = this.props.anim.nodes[index]
+    anim: AnimObject
+    index: number
+    objects: mojs.Timeline[]
+
+    getDataValue(key: string, index = this.index) {
+        var data = this.anim && this.anim.nodes[index]
         if (data) {
-            var val = data[key],
-                fac = this.props.progress
-            if (Array.isArray(val)) {
-                return lerp(val[0], val[1], fac)
-            }
-            else if (typeof val === 'object') {
-                var k = parseFloat(Object.keys(val)[0])
-                return lerp(k, parseFloat(val[k]), fac)
+            var val = data[key]
+            if (typeof val === 'object') {
+                return parseFloat(Object.keys(val)[0])
             }
             else if (val === undefined) {
                 return this.getDataValue(key, index - 1)
@@ -108,29 +99,26 @@ export class CanvasNode extends React.Component<{
     }
 
     render() {
+        this.anim = this.props.timeline.getAnimObjectFromNode(this.props.data)
+        this.index = this.anim ? this.anim.nodes.indexOf(this.props.data) : -1
+        this.objects = this.props.timeline.getTimelineObjectFromAnim(this.anim)
+
+        if (!this.anim) return <div></div>
+
         var width = (parseFloat(this.getDataValue('radiusX') || this.getDataValue('radius')) || 20) * 2,
             height = (parseFloat(this.getDataValue('radiusY') || this.getDataValue('radius')) || 20) * 2,
 
-            lineHeight = height + 'px',
-            borderRadius = height / 2,
             x = this.getDataValue('shiftX') || 0,
             y = this.getDataValue('shiftY') || 0,
             left = x - width / 2,
-            top = y - height / 2,
+            top = y - height / 2
 
+        var lineHeight = height + 'px',
             isActive = this.props.timeline.activeAnimNode === this.props.data,
             borderColor = isActive ? HIGHLIGHT_DARK_COLOR : 'transparent',
             zIndex = isActive ? 99 : 98
 
-        // TODO: refactor
-        if (this.props.data.animType === 'transit') {
-            if (this.props.data['type'] === 'line')
-                width = height = 20
-            left = x - width / 2
-            top = y - height / 2
-        }
-
-        var style = { left, top, width, height, borderColor, lineHeight, borderRadius, zIndex }
+        var style = { left, top, width, height, borderColor, lineHeight, zIndex }
         return <div ref="node" style={ $.extend({}, ANIM_NODE_STYLE, style) }
             onMouseDown={ e => this.handleMouseDown(e) }>
         </div>

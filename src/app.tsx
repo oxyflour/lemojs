@@ -7,6 +7,7 @@ import * as ReactDOM from 'react-dom'
 import { Splitter } from './components/splitter'
 import { ObjectEditor, NodeEditor } from './components/anim-editor'
 import { CanvasMain } from './components/canvas-main'
+import { CanvasNode } from './components/canvas-node'
 import { TimelineTable } from './components/timeline-table'
 
 import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
@@ -97,23 +98,8 @@ export class App extends React.Component<{}, {}> implements Timeline {
         return this.state.timeline.filter(anim => anim.nodes.indexOf(node) >= 0)[0]
     }
 
-    getAnimNodesAtCursor() {
-        var nodes: {
-                anim: AnimObject,
-                index: number,
-                progress: number,
-            }[] = [ ],
-            cursorPosition = this.state.cursorPosition
-        this.state.timeline.forEach(anim => {
-            var start = 0
-            anim.nodes.forEach((node, index) => {
-                start += node.delay
-                if (start <= cursorPosition && cursorPosition <= start + node.duration)
-                    nodes.push({ anim, index, progress:(cursorPosition - start) / node.duration })
-                start += node.duration
-            })
-        })
-        return nodes
+    getTimelineObjectFromAnim(anim: AnimObject) {
+        return this.tween.hash.get(anim)
     }
 
     // timeline implement
@@ -154,9 +140,9 @@ export class App extends React.Component<{}, {}> implements Timeline {
             this.activeAnimObject = this.state.timeline[index]
         if (!this.activeAnimObject) return
         var animType = this.activeAnimObject.animType,
-            x = this.state.canvasStyle.width / 2,
-            y = this.state.canvasStyle.height / 2,
-            node = { delay:0, duration:1000, animType, x, y }
+            shiftX = this.state.canvasStyle.width / 2,
+            shiftY = this.state.canvasStyle.height / 2,
+            node = { delay:0, duration:1000, animType, shiftX, shiftY }
         this.activeAnimObject.nodes.push(node)
         this.refreshAnimObject(this.activeAnimObject)
         this.activeAnimNode = node
@@ -270,7 +256,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
     }
 
     componentDidMount() {
-        this.tween = new AnimManager((this.refs['canvas'] as CanvasMain).refs['canvas'] as HTMLElement, {
+        this.tween = new AnimManager(this.refs['anim-pool'] as HTMLElement, {
             onUpdate: (p) => this.setState({ cursorPosition:p * this.tween.getDuration() }),
         })
 
@@ -348,17 +334,21 @@ export class App extends React.Component<{}, {}> implements Timeline {
                         <li><a href="javascript:void(0)" onClick={ e=> this.loadProject() }>
                                 <span className="glyphicon glyphicon-open" />&nbsp;Load</a></li>
                         <li className="divider"></li>
-                        <li><a href="javascript:void(0)" onClick={ e => $(this.refs['paraModalDialog']).modal('show') }>
-                                <span className="glyphicon glyphicon-list" />&nbsp;Parameters</a></li>
+                        <li><a href="javascript:void(0)"
+                                onClick={ e => $(this.refs['paraModalDialog']).modal('show') }>
+                                <span className="glyphicon glyphicon-list" />&nbsp;Parameters</a>
+                        </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0)" onClick={ e => $(this.refs['helpModelDialog']).modal('show') }>Help</a>
+                    <a href="javascript:void(0)"
+                        onClick={ e => $(this.refs['helpModelDialog']).modal('show') }>Help</a>
                 </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
                 <li>
-                    <a href="javascript:void(0)" onClick={ e => $(this.refs['aboutModelDialog']).modal('show') }>About</a>
+                    <a href="javascript:void(0)"
+                        onClick={ e => $(this.refs['aboutModelDialog']).modal('show') }>About</a>
                 </li>
             </ul>
         </div>
@@ -411,14 +401,21 @@ export class App extends React.Component<{}, {}> implements Timeline {
             <div style={{ height:'70%' }}>
                 <div style={{ height:'100%' }}>
                     <div style={{ width:'60%' }}>
-                        <CanvasMain ref="canvas" data={ this.getAnimNodesAtCursor() } timeline={ this }
-                            canvasStyle={ this.state.canvasStyle } updateCanvas={ (data) => this.setState({ canvasStyle:data }) } />
+                        <CanvasMain timeline={ this }
+                            canvasStyle={ this.state.canvasStyle }
+                            updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
+                            <div ref="anim-pool"></div>
+                            <CanvasNode data={ this.activeAnimNode } timeline={ this }></CanvasNode>
+                            <div ref="placeholder-for-svg-editor"></div>
+                        </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>
                         <Splitter orientation="vertical" />
-                        <div style={{ padding:15 }}>
-                            { this.activeAnimNode ? <NodeEditor data={ this.activeAnimNode } timeline={ this } /> :
-                              this.activeAnimObject ? <ObjectEditor data={ this.activeAnimObject } timeline={ this } /> :
+                        <div style={{ padding:15 }}> {
+                            this.activeAnimNode ?
+                                <NodeEditor data={ this.activeAnimNode } timeline={ this } /> :
+                            this.activeAnimObject ?
+                                <ObjectEditor data={ this.activeAnimObject } timeline={ this } /> :
                                 <p>Add or Select a Node to Edit</p>}
                         </div>
                     </div>

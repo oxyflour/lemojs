@@ -8,8 +8,8 @@ export interface AnimNode {
     delay: number,
     duration: number,
     animType: string,
-    x: number,
-    y: number,
+    shiftX: number,
+    shiftY: number,
 }
 
 export interface AnimObject {
@@ -30,6 +30,7 @@ export interface Timeline {
     getTimeline(): AnimObject[]
     getAnimObjectFromNode(node: AnimNode): AnimObject
     getAnimNodeStart(node: AnimNode): number
+    getTimelineObjectFromAnim(anim: AnimObject): mojs.Timeline[]
 
     removeActiveAnimNode()
     cloneActiveAnimNode()
@@ -206,12 +207,21 @@ export class AnimManager {
 
     addBurst(anim: AnimObject) {
         var delay = 0,
-            bursts = []
+            bursts: mojs.Burst[] = []
         anim.nodes.forEach(node => {
             var opt = this.parseOptions(node) as mojs.Burst.InitOptions
+
+            // Note: bursts only use x/y and setting shiftX/Y is not working at all
+            var { shiftX, shiftY } = opt
+            opt.x = shiftX
+            opt.y = shiftY
+            opt.shiftX = opt.shiftY = 0
+
             opt.delay = delay + opt.delay
 
-            bursts.push(new mojs.Burst(opt))
+            var burst = new mojs.Burst(opt)
+            burst.render()
+            bursts.push(burst)
 
             delay = opt.delay + opt.duration
         })

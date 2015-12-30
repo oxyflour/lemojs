@@ -343,7 +343,6 @@ export class NodeEditor extends BaseEditor {
             opacity:            k => this.getRangeInput(k, 0, 1, 0.01),
         },
         align: {
-            position:           (k, i) => this.getTransitCoordGroup(k, i, 'x', 'y'),
             shift:              (k, i) => this.getTransitCoordGroup(k, i, 'shiftX', 'shiftY'),
             angle:              k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
         },
@@ -380,7 +379,6 @@ export class NodeEditor extends BaseEditor {
             points:             k => this.getNumberWithSliderInput(k, 1, 1, 0),
         },
         align: {
-            position:           (k, i) => this.getTransitCoordGroup(k, i, 'x', 'y'),
             shift:              (k, i) => this.getTransitCoordGroup(k, i, 'shiftX', 'shiftY'),
             angle:              k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
         },
@@ -407,7 +405,6 @@ export class NodeEditor extends BaseEditor {
             pathEnd:            k => this.getRangeInput(k, 0, 1, 0.01),
         },
         align: {
-            position:           (k, i) => this.getTransitCoordGroup(k, i, 'x', 'y'),
             offset:             (k, i) => this.getTransitCoordGroup(k, i, 'offsetX', 'offsetY'),
             angle:              k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
         },

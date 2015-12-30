@@ -20,23 +20,15 @@ const CANVAS_STYLE = {
 }
 
 export class CanvasMain extends React.Component<{
-    data: {
-        anim: AnimObject,
-        index: number,
-        progress: number,
-    }[],
     timeline: Timeline,
-    ref: string,
 
     canvasStyle: { width:number, height:number, background:string },
     updateCanvas: (data: { width:number, height:number, background:string }) => void,
-}, {}> {
-    state = {
-        showControls: false
-    }
 
+    children?: React.ReactElement<any>,
+}, {}> {
     updateMousePosition(e: React.MouseEvent) {
-        var offset = $(this.refs['canvas']).offset(),
+        var offset = $(this.refs['content']).offset(),
             posX = Math.floor(e.pageX - offset.left),
             posY = Math.floor(e.pageY - offset.top)
         $(this.refs['coords']).text('(' + posX + ', ' + posY + ')')
@@ -52,25 +44,13 @@ export class CanvasMain extends React.Component<{
         return <div style={ CONTAINER_STYLE }
             onMouseMove={ e => this.updateMousePosition(e) }>
             <div>
-                <a href="javascript:void(0)" onClick={ e => $(this.refs['canvas-para']).toggle() }>
+                <a href="javascript:void(0)" onClick={ e => $(this.refs['config']).toggle() }>
                     { this.props.canvasStyle.width }x{ this.props.canvasStyle.height }
                 </a>
                 &nbsp;
                 <span>@{ Math.floor(this.props.timeline.cursorPosition) }ms</span>
-                &nbsp;
-                <span ref="coords"></span>
-                {/*
-                  * controls are not usable yet
-                  *
-                <label className="pull-right" style={{ cursor:'pointer' }}>
-                    <input type="checkbox" checked={ this.state.showControls }
-                        onChange={ e => this.setState({ showControls:e.target['checked'] }) } />
-                    &nbsp;
-                    show controls
-                </label>
-                */}
             </div>
-            <form ref="canvas-para" style={{ display:'none' }} className="form-inline">
+            <form ref="config" style={{ display:'none' }} className="form-inline">
                 <div className="form-group">
                     <label className="sr-only" htmlFor="canvasWidth">canvas width</label>
                     <label className="sr-only" htmlFor="canvasHeight">canvas height</label>
@@ -91,17 +71,13 @@ export class CanvasMain extends React.Component<{
                             onChange={ e => this.updateCanvasData('background', e.target['value']) } />
                         <div className="input-group-btn">
                             <button type="button" className="btn btn-default"
-                                onClick={ e => $(this.refs['canvas-para']).hide() }>OK</button>
+                                onClick={ e => $(this.refs['config']).hide() }>OK</button>
                         </div>
                     </div>
                 </div>
             </form>
-            <div style={$.extend({}, CANVAS_STYLE, this.props.canvasStyle)}>
-                <div ref="canvas"></div>
-                {/* this.state.showControls && this.props.data.map((item, index) => {
-                    return <CanvasNode {...this.props} data={ item.anim.nodes[item.index] }
-                        anim={ item.anim } index={ item.index } progress={ item.progress } key={ index } />
-                }) */}
+            <div ref="content" style={$.extend({}, CANVAS_STYLE, this.props.canvasStyle)}>
+                { this.props.children }
             </div>
         </div>
     }
