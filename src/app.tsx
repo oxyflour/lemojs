@@ -186,7 +186,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
 
         this.state.timeline = this.state.timeline.filter(anim =>
             anim !== this.activeAnimObject)
-        this.activeAnimObject = this.state.timeline[0]
+        this.activeAnimObject = null
     }
 
     cloneActiveAnimObject() {

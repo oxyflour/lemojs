@@ -34,14 +34,16 @@ class BaseEditor extends React.Component<{
     getInputs(fields: any) {
         return <div>
             { Object.keys(fields).map((key, index) => {
-                if (typeof fields[key] === 'object')
+                if (typeof fields[key] === 'object') {
                     return <div key={ index }>
                         <h5># { key }</h5>
                         { this.getInputs(fields[key]) }
                         <hr />
                     </div>
-                else if (key in this.props.data || this.state.showUnsetFields)
-                    return fields[key].asGroup ? fields[key].call(this, key, index) :
+                }
+                else if (key in this.props.data || this.state.showUnsetFields) {
+                    var elem = fields[key].call(this, key, index)
+                    return elem.props.role === 'editor-field' ? elem :
                     <div className="form-group" key={ index }>
                         <label className="col-xs-4 control-label"
                             title="click to unset" style={{ cursor:'pointer' }}
@@ -49,14 +51,15 @@ class BaseEditor extends React.Component<{
                             { key in this.props.data ? <b>* { key }</b> : key }
                         </label>
                         <div className="col-xs-8">
-                            { fields[key].call(this, key) }
+                            { elem }
                         </div>
                     </div>
+                }
             }) }
         </div>
     }
 
-    getSimpleInput(type: string, holderText: string, key: string) {
+    getSimpleInput(key: string, type: string, holderText: string) {
         return <input type={ type } className="form-control" placeholder={ holderText }
             value={ this.props.data[key] }
             onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
@@ -68,8 +71,9 @@ class BaseEditor extends React.Component<{
             onChange={ e => this.handleValueChange(key, e.target['checked']) } />
     }
 
-    getNumberRangeInput(type: string, min: number, max: number, step: number,
-            holderText: string, key: string) {
+    getNumberRangeInput(key: string, type: string,
+            min: number = -Infinity, max: number = Infinity,
+            step: number | string = 'any', holderText: string = '') {
         if (!holderText) {
             holderText = 'number'
             if (min > -Infinity && max < Infinity)
@@ -85,7 +89,7 @@ class BaseEditor extends React.Component<{
             onChange={ e => this.handleValueChange(key, parseFloat($(e.target).val())) } />
     }
 
-    getSelectInput(values: string[], key: string) {
+    getSelectInput(key: string, values: string[]) {
         var val = this.props.data[key]
 
         // https://github.com/facebook/react/issues/4085
@@ -97,7 +101,7 @@ class BaseEditor extends React.Component<{
         </select>
     }
 
-    getTextWithSelectInput(holderText: string, values: string[], key: string) {
+    getTextWithSelectInput(key: string, values: string[], holderText: string) {
         var val = this.props.data[key]
         return <div className="input-group">
             <input type="text" className="form-control" placeholder={ holderText }
@@ -131,7 +135,7 @@ class BaseEditor extends React.Component<{
         }
     }
 
-    getJsonInput(holderText: string, key: string) {
+    getJsonInput(key: string, holderText: string) {
         var val = this.props.data[key]
         return <div className={ val && val.err ? 'has-error' : '' }>
             <input type="text" className="form-control" placeholder={ holderText }
@@ -140,7 +144,7 @@ class BaseEditor extends React.Component<{
         </div>
     }
 
-    getJsonTextarea(holderText: string, key: string) {
+    getJsonTextarea(key: string, holderText: string) {
         var val = this.props.data[key]
         return <div className={ val && val.err ? 'has-error' : '' }>
             <textarea className="form-control" placeholder={ holderText }
@@ -176,7 +180,7 @@ class BaseEditor extends React.Component<{
         this.handleValueChange(key, { err: val })
     }
 
-    getTransitValueInput(holderText: string, type: string, key: string) {
+    getTransitValueInput(key: string, holderText: string, type: string = '') {
         var val = this.props.data[key]
         return <div className={ val && val.err ? 'has-error' : '' }>
             <input type="text" className="form-control" placeholder={ holderText }
@@ -185,10 +189,10 @@ class BaseEditor extends React.Component<{
         </div>
     }
 
-    getTransitCoordGroup(kx: string, ky: string, key: string, index: number) {
+    getTransitCoordGroup(key: string, index: number, kx: string, ky: string) {
         var vx = this.props.data[kx],
             vy = this.props.data[ky]
-        return <div className="form-group" key={ index }>
+        return <div className="form-group" key={ index } role="editor-field">
             <label className="col-xs-4 control-label"
                 title="click to unset" style={{ cursor:'pointer' }}
                 onClick={ e => void(this.unsetValue(kx), this.unsetValue(ky)) }>
@@ -221,154 +225,110 @@ class BaseEditor extends React.Component<{
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
     }
-
-    makeTextInput(holderText = '') {
-        return this.getSimpleInput.bind(this, 'text', holderText)
-    }
-
-    makeColorInput() {
-        return this.getColorInput.bind(this)
-    }
-
-    makeCheckboxInput() {
-        return this.getCheckboxInput.bind(this)
-    }
-
-    makeNumberInput(min = -Infinity, max = Infinity, step = 0, holderText = '') {
-        return this.getNumberRangeInput.bind(this, 'number', min, max, step, holderText)
-    }
-
-    makeRangeInput(min = -Infinity, max = Infinity, step = 0, holderText = '') {
-        return this.getNumberRangeInput.bind(this, 'range', min, max, step, holderText)
-    }
-
-    makeTextWithSelectInput(values: string[], holderText = '') {
-        return this.getTextWithSelectInput.bind(this, holderText, values)
-    }
-
-    makeSelectInput(values: string[]) {
-        return this.getSelectInput.bind(this, values)
-    }
-
-    makeJsonInput(holderText = '', isLarge = false) {
-        return isLarge ?
-            this.getJsonTextarea.bind(this, holderText) :
-            this.getJsonInput.bind(this, holderText)
-    }
-
-    makeTransitValueInput(holderText = '', type = '') {
-        return this.getTransitValueInput.bind(this, holderText, type)
-    }
-
-    makeTransitCoordInput(kx: string, ky: string) {
-        var func = this.getTransitCoordGroup.bind(this, kx, ky)
-        func.asGroup = true
-        return func
-    }
 }
 
 export class NodeEditor extends BaseEditor {
     transitFields = {
-        type:                   this.makeSelectInput(['', 'circle', 'line']),
-        isShowInit:             this.makeCheckboxInput(),
-        isShowEnd:              this.makeCheckboxInput(),
+        type:                   k => this.getSelectInput(k, ['', 'circle', 'line']),
+        isShowInit:             k => this.getCheckboxInput(k),
+        isShowEnd:              k => this.getCheckboxInput(k),
 
-        repeat:                 this.makeNumberInput(0, 100, 1),
-        yoyo:                   this.makeCheckboxInput(),
-        easing:                 this.makeTextWithSelectInput(EASING_OPTIONS, 'easing or bezier paramters'),
+        repeat:                 k => this.getNumberRangeInput(k, 'number', 0, 100, 1),
+        yoyo:                   k => this.getCheckboxInput(k),
+        easing:                 k => this.getTextWithSelectInput(k, EASING_OPTIONS, 'easing or bezier paramters'),
         svgPathOpt: {
-            bitPathType:        this.makeSelectInput(['', 'path', 'ellipse']),
-            bitPathStr:         this.makeTextInput('path d attribute'),
-            zIndex:             this.makeNumberInput(),
+            bitPathType:        k => this.getSelectInput(k, ['', 'path', 'ellipse']),
+            bitPathStr:         k => this.getSimpleInput(k, 'text', 'path d attribute'),
+            zIndex:             k => this.getNumberRangeInput(k, 'number', -1000, 1000, 1),
         },
         stroke: {
-            stroke:             this.makeColorInput(),
-            strokeWidth:        this.makeNumberInput(0, 100, 0.1),
-            strokeOpacity:      this.makeRangeInput(0, 1, 0.01),
-            strokeDasharray:    this.makeTransitValueInput('json literal'),
-            strokeDashoffset:   this.makeTransitValueInput('json literal'),
-            strokeLinecap:      this.makeSelectInput(LINECAP_STYLES),
+            stroke:             k => this.getColorInput(k),
+            strokeWidth:        k => this.getNumberRangeInput(k, 'number', 0, 100, 0.1),
+            strokeOpacity:      k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
+            strokeDasharray:    k => this.getTransitValueInput(k, 'string value'),
+            strokeDashoffset:   k => this.getTransitValueInput(k, 'string value or value:value'),
+            strokeLinecap:      k => this.getSelectInput(k, LINECAP_STYLES),
         },
         fill: {
-            fill:               this.makeColorInput(),
-            fillOpacity:        this.makeRangeInput(0, 1, 0.01),
-            points:             this.makeNumberInput(),
-            opacity:            this.makeRangeInput(0, 1, 0.01),
+            fill:               k => this.getColorInput(k),
+            fillOpacity:        k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
+            points:             k => this.getNumberRangeInput(k, 'number', 0),
+            opacity:            k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
         },
         align: {
-            position:           this.makeTransitCoordInput('x', 'y'),
-            shift:              this.makeTransitCoordInput('shiftX', 'shiftY'),
-            angle:              this.makeNumberInput(0, 360),
+            position:           (k, i) => this.getTransitCoordGroup(k, i, 'x', 'y'),
+            shift:              (k, i) => this.getTransitCoordGroup(k, i, 'shiftX', 'shiftY'),
+            angle:              k => this.getNumberRangeInput(k, 'number', 0, 360),
         },
         shape: {
-            radius:             this.makeTransitValueInput('number or number:number', 'number'),
-            radiusXY:           this.makeTransitCoordInput('radiusX', 'radiusY'),
-            sizeGap:            this.makeNumberInput(0),
+            radius:             (k, i) => this.getTransitCoordGroup(k, i, 'number or number:number', 'number or number:number'),
+            radiusXY:           (k, i) => this.getTransitCoordGroup(k, i, 'radiusX', 'radiusY'),
+            sizeGap:            k => this.getNumberRangeInput(k, 'number', 0),
         },
     }
     burstFields = {
-        type:                   this.makeSelectInput(['', 'circle', 'line']),
+        type:                   k => this.getSelectInput(k, ['', 'circle', 'line']),
 
-        repeat:                 this.makeNumberInput(0, 100, 1),
-        yoyo:                   this.makeCheckboxInput(),
-        easing:                 this.makeTextWithSelectInput(EASING_OPTIONS, 'easing or bezier paramters'),
+        repeat:                 k => this.getNumberRangeInput(k, 'number', 0, 100, 1),
+        yoyo:                   k => this.getCheckboxInput(k),
+        easing:                 k => this.getTextWithSelectInput(k, EASING_OPTIONS, 'easing or bezier paramters'),
         display: {
-            count:              this.makeNumberInput(0),
-            degree:             this.makeNumberInput(0, 360),
-            opacity:            this.makeRangeInput(0, 1, 0.01),
-            randomAngle:        this.makeNumberInput(0, 360),
-            randomRadius:       this.makeNumberInput(0, 360),
+            count:              k => this.getNumberRangeInput(k, 'number', 0),
+            degree:             k => this.getNumberRangeInput(k, 'number', 0, 360),
+            opacity:            k => this.getNumberRangeInput(k, 'number', 0, 1, 0.01),
+            randomAngle:        k => this.getNumberRangeInput(k, 'number', 0, 360),
+            randomRadius:       k => this.getNumberRangeInput(k, 'number', 0, 360),
         },
         stroke: {
-            stroke:             this.makeColorInput(),
-            strokeWidth:        this.makeNumberInput(0, 100, 0.1),
-            strokeOpacity:      this.makeRangeInput(0, 1, 0.01),
-            strokeDasharray:    this.makeTransitValueInput('json literal'),
-            strokeDashoffset:   this.makeTransitValueInput('json literal'),
-            strokeLinecap:      this.makeSelectInput(LINECAP_STYLES),
+            stroke:             k => this.getColorInput(k),
+            strokeWidth:        k => this.getNumberRangeInput(k, 'number', 0, 100, 0.1),
+            strokeOpacity:      k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
+            strokeDasharray:    k => this.getTransitValueInput(k, 'string value'),
+            strokeDashoffset:   k => this.getTransitValueInput(k, 'string value or value:value'),
+            strokeLinecap:      k => this.getSelectInput(k, LINECAP_STYLES),
         },
         fill: {
-            fill:               this.makeColorInput(),
-            fillOpacity:        this.makeRangeInput(0, 1, 0.01),
-            points:             this.makeNumberInput(),
+            fill:               k => this.getColorInput(k),
+            fillOpacity:        k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
+            points:             k => this.getNumberRangeInput(k, 'number', 0),
         },
         align: {
-            position:           this.makeTransitCoordInput('x', 'y'),
-            shift:              this.makeTransitCoordInput('shiftX', 'shiftY'),
-            angle:              this.makeNumberInput(0, 360),
+            position:           (k, i) => this.getTransitCoordGroup(k, i, 'x', 'y'),
+            shift:              (k, i) => this.getTransitCoordGroup(k, i, 'shiftX', 'shiftY'),
+            angle:              k => this.getNumberRangeInput(k, 'number', 0, 360),
         },
         shape: {
-            radius:             this.makeTransitValueInput('number or number:number', 'number'),
-            radiusXY:           this.makeTransitCoordInput('radiusX', 'radiusY'),
-            sizeGap:            this.makeNumberInput(0),
+            radius:             (k, i) => this.getTransitCoordGroup(k, i, 'number or number:number', 'number or number:number'),
+            radiusXY:           (k, i) => this.getTransitCoordGroup(k, i, 'radiusX', 'radiusY'),
+            sizeGap:            k => this.getNumberRangeInput(k, 'number', 0),
         },
         // TODO: add child options
     }
 
     motionPathFields = {
-        easing:                 this.makeTextWithSelectInput(EASING_OPTIONS, 'easing or bezier paramters'),
+        easing:                 k => this.getTextWithSelectInput(k, EASING_OPTIONS, 'easing or bezier paramters'),
         element: {
-            elemName:           this.makeTextInput('name of element'),
-            pathName:           this.makeTextInput('name of path'),
+            elemName:           k => this.getSimpleInput(k, 'text', 'name of element'),
+            pathName:           k => this.getSimpleInput(k, 'text', 'name of path'),
+            path:               k => this.getSimpleInput(k, 'text', 'path d attribute'),
         },
         path: {
-            path:               this.makeTextInput('path d attribute'),
-            isAngle:            this.makeCheckboxInput(),
-            angleOffset:        this.makeNumberInput(0, 360),
-            isReverse:          this.makeCheckboxInput(),
-            pathStart:          this.makeRangeInput(0, 1, 0.01),
-            pathEnd:            this.makeRangeInput(0, 1, 0.01),
+            isAngle:            k => this.getCheckboxInput(k),
+            angleOffset:        k => this.getNumberRangeInput(k, 'number', 0, 360),
+            isReverse:          k => this.getCheckboxInput(k),
+            pathStart:          k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
+            pathEnd:            k => this.getNumberRangeInput(k, 'range', 0, 1, 0.01),
         },
         align: {
-            position:           this.makeTransitCoordInput('x', 'y'),
-            offset:             this.makeTransitCoordInput('offsetX', 'offsetY'),
-            angle:              this.makeNumberInput(0, 360),
+            position:           (k, i) => this.getTransitCoordGroup(k, i, 'x', 'y'),
+            offset:             (k, i) => this.getTransitCoordGroup(k, i, 'offsetX', 'offsetY'),
+            angle:              k => this.getNumberRangeInput(k, 'number', 0, 360),
         },
     }
 
     commonFields = {
-        delay: this.makeNumberInput(0),
-        duration: this.makeNumberInput(0),
+        delay:                  k => this.getNumberRangeInput(k, 'number', 0),
+        duration:               k => this.getNumberRangeInput(k, 'number', 0),
     }
 
     render() {
@@ -382,8 +342,8 @@ export class NodeEditor extends BaseEditor {
         if (this.props.data.animType === 'motion-path') {
             var names = ['']
             this.props.timeline.getTimeline().forEach(anim => names.push(anim.name))
-            fields.element.elemName = this.makeSelectInput(names)
-            fields.element.pathName = this.makeSelectInput(names)
+            fields.element.elemName = k => this.getSelectInput(k, names)
+            fields.element.pathName = k => this.getSelectInput(k, names)
         }
 
         return <form className="form-horizontal">
@@ -412,13 +372,13 @@ export class NodeEditor extends BaseEditor {
 
 export class ObjectEditor extends BaseEditor {
     commonFields = {
-        name:       this.makeTextInput('animation name'),
-        disabled:   this.makeCheckboxInput(),
+        name:       k => this.getSimpleInput(k, 'text', 'animation name'),
+        disabled:   k => this.getCheckboxInput(k),
     }
 
     transitFields = {
-        stagger:    this.makeJsonInput('key: attr[]', true),
-        delayDelta: this.makeNumberInput(0)
+        stagger:    k => this.getJsonTextarea(k, 'key: attr[]'),
+        delayDelta: k => this.getNumberRangeInput(k, 'number', 0)
     }
 
     render() {
