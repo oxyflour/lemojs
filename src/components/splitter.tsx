@@ -3,6 +3,8 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
+import { clamp } from '../utils'
+
 // TODO: emit this style to css
 // https://github.com/js-next/react-style/pull/132
 const STYLE = {
@@ -11,10 +13,6 @@ const STYLE = {
     height: '100%',
     background: '#ddd',
     zIndex: 99,
-}
-
-function clamp(x: number, min: number, max: number) {
-    return x < min ? min : (x > max ? max : x)
 }
 
 export class Splitter extends React.Component<any, {}> {

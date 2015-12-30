@@ -40,6 +40,10 @@ export function debounce<T extends Function>(func: T, delay: number): T {
     } as any
 }
 
+export function clamp(x: number, min: number, max: number) {
+    return x < min ? min : (x > max ? max : x)
+}
+
 // copied from https://github.com/legomushroom/mojs-demo-1/blob/master/dist%2Fmain.js
 // TODO: rewrite this
 export function generateBezier(mX1, mY1, mX2, mY2) {

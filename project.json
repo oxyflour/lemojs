@@ -291,9 +291,7 @@
           "elemName": "ball",
           "pathName": "trail5m",
           "angleOffset": 90,
-          "angle": 80,
-          "offsetX": -288,
-          "offsetY": 34
+          "angle": 80
         },
         {
           "delay": 0,
@@ -302,9 +300,7 @@
           "elemName": "ball",
           "pathName": "trail6m",
           "angleOffset": 90,
-          "angle": 80,
-          "offsetX": -288,
-          "offsetY": 34
+          "angle": 80
         },
         {
           "delay": 0,
@@ -313,9 +309,7 @@
           "elemName": "ball",
           "pathName": "trail7m",
           "angleOffset": 90,
-          "angle": 80,
-          "offsetX": -288,
-          "offsetY": 34
+          "angle": 80
         },
         {
           "delay": 0,
@@ -324,9 +318,7 @@
           "elemName": "ball",
           "pathName": "trail8m",
           "angleOffset": 90,
-          "angle": 80,
-          "offsetX": -288,
-          "offsetY": 34
+          "angle": 80
         },
         {
           "delay": 0,

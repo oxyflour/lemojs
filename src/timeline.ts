@@ -1,8 +1,8 @@
 import { FakeHash, generateBezier } from './utils'
 
-export const EASING_OPTIONS = ['', 'cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
+export const EASING_OPTIONS = ['cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
 
-export const LINECAP_STYLES = ['', 'normal', 'round']
+export const LINECAP_STYLES = ['normal', 'round']
 
 export interface AnimNode {
     delay: number,
