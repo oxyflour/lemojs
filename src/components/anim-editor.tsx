@@ -302,11 +302,12 @@ class BaseEditor extends React.Component<{
         var val = this.props.data[key]
         return <div className="input-group" style={{ width:'100%' }}>
             <input type="text" className="form-control" placeholder="color"
+                style={{ borderRight:'none' }}
                 value={ val }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
             <span style={{ width:0, display:"table-cell" }}></span>
             <input type="color" className="form-control"
-                style={{ borderLeft:'none' }}
+                style={{ borderLeft:'none', minWidth:40 }}
                 value={ /#[0-9a-fA-F]{6}/.test(val) ? val : null }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
@@ -483,6 +484,9 @@ export class ObjectEditor extends BaseEditor {
                     <a className="btn btn-primary"
                         onClick={ e => timeline.cloneActiveAnimObject() }
                         title="shortcut: Ctrl-C">Clone</a>
+                    &nbsp;
+                    <a className="btn btn-default"
+                        onClick={ e => timeline.addAnimNode() }>Add Node</a>
                 </div>
             </div>
             { this.getInputs(this.commonFields) }
