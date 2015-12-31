@@ -101,6 +101,8 @@ class BaseEditor extends React.Component<{
         return <div className="input-group">
             <Slider className="input-group-addon" valueY={ 0 } valueX={ val }
                 step={ step } scale={ scale } range={{ minX:min, maxX:max }}
+                onStart={ (x, y, e) => $(e.target).parent().addClass('active-input has-warning') }
+                onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
                 onChange={ (x, y) => this.handleValueChange(key, x) }>
                 ↔
             </Slider>
@@ -111,10 +113,8 @@ class BaseEditor extends React.Component<{
     }
 
     getSelectInput(key: string, values: string[]) {
-        var val = this.props.data[key]
-
         // https://github.com/facebook/react/issues/4085
-        if (val === undefined) val = ''
+        var val = this.props.data[key] || ''
 
         return <select value={ val } className="form-control"
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) }>
@@ -255,6 +255,8 @@ class BaseEditor extends React.Component<{
         return <div className="input-group">
             <Slider className="input-group-addon" valueY={ 0 } valueX={ this.getTransitValueNumber(val) }
                 step={ step } scale={ scale } range={{ minX:min, maxX:max }}
+                onStart={ (x, y, e) => $(e.target).parent().addClass('active-input has-warning') }
+                onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
                 onChange={ (x, y) => this.handleValueChange(key, this.getNewTransitValue(key, x)) }>
                 ↔
             </Slider>
@@ -284,6 +286,8 @@ class BaseEditor extends React.Component<{
                 <div className={ 'input-group ' + ((vx && vx.err) || (vy && vy.err) ? 'has-error' : '') }>
                     <Slider className="input-group-addon" range={ range } scale={ scale } step={ step }
                         valueX={ this.getTransitValueNumber(vx) } valueY={ this.getTransitValueNumber(vy) }
+                        onStart={ (x, y, e) => $(e.target).parent().addClass('active-input has-warning') }
+                        onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
                         onChange={ (x, y) => this.handleTransitCoordChange(kx, x, ky, y) }>
                         @
                     </Slider>
@@ -308,7 +312,7 @@ class BaseEditor extends React.Component<{
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
             <span style={{ width:0, display:"table-cell" }}></span>
             <input type="color" className="form-control"
-                style={{ borderLeft:'none', minWidth:40 }}
+                style={{ borderLeft:'none', minWidth:40, cursor:'pointer' }}
                 value={ /#[0-9a-fA-F]{6}/.test(val) ? val : null }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>

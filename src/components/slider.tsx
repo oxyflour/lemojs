@@ -21,9 +21,9 @@ export class Slider extends React.Component<{
     },
     title?: string,
     className?: string,
-    onChange?: (x: number, y: number) => void,
-    onStart?: (x: number, y: number) => void,
-    onEnd?: (x: number, y: number) => void,
+    onChange?: (x: number, y: number, e?: React.MouseEvent) => void,
+    onStart?: (x: number, y: number, e?: React.MouseEvent) => void,
+    onEnd?: (x: number, y: number, e?: React.MouseEvent) => void,
     children?: React.ReactElement<any>
 }, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
@@ -48,7 +48,7 @@ export class Slider extends React.Component<{
     }
 
     handleMouseDown(e: React.MouseEvent) {
-        this.props.onStart && this.props.onStart(this.props.valueX, this.props.valueY)
+        this.props.onStart && this.props.onStart(this.props.valueX, this.props.valueY, e)
 
         this.currentMouseData = { x:e.pageX, y:e.pageY, vx:this.props.valueX, vy:this.props.valueY }
         $(document).on('mousemove', this.onMouseMove).on('mouseup', this.onMouseUp)
@@ -61,7 +61,7 @@ export class Slider extends React.Component<{
 
     handleMouseMove(e: React.MouseEvent) {
         var { x, y } = this.getValues(e.pageX, e.pageY)
-        this.props.onChange(x, y)
+        this.props.onChange(x, y, e)
 
         e.preventDefault()
         e.stopPropagation()
@@ -69,7 +69,7 @@ export class Slider extends React.Component<{
 
     handleMouseUp(e: React.MouseEvent) {
         var { x, y } = this.getValues(e.pageX, e.pageY)
-        this.props.onEnd && this.props.onEnd(x, y)
+        this.props.onEnd && this.props.onEnd(x, y, e)
 
         $(document).off('mousemove', this.onMouseMove).off('mouseup', this.onMouseUp)
         $('body').css('cursor', 'auto')
