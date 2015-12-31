@@ -30,16 +30,13 @@ export class CanvasNode extends React.Component<{
         hasMoved?: boolean,
     }
 
-    anim: AnimObject
-    index: number
-    objects: mojs.Timeline[]
-
     getDataValue(key: string, index = this.index) {
         var data = this.anim && this.anim.nodes[index]
         if (data) {
             var val = data[key]
             if (typeof val === 'object') {
-                return parseFloat(Object.keys(val)[0])
+                key = Object.keys(val)[0]
+                return parseFloat(val[key])
             }
             else if (val === undefined) {
                 return this.getDataValue(key, index - 1)
@@ -97,6 +94,10 @@ export class CanvasNode extends React.Component<{
         $('body').css('cursor', 'auto')
             .off('mousemove', this.onMouseMove).off('mouseup', this.onMouseUp)
     }
+
+    anim: AnimObject
+    index: number
+    objects: mojs.Timeline[]
 
     render() {
         this.anim = this.props.timeline.getAnimObjectFromNode(this.props.data)
