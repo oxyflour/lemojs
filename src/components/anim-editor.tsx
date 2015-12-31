@@ -8,6 +8,7 @@ import { AnimNode, AnimObject, Timeline,
 import { debounce } from '../utils'
 
 import { Slider } from './slider'
+import { Switch } from './switch'
 
 class BaseEditor extends React.Component<{
     data: any,
@@ -71,7 +72,7 @@ class BaseEditor extends React.Component<{
     }
 
     getCheckboxInput(key: string) {
-        return <input type="checkbox"
+        return <Switch
             checked={ this.props.data[key] }
             onChange={ e => this.handleValueChange(key, e.target['checked']) } />
     }

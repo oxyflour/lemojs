@@ -12,10 +12,13 @@
       "commit": "7a3d6944036902996b87981e6150900952b35628"
     },
     "jquery/jquery.d.ts": {
-      "commit": "a81c34dcfd6b681b55eefd02b3f19e9635bc1e9c"
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     },
     "bootstrap/bootstrap.d.ts": {
       "commit": "a81c34dcfd6b681b55eefd02b3f19e9635bc1e9c"
+    },
+    "bootstrap-switch/bootstrap-switch.d.ts": {
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     }
   }
 }

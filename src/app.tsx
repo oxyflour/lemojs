@@ -321,7 +321,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
             <div className="navbar-header">
                 <a href="javascript:void(0)" className="navbar-brand">LeMojs</a>
             </div>
-            <ul className="nav navbar-nav">
+            <ul className="nav navbar-nav collapse navbar-collapse">
                 <li className="dropdown">
                     <a href="javascript:void(0)" className="dropdown-toggle" data-toggle="dropdown">
                         Project <span className="caret" />
@@ -345,7 +345,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
                         onClick={ e => $(this.refs['helpModelDialog']).modal('show') }>Help</a>
                 </li>
             </ul>
-            <ul className="nav navbar-nav navbar-right">
+            <ul className="nav navbar-nav navbar-right collapse navbar-collapse">
                 <li>
                     <a href="javascript:void(0)"
                         onClick={ e => $(this.refs['aboutModelDialog']).modal('show') }>About</a>
