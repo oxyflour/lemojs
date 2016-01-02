@@ -5,7 +5,6 @@ import * as $ from 'jquery'
 
 import { AnimNode, AnimObject, Timeline,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
-import { debounce } from '../utils'
 import { BaseEditor } from './anim-base-editor'
 
 export class NodeEditor extends BaseEditor<{

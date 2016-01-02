@@ -8,9 +8,12 @@ import { Splitter } from './components/splitter'
 import { ObjectEditor, NodeEditor } from './components/anim-editor'
 import { CanvasMain } from './components/canvas-main'
 import { CanvasNode } from './components/canvas-node'
+import { PathEditor } from './components/canvas-path-editor'
 import { TimelineTable } from './components/timeline-table'
 
 import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
+
+import { debounce } from './utils'
 
 const VERSION_STRING = '0.0.1'
 const CANVAS_STYLE = { width:320, height:480, background:'#eeeeee' }
@@ -194,6 +197,8 @@ export class App extends React.Component<{}, {}> implements Timeline {
         var anim = node['nodes'] ? node as AnimObject : this.getAnimObjectFromNode(node as AnimNode)
         if (anim) this.tween.update(anim)
     }
+
+    refreshAnimObjectDebounced = debounce(this.refreshAnimObject.bind(this), 300)
 
     // project
 
@@ -402,7 +407,9 @@ export class App extends React.Component<{}, {}> implements Timeline {
                             updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
                             <div ref="anim-pool"></div>
                             <CanvasNode data={ this.activeAnimNode } timeline={ this }></CanvasNode>
-                            <div ref="placeholder-for-svg-editor"></div>
+                            <PathEditor data={ this.activeAnimNode && this.activeAnimNode['bitPathStr'] }
+                                onChange={ d => (this.activeAnimNode['bitPathStr'] = d,
+                                    this.forceUpdate(), this.refreshAnimObjectDebounced(this.activeAnimNode)) }/>
                         </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>
