@@ -32,6 +32,9 @@ export class App extends React.Component<{}, {}> implements Timeline {
         activeAnimObject: null as AnimObject,
         cursorPosition: 0,
 
+        activePathEditorNode: null as AnimNode,
+        activePathEditorKey: '' as string,
+
         timeline: [ ] as AnimObject[],
         canvasStyle: $.extend({}, CANVAS_STYLE),
         timelineState: null as boolean[ ]
@@ -422,9 +425,11 @@ export class App extends React.Component<{}, {}> implements Timeline {
                             updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
                             <div ref="anim-pool"></div>
                             <CanvasNode data={ this.activeAnimNode } timeline={ this }></CanvasNode>
-                            <PathEditor data={ this.activeAnimNode && this.activeAnimNode['bitPathStr'] }
-                                onChange={ d => (this.activeAnimNode['bitPathStr'] = d,
-                                    this.forceUpdate(), this.refreshAnimObjectDebounced(this.activeAnimNode)) }/>
+                            <PathEditor
+                                data={ this.activeAnimNode && this.activeAnimNode === this.state.activePathEditorNode &&
+                                    this.activeAnimNode[this.state.activePathEditorKey] }
+                                onChange={ d => (this.activeAnimNode[this.state.activePathEditorKey] = d, this.forceUpdate(),
+                                    this.refreshAnimObjectDebounced(this.activeAnimNode)) }/>
                         </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>

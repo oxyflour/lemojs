@@ -21,7 +21,7 @@ export class NodeEditor extends BaseEditor<{
         easing:                 k => this.getTextWithSelectInput(k, EASING_OPTIONS, 'easing or bezier paramters'),
         svgPathOpt: {
             bitPathType:        k => this.getSelectInput(k, ['', 'path', 'ellipse']),
-            bitPathStr:         k => this.getSimpleInput(k, 'text', 'path d attribute'),
+            bitPathStr:         k => this.getEditablePathInput(k, 'path d attribute'),
             zIndex:             k => this.getNumberWithSliderInput(k, 1, 1, -1000, 1000),
         },
         stroke: {
@@ -109,6 +109,18 @@ export class NodeEditor extends BaseEditor<{
     commonFields = {
         delay:                  k => this.getNumberWithSliderInput(k, 1, 5, 0),
         duration:               k => this.getNumberWithSliderInput(k, 1, 5, 0),
+    }
+
+    getEditablePathInput(key: string, holderText: string) {
+        return <div className="input-group">
+            <div className="input-group-addon" style={{ cursor:'pointer' }}
+                title="use the svg path editor in the canvas">c</div>
+            <input type="text" className="form-control" placeholder={ holderText }
+                value={ this.props.data[key] }
+                onFocus={ e => this.props.timeline.setState({ activePathEditorNode: this.props.data, activePathEditorKey: key }) }
+                onBlur={ e => this.props.timeline.setState({ activePathEditorNode: null }) }
+                onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
+        </div>
     }
 
     render() {

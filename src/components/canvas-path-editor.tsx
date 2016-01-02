@@ -23,6 +23,10 @@ const POINT_CONTROLLER_STYLE = {
     marginTop: -5,
 }
 
+const MOVETO_CONTROLLER_COLOR = '#415b76',
+    LINETO_CONTROLLER_COLOR = '#48c9b0',
+    CURVETO_CONTROLLER_COLOR = '#5dade2'
+
 class PathMoveToController extends React.Component<{
     data: SVGPathData.CommandMoveTo,
     onChange: (data: SVGPathData.CommandMoveTo) => void,
@@ -35,7 +39,7 @@ class PathMoveToController extends React.Component<{
             onChange={ (x, y) => this.props.onChange($.extend(cmd, { x, y })) }
             onStart={ (x, y) => this.props.onStart && this.props.onStart() }
             onEnd={ (x, y) => this.props.onEnd && this.props.onEnd() }
-            style={$.extend({ left:cmd.x, top:cmd.y, background:'blue' }, POINT_CONTROLLER_STYLE)} />
+            style={$.extend({ left:cmd.x, top:cmd.y, background:MOVETO_CONTROLLER_COLOR }, POINT_CONTROLLER_STYLE)} />
     }
 }
 
@@ -51,7 +55,7 @@ class PathLineToController extends React.Component<{
             onChange={ (x, y) => this.props.onChange($.extend(cmd, { x, y })) }
             onStart={ (x, y) => this.props.onStart && this.props.onStart() }
             onEnd={ (x, y) => this.props.onEnd && this.props.onEnd() }
-            style={$.extend({ left:cmd.x, top:cmd.y, background:'red' }, POINT_CONTROLLER_STYLE)} />
+            style={$.extend({ left:cmd.x, top:cmd.y, background:LINETO_CONTROLLER_COLOR }, POINT_CONTROLLER_STYLE)} />
     }
 }
 
@@ -68,7 +72,7 @@ class PathCurveToController extends React.Component<{
                 onChange={ (x, y) => this.props.onChange($.extend(cmd, { x, y })) }
                 onStart={ (x, y) => this.props.onStart && this.props.onStart() }
                 onEnd={ (x, y) => this.props.onEnd && this.props.onEnd() }
-                style={$.extend({ left:cmd.x, top:cmd.y, background:'black' }, POINT_CONTROLLER_STYLE)} />
+                style={$.extend({ left:cmd.x, top:cmd.y, background:CURVETO_CONTROLLER_COLOR }, POINT_CONTROLLER_STYLE)} />
             <Slider valueX={ cmd.x1 } valueY={ cmd.y1 }
                 onChange={ (x1, y1) => this.props.onChange($.extend(cmd, { x1, y1 })) }
                 onStart={ (x, y) => this.props.onStart && this.props.onStart() }
@@ -95,14 +99,10 @@ export class PathEditor extends React.Component<{
     data: string,
     onChange: (data: string) => void,
 }, { }> {
-    state = {
-        showControls: true,
-    }
-
     render() {
         var svgPath = null
         try {
-            svgPath = this.state.showControls && this.props.data && new SVGPathData(this.props.data)
+            svgPath = this.props.data && new SVGPathData(this.props.data)
         }
         catch (e) {
             console.warn('the given data is not a valid svg path')
@@ -118,14 +118,9 @@ export class PathEditor extends React.Component<{
         })
 
         return <div style={ EDITOR_CONTENT_STYLE }>
-            <label style={{ position:'absolute', cursor:'hand' }}>
-                <input type="checkbox" checked={ this.state.showControls }
-                    onChange={ e => this.setState({ showControls:e.target['checked'] }) } />
-                show controls
-            </label>
             <svg style={{ width:'100%', height:'100%' }}>
                 <path d={ svgPath ? this.props.data : '' }
-                    fill="none" stroke="black" strokeWidth="2" />
+                    fill="none" stroke="black" strokeWidth="3" strokeDasharray="10 10" />
                 { curveHelpers.map(d =>
                     <path d={ d } fill="none" stroke="#555555" strokeWidth="1" />
                 ) }

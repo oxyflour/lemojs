@@ -42,6 +42,7 @@ export interface Timeline {
     refreshAnimObjectDebounced(node: AnimNode | AnimObject)
 
     forceUpdate()
+    setState(state: any)
 }
 
 const SVG_STYLE = {
