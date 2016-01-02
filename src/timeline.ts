@@ -283,8 +283,9 @@ export class AnimManager {
         this.tween.add(objs)
         this.hash.put(anim, objs)
 
-        // TODO: update and show added animation object
         this.tween.recalcDuration()
+        // important to refresh animation object
+        this.tween.setStartTime(this.tween.props.time)
     }
 
     // controls

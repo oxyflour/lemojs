@@ -195,7 +195,10 @@ export class App extends React.Component<{}, {}> implements Timeline {
 
     refreshAnimObject(node: AnimNode | AnimObject) {
         var anim = node['nodes'] ? node as AnimObject : this.getAnimObjectFromNode(node as AnimNode)
-        if (anim) this.tween.update(anim)
+        if (anim) {
+            this.tween.update(anim)
+            this.tween.setProgress(this.cursorPosition / this.tween.getDuration())
+        }
     }
 
     refreshAnimObjectDebounced = debounce(this.refreshAnimObject.bind(this), 300)
