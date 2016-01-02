@@ -89,8 +89,10 @@ export class TimelineNode extends React.Component<{
             this.props.timeline.refreshAnimObject(this.props.data)
         }
         else {
-            var cursorPosition = this.props.timeline.getAnimNodeStart(this.props.data)
-            this.props.timeline.cursorPosition = cursorPosition
+            var startPosition = this.props.timeline.getAnimNodeStart(this.props.data),
+                cursorPosition = this.props.timeline.cursorPosition
+            if (cursorPosition < startPosition || cursorPosition > startPosition + this.props.data.duration)
+                this.props.timeline.cursorPosition = startPosition
         }
 
         var elem = $(this.refs['node'])
