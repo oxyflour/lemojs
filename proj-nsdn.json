@@ -1,0 +1,222 @@
+{
+  "version": "0.0.1",
+  "canvasStyle": {
+    "width": 640,
+    "height": 480,
+    "background": "#e4e4e4"
+  },
+  "timeline": [
+    {
+      "name": "outer",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 0,
+          "duration": 1910,
+          "animType": "transit",
+          "type": "line",
+          "bitPathType": "path",
+          "bitPathStr": "M418 165L324 116L234 164L193 263L238 362L339 393L429 347L452 263L400 265",
+          "stroke": "#7a3d89",
+          "strokeWidth": 10,
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100%": "0"
+          },
+          "fill": "transparent",
+          "isShowEnd": true,
+          "zIndex": "11",
+          "easing": "cubic.out"
+        }
+      ],
+      "stagger": {
+        "stroke": [
+          "white",
+          "#ddc1e3",
+          "#7a3d89"
+        ],
+        "zIndex": [
+          11,
+          12,
+          13
+        ],
+        "strokeWidth": [
+          10,
+          10,
+          11
+        ]
+      },
+      "delayDelta": "500"
+    },
+    {
+      "name": "inner",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 10,
+          "duration": 1880,
+          "animType": "transit",
+          "type": "line",
+          "bitPathType": "path",
+          "bitPathStr": "M416 160L390 209L326 173L270 204L249 259L275 320L336 338L388 311L406 262",
+          "stroke": "#7a3d89",
+          "strokeWidth": 10,
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "fill": "transparent",
+          "isShowEnd": true,
+          "zIndex": "11",
+          "easing": "cubic.out"
+        }
+      ],
+      "stagger": {
+        "stroke": [
+          "white",
+          "#ddc1e3",
+          "#7a3d89"
+        ],
+        "zIndex": [
+          11,
+          12,
+          13
+        ]
+      },
+      "delayDelta": "500"
+    },
+    {
+      "name": "fill",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 2130,
+          "duration": 1830,
+          "animType": "transit",
+          "type": "line",
+          "bitPathType": "path",
+          "bitPathStr": "M402 184L325 144L253 183L221 261L257 342L339 365L408 328L425 274L425 265",
+          "stroke": "#ffffff",
+          "strokeWidth": 50,
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100%": "200%"
+          },
+          "fill": "transparent",
+          "isShowEnd": true,
+          "zIndex": "1",
+          "easing": "cubic.out"
+        }
+      ],
+      "stagger": {
+        "stroke": [
+          "#7a3d89",
+          "#ddc1e3",
+          "white"
+        ],
+        "zIndex": [
+          1,
+          2,
+          3
+        ]
+      },
+      "delayDelta": "500"
+    },
+    {
+      "name": "tip",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 1920,
+          "duration": 2460,
+          "animType": "transit",
+          "type": "line",
+          "bitPathType": "path",
+          "bitPathStr": "M404 265L343 267L430 347",
+          "stroke": "#7a3d89",
+          "strokeWidth": 10,
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100%": "0"
+          },
+          "fill": "transparent",
+          "isShowEnd": true,
+          "zIndex": "21",
+          "easing": "cubic.out"
+        }
+      ]
+    },
+    {
+      "name": "border",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 2600,
+          "duration": 880,
+          "animType": "transit",
+          "type": "line",
+          "bitPathType": "path",
+          "bitPathStr": "M192 262L192 415L454 415L454 258",
+          "stroke": "#7a3d89",
+          "strokeWidth": 10,
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100%": "0"
+          },
+          "fill": "transparent",
+          "isShowEnd": true,
+          "zIndex": "11",
+          "easing": "cubic.out"
+        }
+      ],
+      "stagger": {
+        "stroke": [
+          "white",
+          "#ddc1e3",
+          "#7a3d89"
+        ],
+        "zIndex": [
+          11,
+          12,
+          13
+        ],
+        "strokeWidth": [
+          10,
+          10,
+          11
+        ]
+      },
+      "delayDelta": "500"
+    },
+    {
+      "name": "bottom",
+      "animType": "transit",
+      "nodes": [
+        {
+          "delay": 3350,
+          "duration": 200,
+          "animType": "transit",
+          "type": "line",
+          "bitPathType": "path",
+          "bitPathStr": "M191 257L191 413L454 412L454 258L344 372L197 261",
+          "strokeDasharray": "100% 100%",
+          "strokeDashoffset": {
+            "100%": "0"
+          },
+          "fill": "#7a3d89",
+          "isShowEnd": true,
+          "zIndex": "1",
+          "easing": "cubic.out",
+          "opacity": 0
+        },
+        {
+          "delay": 0,
+          "duration": 1000,
+          "animType": "transit",
+          "opacity": 1
+        }
+      ]
+    }
+  ],
+  "timelineState": null
+}

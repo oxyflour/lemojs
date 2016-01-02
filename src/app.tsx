@@ -241,7 +241,8 @@ export class App extends React.Component<{}, {}> implements Timeline {
     updateProject(proj: ProjectObject) {
         // compare major version string only
         if (proj.version.replace(/.\w+$/, '') === VERSION_STRING.replace(/.\w+$/, '')) {
-            this.state.timeline.forEach(anim => (anim.nodes = [ ]) && this.refreshAnimObject(anim))
+            this.state.timeline.forEach(anim => (anim.disabled = true) && this.refreshAnimObject(anim))
+            this.state.activeAnimNode = this.state.activeAnimObject = null
             this.setState(proj)
             proj.timeline.forEach(anim => this.refreshAnimObject(anim))
         }
@@ -263,8 +264,6 @@ export class App extends React.Component<{}, {}> implements Timeline {
         this.tween = new AnimManager(this.refs['anim-pool'] as HTMLElement, {
             onUpdate: (p) => this.setState({ cursorPosition:p * this.tween.getDuration() }),
         })
-
-        $.getJSON('project.json', (proj) => this.updateProject(proj))
     }
 
     // view
@@ -342,6 +341,19 @@ export class App extends React.Component<{}, {}> implements Timeline {
                                 onClick={ e => $(this.refs['paraModalDialog']).modal('show') }>
                                 <span className="glyphicon glyphicon-list" />&nbsp;Parameters</a>
                         </li>
+                    </ul>
+                </li>
+                <li className="dropdown">
+                    <a href="javascript:void(0)" className="dropdown-toggle" data-toggle="dropdown">
+                        Samples <span className="caret" />
+                    </a>
+                    <ul className="dropdown-menu">
+                        <li><a href="javascript:void(0)"
+                            onClick={ e => $.getJSON('proj-mojs.json', (proj) => this.updateProject(proj)) }>
+                                <span className="glyphicon glyphicon-save" />&nbsp;mojs</a></li>
+                        <li><a href="javascript:void(0)"
+                            onClick={ e => $.getJSON('proj-nsdn.json', (proj) => this.updateProject(proj)) }>
+                                <span className="glyphicon glyphicon-save" />&nbsp;nsdn</a></li>
                     </ul>
                 </li>
                 <li>
@@ -422,7 +434,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
                                 <NodeEditor data={ this.activeAnimNode } timeline={ this } /> :
                             this.activeAnimObject ?
                                 <ObjectEditor data={ this.activeAnimObject } timeline={ this } /> :
-                                <p>Add or Select a Node to Edit</p>}
+                                <p>Add an Animation Object or Load a Sample Project to Start</p>}
                         </div>
                     </div>
                 </div>
