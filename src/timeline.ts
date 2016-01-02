@@ -30,7 +30,6 @@ export interface Timeline {
     getTimeline(): AnimObject[]
     getAnimObjectFromNode(node: AnimNode): AnimObject
     getAnimNodeStart(node: AnimNode): number
-    getTimelineObjectFromAnim(anim: AnimObject): mojs.Timeline[]
 
     removeActiveAnimNode()
     cloneActiveAnimNode()
@@ -97,11 +96,15 @@ export class AnimManager {
         var oldNodes = this.hash.get(anim) as mojs.Timeline[]
         if (oldNodes) oldNodes.forEach(tl => {
             // cleanup
-            if (anim.animType !== 'motion-path') {
+            if (anim.animType === 'motion-path') {
+                // elem of motion-path are borrowed, so we just do noting
+            }
+            else {
                 var el = tl['el'] as HTMLElement,
                     pt = el && el.parentNode
                 el && pt && pt.removeChild(el)
-                el && el['remove-parent'] && pt && pt.parentNode.removeChild(pt)
+                // remember to remove dynamically created svg
+                el && el['parent-is-dynamic'] && pt && pt.parentNode.removeChild(pt)
             }
             // weird?
             this.tween.remove(tl['timeline'])
@@ -129,7 +132,7 @@ export class AnimManager {
                         .css(SVG_STYLE).css('z-index', opt['zIndex']).prependTo(this.element)
                     opt.bit = svg.children()[0]
                     // remember to remove dynamically created svg
-                    opt.bit['remove-parent'] = true
+                    opt.bit['parent-is-dynamic'] = true
                 }
 
                 transit = new mojs.Transit(firstOpt = opt)

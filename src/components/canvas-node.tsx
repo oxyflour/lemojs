@@ -11,7 +11,6 @@ const HIGHLIGHT_DARK_COLOR = '#1abc9c'
 const ANIM_NODE_STYLE = {
     position: 'absolute',
     background: '#bbb',
-    cursor: 'all-scroll',
     textAlign: 'center',
     opacity: 0.3,
     border: '2px solid transparent',
@@ -97,31 +96,25 @@ export class CanvasNode extends React.Component<{
 
     anim: AnimObject
     index: number
-    objects: mojs.Timeline[]
 
     render() {
         this.anim = this.props.timeline.getAnimObjectFromNode(this.props.data)
         this.index = this.anim ? this.anim.nodes.indexOf(this.props.data) : -1
-        this.objects = this.props.timeline.getTimelineObjectFromAnim(this.anim)
 
-        if (!this.anim) return <div></div>
+        var x = this.getDataValue('shiftX'),
+            y = this.getDataValue('shiftY'),
+            w = (parseFloat(this.getDataValue('radiusX') || this.getDataValue('radius')) || 0) * 2,
+            h = (parseFloat(this.getDataValue('radiusY') || this.getDataValue('radius')) || 0) * 2
+        if (x !== undefined && y !== undefined && w > 0 && h > 0) {
+            var isActive = this.props.timeline.activeAnimNode === this.props.data,
+                borderColor = isActive ? HIGHLIGHT_DARK_COLOR : 'transparent',
+                zIndex = isActive ? 99 : 98,
+                style = { width:w, height:h, left:x-w/2, top:y-h/2, borderColor, zIndex }
+            return <div ref="node" style={ $.extend({}, ANIM_NODE_STYLE, style) }
+                //onMouseDown={ e => this.handleMouseDown(e) }
+                title={ this.anim.name + ':' + this.index + ' [' + this.anim.animType + ']' }></div>
+        }
 
-        var width = (parseFloat(this.getDataValue('radiusX') || this.getDataValue('radius')) || 20) * 2,
-            height = (parseFloat(this.getDataValue('radiusY') || this.getDataValue('radius')) || 20) * 2,
-
-            x = this.getDataValue('shiftX') || 0,
-            y = this.getDataValue('shiftY') || 0,
-            left = x - width / 2,
-            top = y - height / 2
-
-        var lineHeight = height + 'px',
-            isActive = this.props.timeline.activeAnimNode === this.props.data,
-            borderColor = isActive ? HIGHLIGHT_DARK_COLOR : 'transparent',
-            zIndex = isActive ? 99 : 98
-
-        var style = { left, top, width, height, borderColor, lineHeight, zIndex }
-        return <div ref="node" style={ $.extend({}, ANIM_NODE_STYLE, style) }
-            onMouseDown={ e => this.handleMouseDown(e) }>
-        </div>
+        return <div />
     }
 }

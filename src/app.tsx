@@ -98,10 +98,6 @@ export class App extends React.Component<{}, {}> implements Timeline {
         return this.state.timeline.filter(anim => anim.nodes.indexOf(node) >= 0)[0]
     }
 
-    getTimelineObjectFromAnim(anim: AnimObject) {
-        return this.tween.hash.get(anim)
-    }
-
     // timeline implement
 
     get activeAnimNode() { return this.state.activeAnimNode }
