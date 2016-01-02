@@ -124,7 +124,7 @@ export class PathEditor extends React.Component<{
                 show controls
             </label>
             <svg style={{ width:'100%', height:'100%' }}>
-                <path d={ this.state.showControls && this.props.data }
+                <path d={ svgPath ? this.props.data : '' }
                     fill="none" stroke="black" strokeWidth="2" />
                 { curveHelpers.map(d =>
                     <path d={ d } fill="none" stroke="#555555" strokeWidth="1" />
