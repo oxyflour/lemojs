@@ -6,6 +6,8 @@ import * as $ from 'jquery'
 import { AnimNode, AnimObject, Timeline,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 
+import { debounce } from '../utils'
+
 import { Slider } from './slider'
 import { Switch } from './switch'
 
@@ -17,19 +19,22 @@ export class BaseEditor<P extends {
         showUnsetFields: true,
     }
 
+    refreshAnimObjectDebounced = debounce(() =>
+        this.props.timeline.refreshAnimObject(this.props.data) , 300)
+
     handleValueChange(key: string | string[], val: any) {
         if (Array.isArray(key))
             key.forEach((k, i) => this.props.data[k] = val[i])
         else
             this.props.data[key] = val
         this.props.timeline.forceUpdate()
-        this.props.timeline.refreshAnimObjectDebounced(this.props.data)
+        this.refreshAnimObjectDebounced()
     }
 
     unsetValue(key: string) {
         delete this.props.data[key]
         this.props.timeline.forceUpdate()
-        this.props.timeline.refreshAnimObjectDebounced(this.props.data)
+        this.refreshAnimObjectDebounced()
     }
 
     getInputs(fields: any) {

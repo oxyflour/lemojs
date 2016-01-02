@@ -204,7 +204,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         }
     }
 
-    refreshAnimObjectDebounced = debounce(this.refreshAnimObject.bind(this), 300)
+    refreshAnimObjectDebounced = debounce(() => this.refreshAnimObject(this.activeAnimNode), 300)
 
     // project
 
@@ -429,7 +429,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
                                 data={ this.activeAnimNode && this.activeAnimNode === this.state.activePathEditorNode &&
                                     this.activeAnimNode[this.state.activePathEditorKey] }
                                 onChange={ d => (this.activeAnimNode[this.state.activePathEditorKey] = d, this.forceUpdate(),
-                                    this.refreshAnimObjectDebounced(this.activeAnimNode)) }/>
+                                    this.refreshAnimObjectDebounced()) }/>
                         </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>

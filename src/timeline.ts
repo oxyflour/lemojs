@@ -39,7 +39,6 @@ export interface Timeline {
     cloneActiveAnimObject()
     addAnimObject(type: string)
     refreshAnimObject(node: AnimNode | AnimObject)
-    refreshAnimObjectDebounced(node: AnimNode | AnimObject)
 
     forceUpdate()
     setState(state: any)
