@@ -37,6 +37,10 @@ export class BaseEditor<P extends {
         this.refreshAnimObjectDebounced()
     }
 
+    allowToShow(key: string) {
+        return true
+    }
+
     getInputs(fields: any) {
         return <div>
             { Object.keys(fields).map((key, index) => {
@@ -47,7 +51,7 @@ export class BaseEditor<P extends {
                         <hr />
                     </div>
                 }
-                else if (key in this.props.data || this.state.showUnsetFields) {
+                else if (key in this.props.data || this.state.showUnsetFields && this.allowToShow(key)) {
                     var elem = fields[key].call(this, key, index)
                     return elem.props.role === 'editor-field' ? elem :
                     <div className="form-group" key={ index }>

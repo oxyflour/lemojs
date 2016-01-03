@@ -111,6 +111,12 @@ export class NodeEditor extends BaseEditor<{
         duration:               k => this.getNumberWithSliderInput(k, 1, 5, 0),
     }
 
+    allowToShow(key: string) {
+        if (key === 'bitPathStr')
+            return this.props.data['bitPathType'] === 'path'
+        return super.allowToShow(key)
+    }
+
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
             <div className="input-group-addon" style={{ cursor:'pointer' }}
