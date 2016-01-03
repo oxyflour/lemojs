@@ -19,14 +19,16 @@ export class Slider extends React.Component<{
         minY?: number,
         maxY?: number,
     },
-    title?: string,
-    className?: string,
-    style?: React.CSSProperties,
     onChange?: (x: number, y: number, e?: React.MouseEvent) => void,
     onStart?: (x: number, y: number, e?: React.MouseEvent) => void,
     onEnd?: (x: number, y: number, e?: React.MouseEvent) => void,
     onDoubleClick?: (e?: React.MouseEvent) => void,
-    children?: React.ReactElement<any>
+    
+    title?: string,
+    className?: string,
+    style?: React.CSSProperties,
+    children?: React.ReactElement<any>,
+    key?: number,
 }, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
     onMouseUp = this.handleMouseUp.bind(this)
