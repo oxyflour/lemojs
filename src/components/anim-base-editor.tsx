@@ -51,7 +51,7 @@ export class BaseEditor<P extends {
                         <hr />
                     </div>
                 }
-                else if (key in this.props.data || this.state.showUnsetFields && this.allowToShow(key)) {
+                else if ((key in this.props.data || this.state.showUnsetFields) && this.allowToShow(key)) {
                     var elem = fields[key].call(this, key, index)
                     return elem.props.role === 'editor-field' ? elem :
                     <div className="form-group" key={ index }>
