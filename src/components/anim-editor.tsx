@@ -120,6 +120,7 @@ export class NodeEditor extends BaseEditor<{
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
             <div className="input-group-addon" style={{ cursor:'pointer' }}
+                onClick={ e => $(e.target).next().focus() }
                 title="use the svg path editor in the canvas">c</div>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.props.data[key] }
