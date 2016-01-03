@@ -3,6 +3,18 @@ declare module 'svg-pathdata' {
         constructor(data: string)
         commands: SVGPathData.Command[]
         encode(): string
+        toAbs(): SVGPathData
+        toRel(): SVGPathData
+        round(...args): SVGPathData
+        translate(...args): SVGPathData
+        scale(...args): SVGPathData
+        rotate(...args): SVGPathData
+        matrix(...args): SVGPathData
+        skewX(...args): SVGPathData
+        skewY(...args): SVGPathData
+        xSymetry(...args): SVGPathData
+        ySymetry(...args): SVGPathData
+        aToc(...args): SVGPathData
     }
 
     module SVGPathData {
@@ -17,6 +29,9 @@ declare module 'svg-pathdata' {
         export const SMOOTH_QUAD_TO
         export const ARC
         export const DRAWING_COMMANDS
+
+        export function encode(cmds: Command[]): string
+        export function parse(str: string): Command[]
 
         export interface Command {
             type: string

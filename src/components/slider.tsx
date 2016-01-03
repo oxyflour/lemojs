@@ -25,6 +25,7 @@ export class Slider extends React.Component<{
     onChange?: (x: number, y: number, e?: React.MouseEvent) => void,
     onStart?: (x: number, y: number, e?: React.MouseEvent) => void,
     onEnd?: (x: number, y: number, e?: React.MouseEvent) => void,
+    onDoubleClick?: (e?: React.MouseEvent) => void,
     children?: React.ReactElement<any>
 }, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
@@ -81,6 +82,7 @@ export class Slider extends React.Component<{
         return <span ref="elem" className={ this.props.className}
             style={ $.extend({ cursor:OPENHAND_URL }, this.props.style || { })}
             title={ this.props.title || 'drag to alter' }
+            onDoubleClick={ e => this.props.onDoubleClick(e) }
             onMouseDown={ e => this.handleMouseDown(e) }>
             { this.props.children }
         </span>

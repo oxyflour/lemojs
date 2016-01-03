@@ -376,10 +376,14 @@ export class App extends React.Component<{}, {}> implements Timeline {
                             <div ref="anim-pool"></div>
                             <CanvasNode data={ this.activeAnimNode } timeline={ this }></CanvasNode>
                             <PathEditor
-                                data={ this.activeAnimNode && this.activeAnimNode === this.state.activePathEditorNode &&
-                                    this.activeAnimNode[this.state.activePathEditorKey] }
-                                onChange={ d => (this.activeAnimNode[this.state.activePathEditorKey] = d, this.forceUpdate(),
-                                    this.refreshAnimObjectDebounced()) }/>
+                                data={ this.activeAnimNode &&
+                                    this.activeAnimNode === this.state.activePathEditorNode &&
+                                    (this.activeAnimNode[this.state.activePathEditorKey] || '') }
+                                onChange={ d => {
+                                    this.activeAnimNode[this.state.activePathEditorKey] = d
+                                    this.forceUpdate()
+                                    this.refreshAnimObjectDebounced()
+                                } }/>
                         </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>
