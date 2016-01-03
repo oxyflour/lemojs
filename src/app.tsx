@@ -10,13 +10,14 @@ import { CanvasMain } from './components/canvas-main'
 import { CanvasNode } from './components/canvas-node'
 import { PathEditor } from './components/canvas-path-editor'
 import { TimelineTable } from './components/timeline-table'
+import { Modal } from './components/modal'
 
 import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
 
 import { debounce } from './utils'
 
 const VERSION_STRING = '0.0.1'
-const CANVAS_STYLE = { width:320, height:480, background:'#eeeeee' }
+const CANVAS_STYLE = { width:480, height:320, background:'#eeeeee' }
 
 interface ProjectObject {
     version: string,
@@ -218,7 +219,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         var content = JSON.stringify(proj, null, 2)
         $(this.refs['saveProjectLink']).attr('href',
             'data:text/json;charset=utf-8,' + encodeURIComponent(content))
-        $(this.refs['saveModelDialog']).modal('show')
+        void (this.refs['saveModelDialog'] as Modal).show()
     }
 
     loadProject() {
@@ -271,57 +272,6 @@ export class App extends React.Component<{}, {}> implements Timeline {
 
     // view
 
-    renderModal(title: string, body: JSX.Element, footer?: JSX.Element, options = { } as any) {
-        return <div ref={ options.ref ? options.ref : '' } className="modal fade" tabIndex={ -1 } role="dialog">
-            <div className={ 'modal-dialog' + (options.small ? ' modal-sm' : ' ') }>
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        <h4 className="modal-title">{ title }</h4>
-                    </div>
-                    <div className="modal-body">{ body }</div>
-                    { footer && <div className="modal-footer">{ footer }</div> }
-                </div>
-            </div>
-        </div>
-    }
-
-    renderSaveModal() {
-        return this.renderModal('Save Project', <div>
-            <p>Click <a ref="saveProjectLink" download="project.json">here</a> to download project</p>
-        </div>, null, {
-            ref: 'saveModelDialog',
-        })
-    }
-
-    renderHelpModal() {
-        return this.renderModal('LeMojs Help', <div>
-            <p>help content to be updated...</p>
-        </div>, null, {
-            ref: 'helpModelDialog',
-        })
-    }
-
-    renderAboutModal() {
-        return this.renderModal('LeMojs Help', <div>
-            <p>A Lightweight editor for <a href="https://github.com/legomushroom/mojs">mojs</a></p>
-            <a href="https://github.com/oxyflour/lemojs">Github Repo Link</a>
-        </div>, null, {
-            ref: 'aboutModelDialog',
-        })
-    }
-
-    renderParameterModal() {
-        return this.renderModal('Parameters', <div>
-            <p>you can reference the following values with P.parameterName in fields</p>
-            <p>not implemented yet</p>
-        </div>, null, {
-            ref: 'paraModalDialog'
-        })
-    }
-
     renderNavBar() {
         return <div className="navbar navbar-inverse navbar-fixed-top">
             <div className="navbar-header">
@@ -341,7 +291,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
                                 <span className="glyphicon glyphicon-open" />&nbsp;Load</a></li>
                         <li className="divider"></li>
                         <li><a href="javascript:void(0)"
-                                onClick={ e => $(this.refs['paraModalDialog']).modal('show') }>
+                                onClick={ e => (this.refs['paraModalDialog'] as Modal).show() }>
                                 <span className="glyphicon glyphicon-list" />&nbsp;Parameters</a>
                         </li>
                     </ul>
@@ -361,13 +311,13 @@ export class App extends React.Component<{}, {}> implements Timeline {
                 </li>
                 <li>
                     <a href="javascript:void(0)"
-                        onClick={ e => $(this.refs['helpModelDialog']).modal('show') }>Help</a>
+                        onClick={ e => (this.refs['helpModelDialog'] as Modal).show() }>Help</a>
                 </li>
             </ul>
             <ul className="nav navbar-nav navbar-right collapse navbar-collapse">
                 <li>
                     <a href="javascript:void(0)"
-                        onClick={ e => $(this.refs['aboutModelDialog']).modal('show') }>About</a>
+                        onClick={ e => (this.refs['aboutModelDialog'] as Modal).show() }>About</a>
                 </li>
             </ul>
         </div>
@@ -453,10 +403,20 @@ export class App extends React.Component<{}, {}> implements Timeline {
                         duration={ this.tween.getDuration() } />
                 </div>
             </div>
-            { this.renderSaveModal() }
-            { this.renderHelpModal() }
-            { this.renderAboutModal() }
-            { this.renderParameterModal() }
+            <Modal ref="saveModelDialog" title="Save Project">
+                <p>Click <a ref="saveProjectLink" download="project.json">here</a> to download project</p>
+            </Modal>
+            <Modal ref="helpModelDialog" title="LeMojs Help">
+                <p>help content to be updated...</p>
+            </Modal>
+            <Modal ref="aboutModelDialog" title="About">
+                <p>A Lightweight editor for <a href="https://github.com/legomushroom/mojs">mojs</a></p>
+                <a href="https://github.com/oxyflour/lemojs">Github Repo Link</a>
+            </Modal>
+            <Modal ref="paraModalDialog" title="Parameters">
+                <p>you can reference the following values with P.parameterName in fields</p>
+                <p>not implemented yet</p>
+            </Modal>
         </div>
     }
 }
