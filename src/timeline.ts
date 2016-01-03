@@ -123,7 +123,7 @@ export class AnimManager {
                 if (type) {
                     var elem = '<g></g>'
                     if (type === 'path')
-                        elem = '<path d="' + opt['bitPathStr'] + '"></path>'
+                        elem = '<path d="' + (opt['bitPathStr'] || '') + '"></path>'
                     else if (type === 'ellipse')
                         elem = '<ellipse></ellipse>'
                     // NOTE: you can only use svg as root element in jquery
