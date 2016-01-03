@@ -8,8 +8,6 @@ export interface AnimNode {
     delay: number,
     duration: number,
     animType: string,
-    shiftX: number,
-    shiftY: number,
 }
 
 export interface AnimObject {

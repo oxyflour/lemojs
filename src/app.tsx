@@ -143,9 +143,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
             this.activeAnimObject = this.state.timeline[index]
         if (!this.activeAnimObject) return
         var animType = this.activeAnimObject.animType,
-            shiftX = this.state.canvasStyle.width / 2,
-            shiftY = this.state.canvasStyle.height / 2,
-            node = { delay:0, duration:1000, animType, shiftX, shiftY }
+            node = { delay:0, duration:1000, animType }
         this.activeAnimObject.nodes.push(node)
         this.refreshAnimObject(this.activeAnimObject)
         this.activeAnimNode = node
