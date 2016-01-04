@@ -13,10 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "bootstrap-material": "^0.1.5",
-    "extract-text-webpack-plugin": "^0.3.8",
     "jquery": "^2.1.4",
-    "mo-js": "^0.147.4",
     "react": "latest",
     "react-dom": "^0.14.3",
     "react-style": "^0.5.5",
@@ -26,6 +23,8 @@
     "ts-loader": "^0.7.2",
     "tsd": "latest",
     "typescript": "latest",
-    "webpack": "^1.12.9"
+    "webpack": "^1.12.9",
+    "mo-js": "legomushroom/mojs",
+    "flat-ui": "designmodo/Flat-UI"
   }
 }
