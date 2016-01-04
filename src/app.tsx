@@ -8,7 +8,6 @@ import { Splitter } from './components/splitter'
 import { Slider } from './components/slider'
 import { ObjectEditor, NodeEditor } from './components/anim-editor'
 import { CanvasMain } from './components/canvas-main'
-import { CanvasNode } from './components/canvas-node'
 import { PathEditor } from './components/canvas-path-editor'
 import { TimelineTable } from './components/timeline-table'
 import { Modal } from './components/modal'
@@ -376,7 +375,6 @@ export class App extends React.Component<{}, {}> implements Timeline {
                             canvasStyle={ this.state.canvasStyle }
                             updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
                             <div ref="anim-pool"></div>
-                            <CanvasNode data={ this.activeAnimNode } timeline={ this }></CanvasNode>
                             { this.state.pathToEdit && this.activeAnimNode &&
                                 this.state.pathToEdit.node === this.activeAnimNode &&
                                 <PathEditor data={ this.activeAnimNode[this.state.pathToEdit.key] || '' }
