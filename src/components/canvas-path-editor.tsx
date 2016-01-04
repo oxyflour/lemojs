@@ -38,8 +38,8 @@ const SVG_CONTROLLER_COLOR = {
     [SVGPathData.VERT_LINE_TO]:     '#48c9b0',
     [SVGPathData.CURVE_TO]:         '#5dade2',
     [SVGPathData.SMOOTH_CURVE_TO]:  '#5dade2',
-    [SVGPathData.QUAD_TO]:          '#5dade2',
-    [SVGPathData.SMOOTH_QUAD_TO]:   '#5dade2',
+    [SVGPathData.QUAD_TO]:          '#f4d313',
+    [SVGPathData.SMOOTH_QUAD_TO]:   '#f4d313',
     [SVGPathData.CLOSE_PATH]:       '#ec7063',
 }
 
@@ -142,7 +142,8 @@ export class PathEditor extends React.Component<{
                 onChange={ (x, y) => $.extend(cmd, { x }) && this.props.onChange(SVGPathData.encode(cmds)) }
                 onDoubleClick={ (e) => this.props.onChange(SVGPathData.encode(cmds.filter(c => c !== cmd))) }
                 title="drag to change end point\ndouble click to delete"
-                style={$.extend({ left:cmd.x, top:posY, background }, POINT_CONTROLLER_STYLE)} />
+                style={$.extend({ left:cmd.x, top:posY, background,
+                    borderTop:'2px solid black', borderBottom: '2px solid black' }, POINT_CONTROLLER_STYLE)} />
         }
         else if (cmd.type === SVGPathData.VERT_LINE_TO) {
             var prev = findLastItemWith(cmds, index, 'x'),
@@ -151,7 +152,8 @@ export class PathEditor extends React.Component<{
                 onChange={ (x, y) => $.extend(cmd, { y }) && this.props.onChange(SVGPathData.encode(cmds)) }
                 onDoubleClick={ (e) => this.props.onChange(SVGPathData.encode(cmds.filter(c => c !== cmd))) }
                 title="drag to change end point\ndouble click to delete"
-                style={$.extend({ left:posX, top:cmd.y, background }, POINT_CONTROLLER_STYLE)} />
+                style={$.extend({ left:posX, top:cmd.y, background,
+                    borderLeft:'2px solid black', borderRight: '2px solid black' }, POINT_CONTROLLER_STYLE)} />
         }
         else if (cmd.type === SVGPathData.CURVE_TO) {
             return <div>
@@ -163,11 +165,11 @@ export class PathEditor extends React.Component<{
                 <Slider valueX={ cmd.x1 } valueY={ cmd.y1 }
                     onChange={ (x1, y1) => $.extend(cmd, { x1, y1 }) && this.props.onChange(SVGPathData.encode(cmds)) }
                     title="drag to change curve"
-                    style={$.extend({ left:cmd.x1, top:cmd.y1, border:'1px solid black' }, POINT_CONTROLLER_STYLE)} />
+                    style={$.extend({ left:cmd.x1, top:cmd.y1, border:'2px solid black' }, POINT_CONTROLLER_STYLE)} />
                 <Slider valueX={ cmd.x2 } valueY={ cmd.y2 }
                     onChange={ (x2, y2) => $.extend(cmd, { x2, y2 }) && this.props.onChange(SVGPathData.encode(cmds)) }
                     title="drag to change curve"
-                    style={$.extend({ left:cmd.x2, top:cmd.y2, border:'1px solid black' }, POINT_CONTROLLER_STYLE)} />
+                    style={$.extend({ left:cmd.x2, top:cmd.y2, border:'2px solid black' }, POINT_CONTROLLER_STYLE)} />
             </div>
         }
         else if (cmd.type === SVGPathData.SMOOTH_CURVE_TO) {
@@ -176,11 +178,11 @@ export class PathEditor extends React.Component<{
                     onChange={ (x, y) => $.extend(cmd, { x, y }) && this.props.onChange(SVGPathData.encode(cmds)) }
                     onDoubleClick={ (e) => this.props.onChange(SVGPathData.encode(cmds.filter(c => c !== cmd))) }
                     title="drag to change end point\ndouble click to delete"
-                    style={$.extend({ left:cmd.x, top:cmd.y, background }, POINT_CONTROLLER_STYLE)} />
+                    style={$.extend({ left:cmd.x, top:cmd.y, background, border:'2px solid black'}, POINT_CONTROLLER_STYLE)} />
                 <Slider valueX={ cmd.x2 } valueY={ cmd.y2 }
                     onChange={ (x2, y2) => $.extend(cmd, { x2, y2 }) && this.props.onChange(SVGPathData.encode(cmds)) }
                     title="drag to change curve"
-                    style={$.extend({ left:cmd.x2, top:cmd.y2, border:'1px solid black' }, POINT_CONTROLLER_STYLE)} />
+                    style={$.extend({ left:cmd.x2, top:cmd.y2, border:'2px solid black' }, POINT_CONTROLLER_STYLE)} />
             </div>
         }
         else if (cmd.type === SVGPathData.QUAD_TO) {
@@ -193,7 +195,7 @@ export class PathEditor extends React.Component<{
                 <Slider valueX={ cmd.x1 } valueY={ cmd.y1 }
                     onChange={ (x1, y1) => $.extend(cmd, { x1, y1 }) && this.props.onChange(SVGPathData.encode(cmds)) }
                     title="drag to change curve"
-                    style={$.extend({ left:cmd.x1, top:cmd.y1, border:'1px solid black' }, POINT_CONTROLLER_STYLE)} />
+                    style={$.extend({ left:cmd.x1, top:cmd.y1, border:'2px solid black' }, POINT_CONTROLLER_STYLE)} />
             </div>
         }
         else if (cmd.type === SVGPathData.SMOOTH_QUAD_TO) {
@@ -201,7 +203,7 @@ export class PathEditor extends React.Component<{
                 onChange={ (x, y) => $.extend(cmd, { x, y }) && this.props.onChange(SVGPathData.encode(cmds)) }
                 onDoubleClick={ (e) => this.props.onChange(SVGPathData.encode(cmds.filter(c => c !== cmd))) }
                 title="drag to change end point"
-                style={$.extend({ left:cmd.x, top:cmd.y, background }, POINT_CONTROLLER_STYLE)} />
+                style={$.extend({ left:cmd.x, top:cmd.y, background, border:'2px solid black' }, POINT_CONTROLLER_STYLE)} />
         }
         else if (cmd.type === SVGPathData.CLOSE_PATH) {
             var left = -10, top = -10,
