@@ -73,9 +73,14 @@ export class PathEditor extends React.Component<{
     attachCmds(cmds: SVGPathData.Command[], type: any, e: React.MouseEvent) {
         var offset = $(this.refs['content']).offset(),
             cmd = { type:type, x:e.pageX - offset.left, y:e.pageY - offset.top } as any
-        cmds = cmds.concat(cmd)
 
-        this.attachedCmds = cmds
+        if (cmd.type === SVGPathData.CLOSE_PATH) {
+            var prev = cmds[cmds.length - 1]
+            if (!prev || prev.type === SVGPathData.CLOSE_PATH)
+                return e.preventDefault()
+        }
+
+        this.attachedCmds = cmds.concat(cmd)
         this.attachedPos = { x:cmd.x, y:cmd.y }
         this.updateLastCmd(0, 0)
 
