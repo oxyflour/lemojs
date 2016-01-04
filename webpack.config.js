@@ -15,6 +15,7 @@ module.exports = {
     externals: {
         "react": "React",
         "react-dom": "ReactDOM",
-        "jquery": "$"
+        "jquery": "$",
+        "svg-pathdata": "SVGPathData"
     }
 }
