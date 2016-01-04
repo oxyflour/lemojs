@@ -8,6 +8,8 @@ import { AnimNode, AnimObject, Timeline, AnimManager,
 import { BaseEditor } from './anim-base-editor'
 import { Slider } from './slider'
 
+import * as SVGPathData from 'svg-pathdata'
+
 export class NodeEditor extends BaseEditor<{
     data: AnimNode
     timeline: Timeline
@@ -92,7 +94,7 @@ export class NodeEditor extends BaseEditor<{
         element: {
             elemName:           k => this.getSimpleInput(k, 'text', 'name of element'),
             pathName:           k => this.getSimpleInput(k, 'text', 'name of path'),
-            path:               k => this.getSimpleInput(k, 'text', 'path d attribute'),
+            path:               k => this.getEditablePathInput(k, 'path d attribute'),
         },
         path: {
             isAngle:            k => this.getCheckboxInput(k),
@@ -113,16 +115,22 @@ export class NodeEditor extends BaseEditor<{
     }
 
     allowToShow(key: string) {
-        if (key === 'bitPathStr')
+        if (this.props.data.animType === 'transit' && key === 'bitPathStr')
             return this.props.data['bitPathType'] === 'path'
+        if (this.props.data.animType === 'motion-path' && key === 'path')
+            return !this.props.data['pathName']
         return super.allowToShow(key)
     }
 
+    attachedPath: string
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
-            <div className="input-group-addon" style={{ cursor:'pointer' }}
-                onClick={ e => $(e.target).next().focus() }
-                title="use the svg path editor in the canvas">c</div>
+            <Slider valueX={ 0 } valueY={ 0 } scale={ 0.5 }
+                onStart={ (x, y, e) => (this.attachedPath = this.props.data[key], e.preventDefault()) }
+                onChange={ (x, y) => this.attachedPath &&
+                    this.handleValueChange(key, new SVGPathData(this.attachedPath).translate(x, y).encode()) }
+                className="input-group-addon" style={{ cursor:'pointer' }}
+                title="drag to translate path">@</Slider>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.props.data[key] }
                 onFocus={ e => this.props.timeline.setPathToEdit(this.props.data, key) }

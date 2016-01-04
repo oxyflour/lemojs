@@ -275,8 +275,6 @@
           "pathName": "trail4m",
           "angleOffset": 90,
           "angle": 80,
-          "offsetX": 12,
-          "offsetY": 135,
           "easing": "bezier 0.240 0.725 0.790 0.395"
         },
         {
@@ -320,10 +318,10 @@
           "duration": 1353,
           "animType": "motion-path",
           "elemName": "ball",
-          "path": "M240.529297,234.470827 L240.529297,57",
           "pathName": "",
           "easing": "elastic.out",
-          "pathEnd": 0.4
+          "pathEnd": 0.4,
+          "path": "M252.529297 370.470827L252.529297 193"
         }
       ]
     },
@@ -464,9 +462,7 @@
           "stroke": "#eeeeee",
           "strokeLinecap": "round",
           "strokeOpacity": 1,
-          "shiftX": 13,
-          "shiftY": 134,
-          "bitPathStr": "M287,235.670827 C187.791726,11.4579344 151.764383,181.797782 155.219461,234.670827",
+          "bitPathStr": "M300 368.67082700000003C200.791726 144.4579344 164.764383 314.797782 168.219461 367.67082700000003",
           "zIndex": 2,
           "bitPathType": "path",
           "easing": "bezier 0.240 0.725 0.790 0.395"
@@ -486,10 +482,8 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "shiftX": 13,
-          "shiftY": 134,
           "opacity": 0.51,
-          "bitPathStr": "M287,235.670827 C187.791726,11.4579344 151.764383,181.797782 155.219461,234.670827",
+          "bitPathStr": "M300 368.67082700000003C200.791726 144.4579344 164.764383 314.797782 168.219461 367.67082700000003",
           "zIndex": 1,
           "bitPathType": "path"
         },
@@ -501,9 +495,7 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "opacity": 0,
-          "shiftX": 13,
-          "shiftY": 134
+          "opacity": 0
         }
       ],
       "disabled": false
@@ -525,9 +517,7 @@
           "stroke": "#eeeeee",
           "strokeLinecap": "round",
           "strokeOpacity": 1,
-          "shiftX": 13,
-          "shiftY": 134,
-          "bitPathStr": "M155.219461,234.470827 C256.749214,45.2260249 359.634766,130.155713 357.466797,234.470827",
+          "bitPathStr": "M168.219461 369.470827C269.749214 180.2260249 372.634766 265.155713 370.466797 369.470827",
           "zIndex": 2,
           "bitPathType": "path",
           "easing": "bezier 0.240 0.725 0.790 0.395"
@@ -547,10 +537,8 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "shiftX": 13,
-          "shiftY": 134,
           "opacity": 0.51,
-          "bitPathStr": "M155.219461,234.470827 C256.749214,45.2260249 359.634766,130.155713 357.466797,234.470827",
+          "bitPathStr": "M168.219461 369.470827C269.749214 180.2260249 372.634766 265.155713 370.466797 369.470827",
           "zIndex": 1,
           "bitPathType": "path"
         },
@@ -562,9 +550,7 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "opacity": 0,
-          "shiftX": 13,
-          "shiftY": 134
+          "opacity": 0
         }
       ],
       "disabled": false
@@ -586,9 +572,7 @@
           "stroke": "#eeeeee",
           "strokeLinecap": "round",
           "strokeOpacity": 1,
-          "shiftX": 13,
-          "shiftY": 134,
-          "bitPathStr": "M357.447266,234.470827 C211.126953,-18.9175695 208,234.470827 208,234.470827",
+          "bitPathStr": "M371.447266 367.470827C225.126953 114.0824305 222 367.470827 222 367.470827",
           "zIndex": 2,
           "bitPathType": "path",
           "easing": "bezier 0.240 0.725 0.790 0.395"
@@ -608,10 +592,8 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "shiftX": 13,
-          "shiftY": 134,
           "opacity": 0.51,
-          "bitPathStr": "M357.447266,234.470827 C211.126953,-18.9175695 208,234.470827 208,234.470827",
+          "bitPathStr": "M371.447266 367.470827C225.126953 114.0824305 222 367.470827 222 367.470827",
           "zIndex": 1,
           "bitPathType": "path"
         },
@@ -623,9 +605,7 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "opacity": 0,
-          "shiftX": 13,
-          "shiftY": 134
+          "opacity": 0
         }
       ],
       "disabled": false
@@ -647,9 +627,7 @@
           "stroke": "#eeeeee",
           "strokeLinecap": "round",
           "strokeOpacity": 1,
-          "shiftX": 13,
-          "shiftY": 134,
-          "bitPathStr": "M208.222656,234.470827 C109,-17 89,234.470827 89,234.470827",
+          "bitPathStr": "M221.222656 370.470827C122 119 102 370.470827 102 370.470827",
           "zIndex": 2,
           "bitPathType": "path",
           "easing": "bezier 0.240 0.725 0.790 0.395"
@@ -669,10 +647,8 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "shiftX": 13,
-          "shiftY": 134,
           "opacity": 0.51,
-          "bitPathStr": "M208.222656,234.470827 C109,-17 89,234.470827 89,234.470827",
+          "bitPathStr": "M221.222656 370.470827C122 119 102 370.470827 102 370.470827",
           "zIndex": 1,
           "bitPathType": "path"
         },
@@ -684,9 +660,7 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "opacity": 0,
-          "shiftX": 13,
-          "shiftY": 134
+          "opacity": 0
         }
       ],
       "disabled": false
@@ -708,9 +682,7 @@
           "stroke": "#eeeeee",
           "strokeLinecap": "round",
           "strokeOpacity": 1,
-          "shiftX": 13,
-          "shiftY": 134,
-          "bitPathStr": "M89,234.470827 C89,234.470827 209.009766,-25.0815972 240.529297,234.470827",
+          "bitPathStr": "M102 368.470827C102 368.470827 222.009766 108.9184028 253.529297 368.470827",
           "zIndex": 2,
           "bitPathType": "path",
           "easing": "bezier 0.240 0.725 0.790 0.395"
@@ -730,10 +702,8 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "shiftX": 13,
-          "shiftY": 134,
           "opacity": 0.51,
-          "bitPathStr": "M89,234.470827 C89,234.470827 209.009766,-25.0815972 240.529297,234.470827",
+          "bitPathStr": "M102 368.470827C102 368.470827 222.009766 108.9184028 253.529297 368.470827",
           "zIndex": 1,
           "bitPathType": "path"
         },
@@ -745,9 +715,7 @@
           "strokeDasharray": "4 4",
           "strokeWidth": 2,
           "stroke": "#060606",
-          "opacity": 0,
-          "shiftX": 13,
-          "shiftY": 134
+          "opacity": 0
         }
       ],
       "disabled": false
