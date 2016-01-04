@@ -36,10 +36,11 @@ export interface Timeline {
     removeActiveAnimObject(anim?: AnimObject)
     cloneActiveAnimObject()
     addAnimObject(type: string)
-    refreshAnimObject(node: AnimNode | AnimObject)
 
+    refreshAnimObject(node: AnimNode | AnimObject)
     forceUpdate()
-    setState(state: any)
+
+    setPathToEdit(node: AnimNode, key: string)
 }
 
 const SVG_STYLE = {
@@ -304,5 +305,45 @@ export class AnimManager {
 
     setProgress(progress: number) {
         this.tween.setProgress(progress)
+    }
+
+    static getTweenableNumber(val: any) {
+        var key: string
+        if (!val)
+            return 0
+        else if (val.substr)
+            return parseFloat(val)
+        else if (key = Object.keys(val)[0])
+            return parseFloat(val[key])
+        else
+            return parseFloat(val) || 0
+    }
+
+    static getTweenableText(val: any) {
+        var key: string
+        if (val === 0)
+            return '0'
+        else if (!val)
+            return ''
+        else if (val.substr)
+            return val
+        else if (key = Object.keys(val)[0])
+            return key + ':' + val[key]
+        else
+            return val
+    }
+
+    static replaceTweenableValue(oldVal: any, newVal: number | string) {
+        var key: string
+        if (!oldVal)
+            return newVal
+        else if (oldVal.substr)
+            return typeof newVal === 'number' ?
+                oldVal.replace(/^-?[\d\.]+/, newVal) : newVal
+        else if (key = Object.keys(oldVal)[0])
+            return $.extend(oldVal, { [key]:
+                AnimManager.replaceTweenableValue(oldVal[key], newVal) })
+        else
+            return newVal
     }
 }

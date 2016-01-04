@@ -5,6 +5,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { Splitter } from './components/splitter'
+import { Slider } from './components/slider'
 import { ObjectEditor, NodeEditor } from './components/anim-editor'
 import { CanvasMain } from './components/canvas-main'
 import { CanvasNode } from './components/canvas-node'
@@ -33,8 +34,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         activeAnimObject: null as AnimObject,
         cursorPosition: 0,
 
-        activePathEditorNode: null as AnimNode,
-        activePathEditorKey: '' as string,
+        pathToEdit: null as { node:AnimNode, key:string },
 
         timeline: [ ] as AnimObject[],
         canvasStyle: $.extend({}, CANVAS_STYLE),
@@ -103,6 +103,10 @@ export class App extends React.Component<{}, {}> implements Timeline {
 
     getAnimObjectFromNode(node: AnimNode) {
         return this.state.timeline.filter(anim => anim.nodes.indexOf(node) >= 0)[0]
+    }
+
+    setPathToEdit(node: AnimNode, key: string) {
+        this.setState({ pathToEdit:{ node, key } })
     }
 
     // timeline implement
@@ -373,15 +377,14 @@ export class App extends React.Component<{}, {}> implements Timeline {
                             updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
                             <div ref="anim-pool"></div>
                             <CanvasNode data={ this.activeAnimNode } timeline={ this }></CanvasNode>
-                            <PathEditor
-                                data={ this.activeAnimNode &&
-                                    this.activeAnimNode === this.state.activePathEditorNode &&
-                                    (this.activeAnimNode[this.state.activePathEditorKey] || '') }
-                                onChange={ d => {
-                                    this.activeAnimNode[this.state.activePathEditorKey] = d
-                                    this.forceUpdate()
-                                    this.refreshAnimObjectDebounced()
-                                } }/>
+                            { this.state.pathToEdit && this.activeAnimNode &&
+                                this.state.pathToEdit.node === this.activeAnimNode &&
+                                <PathEditor data={ this.activeAnimNode[this.state.pathToEdit.key] || '' }
+                                    onChange={ d => {
+                                        this.activeAnimNode[this.state.pathToEdit.key] = d
+                                        this.forceUpdate()
+                                        this.refreshAnimObjectDebounced()
+                                    } } /> }
                         </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>

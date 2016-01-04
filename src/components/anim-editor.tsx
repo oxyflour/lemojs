@@ -3,9 +3,10 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline,
+import { AnimNode, AnimObject, Timeline, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 import { BaseEditor } from './anim-base-editor'
+import { Slider } from './slider'
 
 export class NodeEditor extends BaseEditor<{
     data: AnimNode
@@ -26,10 +27,10 @@ export class NodeEditor extends BaseEditor<{
         },
         stroke: {
             stroke:             k => this.getColorInput(k),
-            strokeWidth:        k => this.getTransitWithSliderInput(k, 0.5, 0.1, 0, 100),
+            strokeWidth:        k => this.getTweenableWithSliderInput(k, 0.5, 0.1, 0, 100),
             strokeOpacity:      k => this.getRangeInput(k, 0, 1, 0.01),
-            strokeDasharray:    k => this.getTransitValueInput(k, 'string value'),
-            strokeDashoffset:   k => this.getTransitValueInput(k, 'string value or value:value'),
+            strokeDasharray:    k => this.getTweenableInput(k, 'string value'),
+            strokeDashoffset:   k => this.getTweenableInput(k, 'string value or value:value'),
             strokeLinecap:      k => this.getSelectInput(k, LINECAP_STYLES),
         },
         fill: {
@@ -39,12 +40,12 @@ export class NodeEditor extends BaseEditor<{
             opacity:            k => this.getRangeInput(k, 0, 1, 0.01),
         },
         align: {
-            shift:              (k, i) => this.getTransitCoordGroup(k, i, 'shiftX', 'shiftY'),
+            shift:              (k, i) => this.getTweenablePairInput(k, i, 'shiftX', 'shiftY'),
             angle:              k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
         },
         shape: {
-            radius:             (k, i) => this.getTransitWithSliderInput(k, 0.1, 0.1, 0),
-            radiusXY:           (k, i) => this.getTransitCoordGroup(k, i, 'radiusX', 'radiusY', { minX:0, minY:0 }, 0.1, 0.1),
+            radius:             (k, i) => this.getTweenableWithSliderInput(k, 0.1, 0.1, 0),
+            radiusXY:           (k, i) => this.getTweenablePairInput(k, i, 'radiusX', 'radiusY', { minX:0, minY:0 }, 0.1, 0.1),
             sizeGap:            k => this.getNumberWithSliderInput(k, 1, 1, 0),
         },
     }
@@ -56,17 +57,17 @@ export class NodeEditor extends BaseEditor<{
         easing:                 k => this.getTextWithSelectInput(k, EASING_OPTIONS, 'easing or bezier paramters'),
         display: {
             count:              k => this.getNumberWithSliderInput(k, 1, 1, 0),
-            degree:             k => this.getTransitWithSliderInput(k, 1, 1, 0, 360),
+            degree:             k => this.getTweenableWithSliderInput(k, 1, 1, 0, 360),
             opacity:            k => this.getRangeInput(k, 0, 1, 0.01),
             randomAngle:        k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
             randomRadius:       k => this.getNumberWithSliderInput(k, 1, 1, 0, 1000),
         },
         stroke: {
             stroke:             k => this.getColorInput(k),
-            strokeWidth:        k => this.getTransitWithSliderInput(k, 0.5, 0.1, 0, 100),
+            strokeWidth:        k => this.getTweenableWithSliderInput(k, 0.5, 0.1, 0, 100),
             strokeOpacity:      k => this.getRangeInput(k, 0, 1, 0.01),
-            strokeDasharray:    k => this.getTransitValueInput(k, 'string value'),
-            strokeDashoffset:   k => this.getTransitValueInput(k, 'string value or value:value'),
+            strokeDasharray:    k => this.getTweenableInput(k, 'string value'),
+            strokeDashoffset:   k => this.getTweenableInput(k, 'string value or value:value'),
             strokeLinecap:      k => this.getSelectInput(k, LINECAP_STYLES),
         },
         fill: {
@@ -75,12 +76,12 @@ export class NodeEditor extends BaseEditor<{
             points:             k => this.getNumberWithSliderInput(k, 1, 1, 0),
         },
         align: {
-            shift:              (k, i) => this.getTransitCoordGroup(k, i, 'shiftX', 'shiftY'),
+            shift:              (k, i) => this.getTweenablePairInput(k, i, 'shiftX', 'shiftY'),
             angle:              k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
         },
         shape: {
-            radius:             (k, i) => this.getTransitWithSliderInput(k, 0.1, 0.1, 0),
-            radiusXY:           (k, i) => this.getTransitCoordGroup(k, i, 'radiusX', 'radiusY', { minX:0, minY:0 }, 0.1, 0.1),
+            radius:             (k, i) => this.getTweenableWithSliderInput(k, 0.1, 0.1, 0),
+            radiusXY:           (k, i) => this.getTweenablePairInput(k, i, 'radiusX', 'radiusY', { minX:0, minY:0 }, 0.1, 0.1),
             sizeGap:            k => this.getNumberWithSliderInput(k, 1, 1, 0),
         },
         // TODO: add child options
@@ -101,7 +102,7 @@ export class NodeEditor extends BaseEditor<{
             pathEnd:            k => this.getRangeInput(k, 0, 1, 0.01),
         },
         align: {
-            offset:             (k, i) => this.getTransitCoordGroup(k, i, 'offsetX', 'offsetY'),
+            offset:             (k, i) => this.getTweenablePairInput(k, i, 'offsetX', 'offsetY'),
             angle:              k => this.getNumberWithSliderInput(k, 1, 1, 0, 360),
         },
     }
@@ -124,8 +125,8 @@ export class NodeEditor extends BaseEditor<{
                 title="use the svg path editor in the canvas">c</div>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.props.data[key] }
-                onFocus={ e => this.props.timeline.setState({ activePathEditorNode: this.props.data, activePathEditorKey: key }) }
-                onBlur={ e => this.props.timeline.setState({ activePathEditorNode: null }) }
+                onFocus={ e => this.props.timeline.setPathToEdit(this.props.data, key) }
+                onBlur={ e => this.props.timeline.setPathToEdit(null, key) }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
     }

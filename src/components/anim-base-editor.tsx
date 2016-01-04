@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline,
+import { AnimNode, AnimObject, Timeline, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 
 import { throttle } from '../utils'
@@ -178,56 +178,7 @@ export class BaseEditor<P extends {
         </div>
     }
 
-    getTransitValueText(val: any): string {
-        var key
-        if (val === 0)
-            return '0'
-        else if (!val)
-            return ''
-        else if (val.err)
-            return val.err
-        else if (val.substr)
-            return val
-        else if (key = Object.keys(val)[0])
-            return key + ':' + val[key]
-        else
-            return val
-    }
-
-    getTransitValueNumber(val: any): number {
-        var key
-        if (!val)
-            return 0
-        else if (val.err)
-            return 0
-        else if (val.substr)
-            return parseFloat(val[key])
-        else if (key = Object.keys(val)[0])
-            return parseFloat(val[key])
-        else
-            return parseFloat(val)
-    }
-
-    getNewTransitValue(key: string, newVal: number) {
-        var val = this.props.data[key]
-        if (!val)
-            return newVal
-        else if (val.err)
-            return newVal
-        else if (val.substr)
-            return val.replace(/^-?[\d\.]+/, newVal)
-        else if (key = Object.keys(val)[0]) {
-            if (val[key] && val[key].substr)
-                val[key] = val.replace(/^-?[\d\.]+/, newVal)
-            else
-                val[key] = newVal
-            return val
-        }
-        else
-            return newVal
-    }
-
-    handleTransitValueChange(key: string, type: string, val: string) {
+    handleTweenableValueChange(key: string, type: string, val: string) {
         var sp = val.split(':')
         if (sp.length === 1) {
             var v = type === 'number' ? parseFloat(val) || 0 : val
@@ -244,40 +195,41 @@ export class BaseEditor<P extends {
         this.handleValueChange(key, { err: val })
     }
 
-    getTransitValueInput(key: string, holderText: string, type: string = '') {
+    getTweenableInput(key: string, holderText: string, type: string = '') {
         var val = this.props.data[key]
         return <div className={ val && val.err ? 'has-error' : '' }>
             <input type="text" className="form-control" placeholder={ holderText }
-                value={ this.getTransitValueText(this.props.data[key]) }
-                onChange={ e => this.handleTransitValueChange(key, type, $(e.target).val()) } />
+                value={ val && val.err ? val.err : AnimManager.getTweenableText(val) }
+                onChange={ e => this.handleTweenableValueChange(key, type, $(e.target).val()) } />
         </div>
     }
 
-    getTransitWithSliderInput(key: string, step: number,
+    getTweenableWithSliderInput(key: string, step: number,
             scale = 1, min = -Infinity, max = Infinity, holderText = '') {
         var val = this.props.data[key]
-        return <div className="input-group">
-            <Slider className="input-group-addon" valueY={ 0 } valueX={ this.getTransitValueNumber(val) }
+        return <div className={ 'input-group' + (val && val.err ? ' has-error' : '') }>
+            <Slider className="input-group-addon" valueY={ 0 } valueX={ AnimManager.getTweenableNumber(val) }
                 step={ step } scale={ scale } range={{ minX:min, maxX:max }}
                 onStart={ (x, y, e) => $(e.target).parent().addClass('active-input has-warning') }
                 onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
-                onChange={ (x, y) => this.handleValueChange(key, this.getNewTransitValue(key, x)) }>
+                onChange={ (x, y) => this.handleValueChange(key, AnimManager.replaceTweenableValue(this.props[key], x)) }>
                 ↔
             </Slider>
             <input type="text" className="form-control" placeholder={ holderText || this.getNumberHolderText(min, max) }
-                min={ min } max={ max } step={ step } value={ this.getTransitValueText(this.props.data[key]) }
-                onChange={ e => this.handleTransitValueChange(key, 'number', $(e.target).val()) } />
+                min={ min } max={ max } step={ step }
+                value={ val && val.err ? val.err : AnimManager.getTweenableText(val) }
+                onChange={ e => this.handleTweenableValueChange(key, 'number', $(e.target).val()) } />
         </div>
     }
 
-    handleTransitCoordChange(kx: string, vx: number, ky: string, vy: number) {
+    handleTweenablePairChange(kx: string, vx: number, ky: string, vy: number) {
         this.handleValueChange([kx, ky], [
-            this.getNewTransitValue(kx, vx),
-            this.getNewTransitValue(ky, vy),
+            AnimManager.replaceTweenableValue(this.props.data[kx], vx),
+            AnimManager.replaceTweenableValue(this.props.data[ky], vy),
         ])
     }
 
-    getTransitCoordGroup(key: string, index: number, kx: string, ky: string, range = null, scale = 1, step = 1) {
+    getTweenablePairInput(key: string, index: number, kx: string, ky: string, range = null, scale = 1, step = 1) {
         var vx = this.props.data[kx],
             vy = this.props.data[ky]
         return <div className="form-group" key={ index } role="editor-field">
@@ -287,21 +239,21 @@ export class BaseEditor<P extends {
                 { kx in this.props.data || ky in this.props.data ? <b>* { key }</b> : key }
             </label>
             <div className="col-xs-8">
-                <div className={ 'input-group ' + ((vx && vx.err) || (vy && vy.err) ? 'has-error' : '') }>
+                <div className={ 'input-group' + ((vx && vx.err) || (vy && vy.err) ? ' has-error' : '') }>
                     <Slider className="input-group-addon" range={ range } scale={ scale } step={ step }
-                        valueX={ this.getTransitValueNumber(vx) } valueY={ this.getTransitValueNumber(vy) }
+                        valueX={ AnimManager.getTweenableNumber(vx) } valueY={ AnimManager.getTweenableNumber(vy) }
                         onStart={ (x, y, e) => $(e.target).parent().addClass('active-input has-warning') }
                         onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
-                        onChange={ (x, y) => this.handleTransitCoordChange(kx, x, ky, y) }>
+                        onChange={ (x, y) => this.handleTweenablePairChange(kx, x, ky, y) }>
                         @
                     </Slider>
                     <input type="text" className="form-control" placeholder="x"
-                        value={ this.getTransitValueText(vx) }
-                        onChange={ e => this.handleTransitValueChange(kx, 'number', $(e.target).val()) } />
+                        value={ vx && vx.err ? vx.err : AnimManager.getTweenableText(vx) }
+                        onChange={ e => this.handleTweenableValueChange(kx, 'number', $(e.target).val()) } />
                     <span style={{ width:0, display:"table-cell" }}></span>
                     <input type="text" className="form-control" style={{ borderLeft:'none' }} placeholder="y"
-                        value={ this.getTransitValueText(vy) }
-                        onChange={ e => this.handleTransitValueChange(ky, 'number', $(e.target).val()) } />
+                        value={ vy && vy.err ? vy.err : AnimManager.getTweenableText(vy) }
+                        onChange={ e => this.handleTweenableValueChange(ky, 'number', $(e.target).val()) } />
                 </div>
             </div>
         </div>
