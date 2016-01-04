@@ -30,13 +30,28 @@ export class FakeHash {
 export function debounce<T extends Function>(func: T, delay: number): T {
     var timeout = 0
     return function() {
-        var that = this,
-            args = arguments
         if (timeout)
             clearTimeout(timeout)
+        var that = this,
+            args = arguments
         timeout = setTimeout(function () {
             func.apply(that, args)
+            timeout = 0
         }, delay)
+    } as any
+}
+
+export function throttle<T extends Function>(func: T, interval: number): T {
+    var timeout = 0
+    return function exec() {
+        if (timeout)
+            return
+        var that = this,
+            args = arguments
+        timeout = setTimeout(function () {
+            func.apply(that, args)
+            timeout = 0
+        }, interval)
     } as any
 }
 
