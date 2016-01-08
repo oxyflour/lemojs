@@ -46,7 +46,7 @@ export class BaseEditor<P extends {
             { Object.keys(fields).map((key, index) => {
                 if (typeof fields[key] === 'object') {
                     return <div key={ index }>
-                        <h5># { key }</h5>
+                        { this.state.showUnsetFields && <h5># { key }</h5> }
                         { this.getInputs(fields[key]) }
                         <hr />
                     </div>

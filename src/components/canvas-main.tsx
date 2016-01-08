@@ -100,6 +100,7 @@ export class CanvasMain extends React.Component<{
                     </a>
                     &nbsp;
                     <span>@{ Math.floor(this.props.timeline.cursorPosition) }ms</span>
+                    &nbsp;
                     <span ref="coords"></span>
                 </div>
             </div>

@@ -126,7 +126,9 @@ export class NodeEditor extends BaseEditor<{
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
             <Slider valueX={ 0 } valueY={ 0 } scale={ 0.5 }
-                onStart={ (x, y, e) => (this.attachedPath = this.props.data[key], e.preventDefault()) }
+                onStart={ (x, y, e) => (this.attachedPath = this.props.data[key],
+                    e.preventDefault(), $(e.target).parent().addClass('active-input has-warning')) }
+                onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
                 onChange={ (x, y) => this.attachedPath &&
                     this.handleValueChange(key, new SVGPathData(this.attachedPath).translate(x, y).encode()) }
                 className="input-group-addon" style={{ cursor:'pointer' }}
