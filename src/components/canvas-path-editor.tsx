@@ -300,7 +300,7 @@ export class PathEditor extends React.Component<{
             </div>
             <div style={{ position:'absolute', right:0 }}>
                 <Slider style={ TOOLBAR_BTN_STYLE }
-                    title="drag to translate path" valueX={ 0 } valueY={ 0 } scale={ 0.5 }
+                    title="drag to translate path" valueX={ 0 } valueY={ 0 }
                     onChange={ (x, y) => this.attachedPath &&
                         this.props.onChange(new SVGPathData(this.attachedPath).translate(x, y).encode()) }
                     onStart={ (x, y, e) => this.attachedPath = this.props.data }>

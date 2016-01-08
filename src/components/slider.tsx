@@ -23,7 +23,7 @@ export class Slider extends React.Component<{
     onStart?: (x: number, y: number, e?: React.MouseEvent) => void,
     onEnd?: (x: number, y: number, e?: React.MouseEvent) => void,
     onDoubleClick?: (e?: React.MouseEvent) => void,
-    
+
     title?: string,
     className?: string,
     style?: React.CSSProperties,
@@ -38,12 +38,13 @@ export class Slider extends React.Component<{
         y: number,
         vx: number,
         vy: number,
+        scale: number,
     }
 
     getValues(x, y) {
         var d = this.currentMouseData,
-            f = this.props.scale || 1,
             s = this.props.step || 1,
+            f = d.scale || 1,
             dx = x - d.x, dy = y - d.y,
             { minX = -Infinity, maxX = Infinity, minY = -Infinity, maxY = Infinity } = this.props.range || { }
         x = clamp(d.vx + s * Math.floor(dx * f), minX, maxX)
@@ -54,7 +55,11 @@ export class Slider extends React.Component<{
     handleMouseDown(e: React.MouseEvent) {
         this.props.onStart && this.props.onStart(this.props.valueX, this.props.valueY, e)
 
-        this.currentMouseData = { x:e.pageX, y:e.pageY, vx:this.props.valueX, vy:this.props.valueY }
+        this.currentMouseData = {
+            x: e.pageX, y: e.pageY,
+            vx: this.props.valueX, vy: this.props.valueY,
+            scale: (this.props.scale || 1) * (e.shiftKey ? 0.5 : 1)
+        }
         $(document).on('mousemove', this.onMouseMove).on('mouseup', this.onMouseUp)
         $('body').css('cursor', CLOSEDHAND_URL)
         $(this.refs['elem']).css('cursor', CLOSEDHAND_URL)

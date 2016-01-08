@@ -125,7 +125,7 @@ export class NodeEditor extends BaseEditor<{
     attachedPath: string
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
-            <Slider valueX={ 0 } valueY={ 0 } scale={ 0.5 }
+            <Slider valueX={ 0 } valueY={ 0 }
                 onStart={ (x, y, e) => (this.attachedPath = this.props.data[key],
                     e.preventDefault(), $(e.target).parent().addClass('active-input has-warning')) }
                 onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
