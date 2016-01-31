@@ -6,35 +6,32 @@ import * as $ from 'jquery'
 import { AnimNode, AnimObject, Timeline, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 
-import { throttle } from '../utils'
+import { throttle, clone } from '../utils'
 
 import { Slider } from './slider'
 import { Switch } from './switch'
 
 export class BaseEditor<P extends {
     data: any
-    timeline: Timeline
+    onChange: (data) => void
 }> extends React.Component<P, {}> {
     state = {
         showUnsetFields: true,
     }
 
-    refreshAnimObjectThrottled = throttle(() =>
-        this.props.timeline.refreshAnimObject(this.props.data), 50)
-
     handleValueChange(key: string | string[], val: any) {
+        var data = clone(this.props.data)
         if (Array.isArray(key))
-            key.forEach((k, i) => this.props.data[k] = val[i])
+            key.forEach((k, i) => data[k] = val[i])
         else
-            this.props.data[key] = val
-        this.props.timeline.forceUpdate()
-        this.refreshAnimObjectThrottled()
+            data[key] = val
+        this.props.onChange(data)
     }
 
     unsetValue(key: string) {
-        delete this.props.data[key]
-        this.props.timeline.forceUpdate()
-        this.refreshAnimObjectThrottled()
+        var data = clone(this.props.data)
+        delete data[key]
+        this.props.onChange(data)
     }
 
     allowToShow(key: string) {
@@ -149,15 +146,14 @@ export class BaseEditor<P extends {
         return val && val.err ? val.err : JSON.stringify(val)
     }
 
-    handleJsonChange(key: string, val: string) {
+    handleJsonChange(key: string, val: any) {
         try {
             val = JSON.parse(val)
-            this.handleValueChange(key, val)
         }
         catch (e) {
-            this.props.data[key] = { err:val }
-            this.props.timeline.forceUpdate()
+            val = { err: val }
         }
+        this.handleValueChange(key, val)
     }
 
     getJsonInput(key: string, holderText: string) {

@@ -21,10 +21,12 @@ const FRAME_INTERVAL = 1000 / 60
 
 export class TimelineCursor extends React.Component<{
     data: number,
-    timeline: Timeline,
     frameScale: number,
     marginLeft: number,
     ref: string,
+
+    onChange: (cursor: number) => void,
+    shiftTo: (cursor: number) => void,
 }, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
     onMouseUp = this.handleMouseUp.bind(this)
@@ -37,7 +39,7 @@ export class TimelineCursor extends React.Component<{
     }
 
     handleMouseDown(e: React.MouseEvent) {
-        this.props.timeline.cursorPosition = this.getCursorFromMouse(e)
+        this.props.onChange(this.getCursorFromMouse(e))
         $('body').css('cursor', 'ew-resize')
             .on('mousemove', this.onMouseMove).on('mouseup', this.onMouseUp)
     }
@@ -45,8 +47,8 @@ export class TimelineCursor extends React.Component<{
     handleMouseMove(e: React.MouseEvent) {
         var cursor = this.getCursorFromMouse(e)
         e.shiftKey ?
-            this.props.timeline.shiftAnimObjectToCursor(cursor) :
-            this.props.timeline.cursorPosition = cursor
+            this.props.shiftTo(cursor) :
+            this.props.onChange(cursor)
         e.preventDefault()
     }
 

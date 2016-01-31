@@ -18,6 +18,7 @@ export interface AnimObject {
 }
 
 export interface Timeline {
+    /*
     activeAnimNode: AnimNode
     activeAnimObject: AnimObject
     cursorPosition: number
@@ -37,10 +38,8 @@ export interface Timeline {
     cloneActiveAnimObject()
     addAnimObject(type: string)
 
-    refreshAnimObject(node: AnimNode | AnimObject)
-    forceUpdate()
-
     setPathToEdit(node: AnimNode, key: string)
+    */
 }
 
 const SVG_STYLE = {

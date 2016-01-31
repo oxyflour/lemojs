@@ -27,6 +27,12 @@ export class FakeHash {
     }
 }
 
+export function clone(...args) {
+    var data = { }
+    args.forEach(a => Object.keys(a).forEach(k => data[k] = a[k]))
+    return data
+}
+
 export function debounce<T extends Function>(func: T, delay: number): T {
     var timeout = 0
     return function() {

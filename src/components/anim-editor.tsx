@@ -12,7 +12,11 @@ import * as SVGPathData from 'svg-pathdata'
 
 export class NodeEditor extends BaseEditor<{
     data: AnimNode
-    timeline: Timeline
+    motionNames: string[]
+    onChange: (data: AnimNode) => void
+    setPathToEdit: (node: AnimNode, key: string) => void
+    removeActiveAnimNode: () => void
+    cloneActiveAnimNode: () => void
 }> {
     transitFields = {
         type:                   k => this.getSelectInput(k, ['', 'circle', 'line']),
@@ -135,8 +139,8 @@ export class NodeEditor extends BaseEditor<{
                 title="drag to translate path">@</Slider>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.props.data[key] }
-                onFocus={ e => this.props.timeline.setPathToEdit(this.props.data, key) }
-                onBlur={ e => this.props.timeline.setPathToEdit(null, key) }
+                onFocus={ e => this.props.setPathToEdit(this.props.data, key) }
+                onBlur={ e => this.props.setPathToEdit(null, key) }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
     }
@@ -146,12 +150,10 @@ export class NodeEditor extends BaseEditor<{
                 transit: this.transitFields,
                 burst: this.burstFields,
                 'motion-path': this.motionPathFields,
-            }[this.props.data.animType] || { },
-            timeline = this.props.timeline
+            }[this.props.data.animType] || { }
 
         if (this.props.data.animType === 'motion-path') {
-            var names = ['']
-            this.props.timeline.getTimeline().forEach(anim => names.push(anim.name))
+            var names = [''].concat(this.props.motionNames)
             fields.element.elemName = k => this.getSelectInput(k, names)
             fields.element.pathName = k => this.getSelectInput(k, names)
         }
@@ -160,11 +162,11 @@ export class NodeEditor extends BaseEditor<{
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => timeline.removeActiveAnimNode() }
+                        onClick={ e => this.props.removeActiveAnimNode() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => timeline.cloneActiveAnimNode() }
+                        onClick={ e => this.props.cloneActiveAnimNode() }
                         title="shortcut: Ctrl-C">Clone</a>
                     <label className="pull-right" style={{ cursor:'pointer' }}>
                         <input type="checkbox" checked={ this.state.showUnsetFields }
@@ -182,7 +184,10 @@ export class NodeEditor extends BaseEditor<{
 
 export class ObjectEditor extends BaseEditor<{
     data: AnimObject
-    timeline: Timeline
+    onChange: (data: AnimObject) => void
+    removeActiveAnimObject: () => void
+    cloneActiveAnimObject: () => void
+    addAnimNode: () => void
 }> {
     commonFields = {
         name:       k => this.getSimpleInput(k, 'text', 'animation name'),
@@ -197,22 +202,21 @@ export class ObjectEditor extends BaseEditor<{
     render() {
         var fields = {
                 transit: this.transitFields,
-            }[this.props.data.animType] || { },
-            timeline = this.props.timeline
+            }[this.props.data.animType] || { }
 
         return <form className="form-horizontal">
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => timeline.removeActiveAnimObject() }
+                        onClick={ e => this.props.removeActiveAnimObject() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => timeline.cloneActiveAnimObject() }
+                        onClick={ e => this.props.cloneActiveAnimObject() }
                         title="shortcut: Ctrl-C">Clone</a>
                     &nbsp;
                     <a className="btn btn-default"
-                        onClick={ e => timeline.addAnimNode() }>Add Node</a>
+                        onClick={ e => this.props.addAnimNode() }>Add Node</a>
                 </div>
             </div>
             { this.getInputs(this.commonFields) }

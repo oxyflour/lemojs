@@ -27,9 +27,11 @@ const TIMELINE_RESIZER_STYLE = {
 
 export class TimelineNode extends React.Component<{
     data: AnimNode,
-    timeline: Timeline,
     frameScale: number,
     key: number,
+
+    onChange: (node: AnimNode) => void
+    onSelected: () => void
 }, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
     onMouseUp = this.handleMouseUp.bind(this)
@@ -46,9 +48,7 @@ export class TimelineNode extends React.Component<{
 
         this.currentMouseData = { attr, start }
 
-        this.props.timeline.activeAnimNode = this.props.data
-        this.props.timeline.activeAnimObject =
-            this.props.timeline.getAnimObjectFromNode(this.props.data)
+        this.props.onSelected()
 
         var elem = $(this.refs['node']), title = elem.attr('title')
         elem.addClass('ms-down').css('cursor', attr === 'duration' ? 'ew-resize' : 'pointer')
@@ -85,8 +85,7 @@ export class TimelineNode extends React.Component<{
 
     handleMouseUp(e: JQueryEventObject) {
         if (this.currentMouseData.hasMoved) {
-            this.props.timeline.forceUpdate()
-            this.props.timeline.refreshAnimObject(this.props.data)
+            this.props.onChange(this.props.data)
         }
         else {
             var startPosition = this.props.timeline.getAnimNodeStart(this.props.data),

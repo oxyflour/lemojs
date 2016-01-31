@@ -13,18 +13,22 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "flat-ui": "designmodo/Flat-UI",
     "jquery": "^2.1.4",
+    "mo-js": "legomushroom/mojs",
     "react": "latest",
     "react-dom": "^0.14.3",
+    "react-redux": "^4.0.6",
     "react-style": "^0.5.5",
     "react-style-webpack-plugin": "^0.4.0",
+    "redux": "^3.0.5",
+    "redux-action": "^0.3.0",
+    "redux-actions": "^0.9.0",
     "simple-list-draggable": "0.0.4",
     "svg-pathdata": "^1.0.3",
     "ts-loader": "^0.7.2",
     "tsd": "latest",
     "typescript": "latest",
-    "webpack": "^1.12.9",
-    "mo-js": "legomushroom/mojs",
-    "flat-ui": "designmodo/Flat-UI"
+    "webpack": "^1.12.9"
   }
 }
