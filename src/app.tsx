@@ -221,7 +221,10 @@ export class App extends React.Component<{}, {}> implements Timeline {
         this.tween = new AnimManager(this.refs['anim-pool'] as HTMLElement, {
             onUpdate: (p) => this.setState({ cursorPosition:p * this.tween.getDuration() }),
         })
-        this.unsubscribe = timeline.subscribe(() => this.forceUpdate())
+        this.unsubscribe = timeline.subscribe(() => {
+            this.tween.sync(timeline.getState())
+            this.forceUpdate()
+        })
     }
 
     componentWillUnmount() {
@@ -336,11 +339,13 @@ export class App extends React.Component<{}, {}> implements Timeline {
                             { this.state.pathToEdit && this.activeAnimNode &&
                                 this.state.pathToEdit.node === this.activeAnimNode &&
                                 <PathEditor data={ this.activeAnimNode[this.state.pathToEdit.key] || '' }
-                                    onChange={ d => {
-                                        this.activeAnimNode[this.state.pathToEdit.key] = d
-                                        this.forceUpdate()
-                                        this.refreshAnimObjectDebounced()
-                                    } } /> }
+                                    onChange={
+                                        d => {
+                                            this.activeAnimNode[this.state.pathToEdit.key] = d
+                                            this.forceUpdate()
+                                            this.refreshAnimObjectDebounced()
+                                        }
+                                    } /> }
                         </CanvasMain>
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>

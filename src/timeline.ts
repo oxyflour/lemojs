@@ -1,4 +1,4 @@
-import { FakeHash, generateBezier } from './utils'
+import { clone, FakeHash, generateBezier } from './utils'
 
 export const EASING_OPTIONS = ['cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
 
@@ -18,28 +18,6 @@ export interface AnimObject {
 }
 
 export interface Timeline {
-    /*
-    activeAnimNode: AnimNode
-    activeAnimObject: AnimObject
-    cursorPosition: number
-
-    toggleAnimObjectEnableDisable(anim: AnimObject)
-    shiftAnimObjectToCursor(delta: number)
-
-    getTimeline(): AnimObject[]
-    getAnimObjectFromNode(node: AnimNode): AnimObject
-    getAnimNodeStart(node: AnimNode): number
-
-    removeActiveAnimNode()
-    cloneActiveAnimNode()
-    addAnimNode()
-
-    removeActiveAnimObject(anim?: AnimObject)
-    cloneActiveAnimObject()
-    addAnimObject(type: string)
-
-    setPathToEdit(node: AnimNode, key: string)
-    */
 }
 
 const SVG_STYLE = {
@@ -57,11 +35,62 @@ function array(size: number) {
 
 export class AnimManager {
     tween: mojs.Timeline
-    hash: FakeHash
+    anims: AnimObject[] = [ ]
+    hash = new FakeHash<AnimObject, Timeline[]>()
 
     constructor(private element: HTMLElement, options?: mojs.Timeline.InitOptions) {
         this.tween = new mojs.Timeline(options)
-        this.hash = new FakeHash()
+    }
+
+    sync(timeline: AnimObject[]) {
+        timeline.forEach(anim => anim['to-add'] = true)
+        this.anims.forEach(anim => anim['has-added'] = true)
+
+        timeline.filter(anim => anim['to-add'] && !anim['has-added']).forEach(anim => {
+            if (anim.disabled) return
+
+            var objs: mojs.Tweenable[]
+            if (anim.animType === 'transit')
+                objs = this.addTransit(anim)
+            else if (anim.animType === 'burst')
+                objs = this.addBurst(anim)
+            else if (anim.animType === 'motion-path')
+                objs = this.addMotionPath(anim)
+            else
+                throw 'not implemented'
+
+            this.hash.put(anim, objs)
+            this.tween.add(objs)
+        })
+
+        this.anims.filter(anim => !anim['to-add'] && anim['has-added']).forEach(anim => {
+            var tls = this.hash.remove(anim)
+            if (tls) tls.forEach(tl => {
+                // cleanup
+                if (anim.animType === 'motion-path') {
+                    // elem of motion-path are borrowed, so we just do noting
+                }
+                else {
+                    var el = tl['el'] as HTMLElement,
+                        pt = el && el.parentNode
+                    el && pt && pt.removeChild(el)
+                    // remember to remove dynamically created svg
+                    el && el['parent-is-dynamic'] && pt && pt.parentNode.removeChild(pt)
+                }
+                // weird?
+                this.tween.remove(tl['timeline'])
+                this.tween.remove(tl)
+            })
+        })
+
+        timeline.forEach(anim => delete anim['to-add'])
+        this.anims.forEach(anim => delete anim['has-added'])
+
+        this.anims = timeline.slice()
+
+        // important to refresh animation object
+        this.tween.recalcDuration()
+        this.tween.setStartTime(this.tween.props.time)
     }
 
     parseOptions(node: AnimNode) {
@@ -87,28 +116,6 @@ export class AnimManager {
         opt.onComplete = node['onComplete']
 
         return opt as any
-    }
-
-    // manage animations
-
-    remove(anim: AnimObject) {
-        var oldNodes = this.hash.get(anim) as mojs.Timeline[]
-        if (oldNodes) oldNodes.forEach(tl => {
-            // cleanup
-            if (anim.animType === 'motion-path') {
-                // elem of motion-path are borrowed, so we just do noting
-            }
-            else {
-                var el = tl['el'] as HTMLElement,
-                    pt = el && el.parentNode
-                el && pt && pt.removeChild(el)
-                // remember to remove dynamically created svg
-                el && el['parent-is-dynamic'] && pt && pt.parentNode.removeChild(pt)
-            }
-            // weird?
-            this.tween.remove(tl['timeline'])
-            this.tween.remove(tl)
-        })
     }
 
     getTransit(anim: AnimObject) {
@@ -197,12 +204,17 @@ export class AnimManager {
         }
 
         // update connected motion-paths
-        this.hash.key().forEach((a: AnimObject) => {
-            if (a.animType === 'motion-path') {
-                if (a.nodes.some(n => n['elemName'] === anim.name || n['pathName'] === anim.name))
-                    setTimeout(() => this.update(a), 0)
+        /*
+        var newAnims: AnimObject[] = [ ]
+        this.hash.each((a: AnimObject) => {
+            if (a.animType === 'motion-path' &&
+                a.nodes.some(n => n['elemName'] === anim.name || n['pathName'] === anim.name)) {
+                a = clone({}, a) as any
             }
+            newAnims.push(a)
         })
+        setTimeout(() => this.sync(newAnims))
+        */
 
         return transits
     }
@@ -262,28 +274,6 @@ export class AnimManager {
         })
 
         return motionPath ? [motionPath] : []
-    }
-
-    update(anim: AnimObject) {
-        this.remove(anim)
-        if (anim.disabled) return
-
-        var objs: mojs.Tweenable[]
-        if (anim.animType === 'transit')
-            objs = this.addTransit(anim)
-        else if (anim.animType === 'burst')
-            objs = this.addBurst(anim)
-        else if (anim.animType === 'motion-path')
-            objs = this.addMotionPath(anim)
-        else
-            throw 'not implemented'
-
-        this.tween.add(objs)
-        this.hash.put(anim, objs)
-
-        this.tween.recalcDuration()
-        // important to refresh animation object
-        this.tween.setStartTime(this.tween.props.time)
     }
 
     // controls
