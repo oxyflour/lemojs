@@ -30,7 +30,7 @@ export class BaseEditor<P extends {
 
     unsetValue(key: string) {
         var data = clone(this.props.data)
-        delete data[key]
+        data[key] = undefined
         this.props.onChange(data)
     }
 
@@ -48,14 +48,14 @@ export class BaseEditor<P extends {
                         <hr />
                     </div>
                 }
-                else if ((key in this.props.data || this.state.showUnsetFields) && this.allowToShow(key)) {
+                else if ((this.props.data[key] !== undefined || this.state.showUnsetFields) && this.allowToShow(key)) {
                     var elem = fields[key].call(this, key, index)
                     return elem.props.role === 'editor-field' ? elem :
                     <div className="form-group" key={ index }>
                         <label className="col-xs-4 control-label"
                             title="click to unset" style={{ cursor:'pointer' }}
                             onClick={ e => this.unsetValue(key) }>
-                            { key in this.props.data ? <b>* { key }</b> : key }
+                            { this.props.data[key] !== undefined ? <b>* { key }</b> : key }
                         </label>
                         <div className="col-xs-8">
                             { elem }
@@ -232,7 +232,7 @@ export class BaseEditor<P extends {
             <label className="col-xs-4 control-label"
                 title="click to unset" style={{ cursor:'pointer' }}
                 onClick={ e => void(this.unsetValue(kx), this.unsetValue(ky)) }>
-                { kx in this.props.data || ky in this.props.data ? <b>* { key }</b> : key }
+                { this.props.data[kx] !== undefined || this.props.data[ky] !== undefined ? <b>* { key }</b> : key }
             </label>
             <div className="col-xs-8">
                 <div className={ 'input-group' + ((vx && vx.err) || (vy && vy.err) ? ' has-error' : '') }>
