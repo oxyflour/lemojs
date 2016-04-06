@@ -215,7 +215,7 @@ export class App extends React.Component<{}, {}> {
             updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
             <div ref="anim-pool"></div>
             { this.state.activePathEditorTween === this.state.activeTween &&
-                this.state.activePathEditorKey &&
+                this.state.activePathEditorTween && this.state.activePathEditorKey &&
                 <PathEditor data={ this.state.activeTween[this.state.activePathEditorKey] || '' }
                     onClose={ () => this.setState({ activePathEditorKey:'' }) }
                     onChange={ path => Action.updateTween.dispatch(this.timeline, {
