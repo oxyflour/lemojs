@@ -16,31 +16,24 @@ function createRedux<S>(
 }
 
 export const timelineReducer = createRedux<Animation[]>([ ], {
-    [Action.addTween.type]: (state, action) => state.map(a => {
-        var { anim, tween, index } = Action.addTween.from(action)
-        if (a === anim) {
-            var tweens = a.tweens.slice()
-            tweens.splice(+index === index ? index : tweens.length, 0, clone(tween))
-            a = clone(a, { tweens })
-        }
-        return a
-    }),
-    [Action.updateTween.type]: (state, action) => state.map(a => {
-        var { tween, update } = Action.updateTween.from(action)
-        if (a.tweens.indexOf(tween) >= 0) {
-            var tweens = a.tweens.map(n => n === tween ? clone(n, update) : n)
-            a = clone(a, { tweens })
-        }
-        return a
-    }),
-    [Action.removeTween.type]: (state, action) => state.map(a => {
-        var { tween } = Action.removeTween.from(action)
-        if (a.tweens.indexOf(tween) >= 0) {
-            var tweens = a.tweens.filter(n => n !== tween)
-            a = clone(a, { tweens })
-        }
-        return a
-    }),
+    [Action.addTween.type]: (state, action) => {
+        var { anim, tween, index } = Action.addTween.from(action),
+            tweens = anim.tweens.slice()
+        tweens.splice(+index === index ? index : tweens.length, 0, clone(tween))
+        return timelineReducer(state, Action.updateAnimation.create({ anim, update: { tweens } }))
+    },
+    [Action.updateTween.type]: (state, action) => {
+        var { tween, update } = Action.updateTween.from(action),
+            anim = state.filter(a => a.tweens.indexOf(tween) >= 0)[0],
+            tweens = anim && anim.tweens.map(t => t === tween ? clone(t, update) : t)
+        return timelineReducer(state, Action.updateAnimation.create({ anim, update: { tweens } }))
+    },
+    [Action.removeTween.type]: (state, action) => {
+        var { tween } = Action.removeTween.from(action),
+            anim = state.filter(a => a.tweens.indexOf(tween) >= 0)[0],
+            tweens = anim && anim.tweens.filter(t => t !== tween)
+        return timelineReducer(state, Action.updateAnimation.create({ anim, update: { tweens } }))
+    },
     [Action.addAnimation.type]: (state, action) => {
         var { anim } = Action.addAnimation.from(action)
         return state.concat(clone(anim))

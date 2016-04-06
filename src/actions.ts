@@ -8,8 +8,9 @@ var typeIdCount = 1
 function createAction<T extends Action>() {
     var type = typeIdCount ++,
         from = (data: any) => data as T,
-        dispatch = (store: Store, data: T) => (data.type = type, store.dispatch(data))
-    return { dispatch, type, from }
+        create = (data: T) => (data.type = type, data),
+        dispatch = (store: Store, data: T) => store.dispatch(create(data))
+    return { dispatch, type, from, create }
 }
 
 export interface Action {
