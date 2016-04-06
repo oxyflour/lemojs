@@ -187,10 +187,10 @@ export class App extends React.Component<{}, {}> {
                     </a>
                     <ul className="dropdown-menu">
                         <li><a href="javascript:void(0)"
-                            onClick={ e => $.getJSON('proj-mojs.json', (proj) => this.updateProject(proj)) }>
+                            onClick={ e => $.getJSON('samples/mojs.json', (proj) => this.updateProject(proj)) }>
                                 <span className="glyphicon glyphicon-save" />&nbsp;mojs</a></li>
                         <li><a href="javascript:void(0)"
-                            onClick={ e => $.getJSON('proj-nsdn.json', (proj) => this.updateProject(proj)) }>
+                            onClick={ e => $.getJSON('samples/nsdn.json', (proj) => this.updateProject(proj)) }>
                                 <span className="glyphicon glyphicon-save" />&nbsp;nsdn</a></li>
                     </ul>
                 </li>
