@@ -17,9 +17,6 @@ export interface AnimObject {
     disabled?: boolean,
 }
 
-export interface Timeline {
-}
-
 const SVG_STYLE = {
     overflow: 'hidden',
     width: '100%',
@@ -29,14 +26,10 @@ const SVG_STYLE = {
     top: '0px',
 }
 
-function array(size: number) {
-    return Array.apply(null, new Array(size))
-}
-
 export class AnimManager {
     tween: mojs.Timeline
     anims: AnimObject[] = [ ]
-    hash = new FakeHash<AnimObject, Timeline[]>()
+    hash = new FakeHash<AnimObject, mojs.Tweenable[]>()
 
     constructor(private element: HTMLElement, options?: mojs.Timeline.InitOptions) {
         this.tween = new mojs.Timeline(options)
@@ -174,7 +167,7 @@ export class AnimManager {
                 keys = Object.keys(stagger),
                 len = Math.max(...keys.map(k => stagger[k].length || 0))
 
-            if (node0) array(len).map((x, i) => {
+            if (node0) Array.apply(0, Array(len)).map((x, i) => {
                 var newAnim: AnimObject = JSON.parse(JSON.stringify(anim)),
                     newNode0: mojs.Transit.InitOptions = newAnim.nodes[0]
                 keys.forEach(k => newNode0[k] = stagger[k][i])

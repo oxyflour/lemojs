@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline, AnimManager,
+import { AnimNode, AnimObject, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 import { BaseEditor } from './anim-base-editor'
 import { Slider } from './slider'
@@ -14,9 +14,9 @@ export class NodeEditor extends BaseEditor<{
     data: AnimNode
     motionNames: string[]
     onChange: (data: AnimNode) => void
-    setPathToEdit: (node: AnimNode, key: string) => void
     removeActiveAnimNode: () => void
     cloneActiveAnimNode: () => void
+    selectPathToEdit: (key: string) => void
 }> {
     transitFields = {
         type:                   k => this.getSelectInput(k, ['', 'circle', 'line']),
@@ -129,18 +129,10 @@ export class NodeEditor extends BaseEditor<{
     attachedPath: string
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
-            <Slider valueX={ 0 } valueY={ 0 }
-                onStart={ (x, y, e) => (this.attachedPath = this.props.data[key],
-                    e.preventDefault(), $(e.target).parent().addClass('active-input has-warning')) }
-                onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
-                onChange={ (x, y) => this.attachedPath &&
-                    this.handleValueChange(key, new SVGPathData(this.attachedPath).translate(x, y).encode()) }
-                className="input-group-addon" style={{ cursor:'pointer' }}
-                title="drag to translate path">@</Slider>
+            <span className="input-group-addon" style={{ cursor:'pointer' }} title="click to edit"
+                onClick={ e => this.props.selectPathToEdit(key) }>#</span>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.props.data[key] }
-                onFocus={ e => this.props.setPathToEdit(this.props.data, key) }
-                onBlur={ e => this.props.setPathToEdit(null, key) }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
     }
@@ -224,3 +216,4 @@ export class ObjectEditor extends BaseEditor<{
         </form>
     }
 }
+

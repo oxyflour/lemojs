@@ -65,6 +65,7 @@ function findLastItemWith(cmds: any[], index: number, fn: string | ((...args) =>
 export class PathEditor extends React.Component<{
     data: string,
     onChange: (data: string) => void,
+    onClose: () => void,
 }, { }> {
     attachedPath: string
     attachedCmds: SVGPathData.Command[]
@@ -306,15 +307,11 @@ export class PathEditor extends React.Component<{
                     onStart={ (x, y, e) => this.attachedPath = this.props.data }>
                     @
                 </Slider>
-                <Slider style={ TOOLBAR_BTN_STYLE }
-                    title="drag to rescale path"
-                    valueX={ 1 } valueY={ 1 } step={ 0.1 } scale={ 0.1 }
-                    range={{ minX:0.1, minY:0.1, maxX:2, maxY:2 }}
-                    onChange={ (x, y) => this.attachedPath &&
-                        this.props.onChange(new SVGPathData(this.attachedPath).scale(x, y).encode()) }
-                    onStart={ (x, y, e) => this.attachedPath = this.props.data }>
-                    #
-                </Slider>
+                <span style={ TOOLBAR_BTN_STYLE }
+                    title="close"
+                    onClick={ e => this.props.onClose() }>
+                    x
+                </span>
             </div>
         </div>
     }

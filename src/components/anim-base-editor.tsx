@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline, AnimManager,
+import { AnimNode, AnimObject, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 
 import { throttle, clone } from '../utils'
@@ -270,3 +270,4 @@ export class BaseEditor<P extends {
         </div>
     }
 }
+
