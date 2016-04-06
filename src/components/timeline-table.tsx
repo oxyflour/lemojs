@@ -155,7 +155,7 @@ export class TimelineTable extends React.Component<{
                 scale={ 1 / frameScale }
                 style={ TIMELINE_RESIZE_TWEEN_STYLE }
                 tooltip={ (end - tween.duration) + ' ~ ' + end }
-                openHandCursor="ew-resize"
+                cursor={{ hover: "ew-resize" }}
                 onChange={ (x, y) => this.props.updateTween(tween, { duration:x }) }>&nbsp;</Slider>
             <Slider
                 valueX={ tween.delay }
@@ -180,7 +180,7 @@ export class TimelineTable extends React.Component<{
             valueY={ 0 }
             range={{ minX:0 }}
             scale={ 1 / frameScale }
-            openHandCursor="ew-resize"
+            cursor={{ hover: "ew-resize" }}
             style={ clone(TIMELINE_CURSOR_STYLE, { left, marginLeft }) }
             tooltip={ '' + this.props.cursorPosition }
             onChange={ (x, y) => this.props.onCursorChange(x) }>
