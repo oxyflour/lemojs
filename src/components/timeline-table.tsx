@@ -126,7 +126,8 @@ export class TimelineTable extends React.Component<{
 
     renderRow(anim: Animation, index: number) {
         var isActive = anim.tweens.indexOf(this.props.activeTween) >= 0,
-            fontWeight = isActive ? 'bold' : 'normal'
+            fontWeight = isActive ? 'bold' : 'normal',
+            end = 0
         return <div style={ TIMELINE_ROW_STYLE } key={ index }>
             <div style={ TIMELINE_ROWHEADER_STYLE }
                 onClick={ e => this.props.setActiveTween(anim.tweens[0]) }
@@ -134,13 +135,14 @@ export class TimelineTable extends React.Component<{
                 <span className="text-primary"
                     style={{ fontWeight }}>{ anim.name }</span>
             </div>
-            { anim.tweens.map((tween, index) => this.renderTween(tween, index)) }
+            { (end = 0) || anim.tweens.map((tween, index) =>
+                this.renderTween(tween, index, end += tween.delay + tween.duration)) }
             { isActive && <span style={ TIMELINE_ADD_TWEEN_STYLE }
                 onClick={ e => this.props.addTween(anim) }>+</span> }
         </div>
     }
 
-    renderTween(tween: Tween, index: number) {
+    renderTween(tween: Tween, index: number, end: number) {
         var frameScale = this.state.frameScale,
             width = tween.duration * frameScale,
             marginLeft = tween.delay * frameScale,
@@ -152,6 +154,7 @@ export class TimelineTable extends React.Component<{
                 range={{ minX:TIMELINE_RESIZE_TWEEN_STYLE.width / frameScale }}
                 scale={ 1 / frameScale }
                 style={ TIMELINE_RESIZE_TWEEN_STYLE }
+                tooltip={ (end - tween.duration) + ' ~ ' + end }
                 openHandCursor="ew-resize"
                 onChange={ (x, y) => this.props.updateTween(tween, { duration:x }) }>&nbsp;</Slider>
             <Slider
@@ -160,7 +163,7 @@ export class TimelineTable extends React.Component<{
                 range={{ minX:0 }}
                 scale={ 1 / frameScale }
                 style={ TIMELINE_MOVE_TWEEN_STYLE }
-                tooltip={ tween.delay + ' : ' + tween.duration }
+                tooltip={ (end - tween.duration) + ' ~ ' + end }
                 onStart={ (x, y) => this.props.setActiveTween(tween) }
                 onChange={ (x, y) => this.props.updateTween(tween, { delay:x }) }>&nbsp;</Slider>
         </div>
