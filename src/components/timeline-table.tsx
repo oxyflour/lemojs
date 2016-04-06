@@ -19,8 +19,13 @@ const TIMELINE_TABLE_STYLE = {
 
 const TIMELINE_CURSOR_STYLE = {
     position: 'absolute',
-    borderRight: '3px solid #333',
-    height: '100%',
+    paddingLeft: 5,
+    paddingRight: 5,
+}
+
+const TIMELINE_CURSOR_CORE_STYLE = {
+    borderLeft: '3px solid #aaa',
+    display: 'block',
 }
 
 const TIMELINE_ROWCONTAINER_STYLE = {
@@ -88,11 +93,6 @@ export class TimelineTable extends React.Component<{
     state = {
         frameScale: 0.1,
     }
-
-    updateCursorDebounced = debounce(() => {
-        var { cursor, rows } = this.refs
-        $(cursor).parent().css('min-height', $(rows)[0].scrollHeight)
-    }, 50)
 
     //
 
@@ -169,10 +169,15 @@ export class TimelineTable extends React.Component<{
         </div>
     }
 
+    updateCursorDebounced = debounce(() => {
+        var { cursor, rows } = this.refs
+        $(cursor).css('min-height', $(rows)[0].scrollHeight)
+    }, 50)
+
     renderCursor() {
         var frameScale = this.state.frameScale,
             left = this.props.cursorPosition * frameScale,
-            marginLeft = TIMELINE_ROWHEADER_STYLE.width
+            marginLeft = TIMELINE_ROWHEADER_STYLE.width - TIMELINE_CURSOR_STYLE.paddingLeft
 
         this.updateCursorDebounced()
         return <Slider
@@ -184,7 +189,7 @@ export class TimelineTable extends React.Component<{
             style={ clone(TIMELINE_CURSOR_STYLE, { left, marginLeft }) }
             tooltip={ '' + this.props.cursorPosition }
             onChange={ (x, y) => this.props.onCursorChange(x) }>
-            <span ref="cursor"></span>
+            <span ref="cursor" style={ TIMELINE_CURSOR_CORE_STYLE }></span>
         </Slider>
     }
 
