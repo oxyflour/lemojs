@@ -39,24 +39,27 @@ export class AnimManager {
         timeline.forEach(anim => anim['to-add'] = true)
         this.anims.forEach(anim => anim['has-added'] = true)
 
-        timeline.filter(anim => anim['to-add'] && !anim['has-added']).forEach(anim => {
-            if (anim.disabled) return
+        var animsToAdd = timeline.filter(anim => anim['to-add'] && !anim['has-added']),
+            animsToRemove = this.anims.filter(anim => !anim['to-add'] && anim['has-added'])
 
-            var objs: mojs.Tweenable[]
-            if (anim.animType === 'transit')
-                objs = this.addTransit(anim)
-            else if (anim.animType === 'burst')
-                objs = this.addBurst(anim)
-            else if (anim.animType === 'motion-path')
-                objs = this.addMotionPath(anim)
-            else
-                throw 'not implemented'
+        // must add motion-path at last as it depends on other objects
+        animsToAdd = animsToAdd.sort((a, b) => a.animType === 'motion-path' ? 1 : 0)
+        // refresh motion-path if it depends on new added objects
+        var animsToAddMap = { }
+        animsToAdd.filter(anim => anim.animType !== 'motion-path')
+            .forEach(anim => animsToAddMap[anim.name] = anim)
+        this.anims.filter(anim => {
+                return anim.animType === 'motion-path' && anim.tweens.some(tween =>
+                    animsToAddMap[tween['elemName']] || animsToAddMap[tween['pathName']])
+            })
+            .forEach(anim => {
+                if (animsToAdd.indexOf(anim) === -1)
+                    animsToAdd.push(anim)
+                if (animsToRemove.indexOf(anim) === -1)
+                    animsToRemove.push(anim)
+            })
 
-            this.hash.put(anim, objs)
-            this.timeline.add(objs)
-        })
-
-        this.anims.filter(anim => !anim['to-add'] && anim['has-added']).forEach(anim => {
+        animsToRemove.forEach(anim => {
             var tls = this.hash.remove(anim)
             if (tls) tls.forEach(tl => {
                 // cleanup
@@ -74,6 +77,25 @@ export class AnimManager {
                 this.timeline.remove(tl['timeline'])
                 this.timeline.remove(tl)
             })
+            console.log('remove', anim)
+        })
+
+        animsToAdd.forEach(anim => {
+            if (anim.disabled) return
+
+            var objs: mojs.Tweenable[]
+            if (anim.animType === 'transit')
+                objs = this.addTransit(anim)
+            else if (anim.animType === 'burst')
+                objs = this.addBurst(anim)
+            else if (anim.animType === 'motion-path')
+                objs = this.addMotionPath(anim)
+            else
+                throw 'not implemented'
+
+            this.hash.put(anim, objs)
+            this.timeline.add(objs)
+            console.log('add', anim)
         })
 
         timeline.forEach(anim => delete anim['to-add'])
@@ -108,7 +130,7 @@ export class AnimManager {
         opt.onStart = tween['onStart']
         opt.onComplete = tween['onComplete']
 
-        return opt as any
+        return opt
     }
 
     getTransit(anim: Animation) {
@@ -227,7 +249,7 @@ export class AnimManager {
         var motionPath: mojs.MotionPath = null,
             lastOpt: mojs.MotionPath.InitOptions = { }
         anim.tweens.forEach(tween => {
-            var opt: mojs.MotionPath.InitOptions = this.parseOptions(tween)
+            var opt = this.parseOptions(tween) as mojs.MotionPath.InitOptions
             Object.keys(lastOpt).forEach(k => {
                 if (opt[k] === undefined)
                     opt[k] = lastOpt[k]
