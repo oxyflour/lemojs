@@ -1,6 +1,6 @@
 // TODO: split it into seperated files
 
-import { AnimObject, AnimNode } from './timeline'
+import { Animation, Tween } from './timeline'
 
 var typeIdCount = 1
 function createAction<T extends Action>() {
@@ -15,36 +15,36 @@ export interface Action {
 }
 
 export module Action {
-    export const addAnimNode = createAction<{
-        anim: AnimObject
-        node: AnimNode
+    export const addTween = createAction<{
+        anim: Animation
+        tween: Tween
         index?: number
     }>()
 
-    export const updateAnimNode = createAction<{
-        node: AnimNode
+    export const updateTween = createAction<{
+        tween: Tween
         update: any
     }>()
 
-    export const removeAnimNode = createAction<{
-        node: AnimNode
+    export const removeTween = createAction<{
+        tween: Tween
     }>()
 
-    export const addAnimObject = createAction<{
-        anim: AnimObject
+    export const addAnimation = createAction<{
+        anim: Animation
         index?: number
     }>()
 
-    export const updateAnimObject = createAction<{
-        anim: AnimObject
+    export const updateAnimation = createAction<{
+        anim: Animation
         update: any
     }>()
 
-    export const removeAnimObject = createAction<{
-        anim: AnimObject
+    export const removeAnimation = createAction<{
+        anim: Animation
     }>()
 
     export const replaceTimeline = createAction<{
-        timeline: AnimObject[]
+        timeline: Animation[]
     }>()
 }

@@ -3,19 +3,19 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, AnimManager,
+import { Tween, Animation, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 import { BaseEditor } from './anim-base-editor'
 import { Slider } from './slider'
 
 import * as SVGPathData from 'svg-pathdata'
 
-export class NodeEditor extends BaseEditor<{
-    data: AnimNode
+export class TweenEditor extends BaseEditor<{
+    data: Tween
     motionNames: string[]
-    onChange: (data: AnimNode) => void
-    removeActiveAnimNode: () => void
-    cloneActiveAnimNode: () => void
+    onChange: (data: Tween) => void
+    removeActiveTween: () => void
+    cloneActiveTween: () => void
     selectPathToEdit: (key: string) => void
 }> {
     transitFields = {
@@ -154,11 +154,11 @@ export class NodeEditor extends BaseEditor<{
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => this.props.removeActiveAnimNode() }
+                        onClick={ e => this.props.removeActiveTween() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => this.props.cloneActiveAnimNode() }
+                        onClick={ e => this.props.cloneActiveTween() }
                         title="shortcut: Ctrl-C">Clone</a>
                     <label className="pull-right" style={{ cursor:'pointer' }}>
                         <input type="checkbox" checked={ this.state.showUnsetFields }
@@ -175,11 +175,11 @@ export class NodeEditor extends BaseEditor<{
 }
 
 export class ObjectEditor extends BaseEditor<{
-    data: AnimObject
-    onChange: (data: AnimObject) => void
-    removeActiveAnimObject: () => void
-    cloneActiveAnimObject: () => void
-    addAnimNode: () => void
+    data: Animation
+    onChange: (data: Animation) => void
+    removeActiveAnimation: () => void
+    cloneActiveAnimation: () => void
+    addTween: () => void
 }> {
     commonFields = {
         name:       k => this.getSimpleInput(k, 'text', 'animation name'),
@@ -200,15 +200,15 @@ export class ObjectEditor extends BaseEditor<{
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => this.props.removeActiveAnimObject() }
+                        onClick={ e => this.props.removeActiveAnimation() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => this.props.cloneActiveAnimObject() }
+                        onClick={ e => this.props.cloneActiveAnimation() }
                         title="shortcut: Ctrl-C">Clone</a>
                     &nbsp;
                     <a className="btn btn-default"
-                        onClick={ e => this.props.addAnimNode() }>Add Node</a>
+                        onClick={ e => this.props.addTween() }>Add Tween</a>
                 </div>
             </div>
             { this.getInputs(this.commonFields) }

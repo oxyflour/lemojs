@@ -4,7 +4,7 @@ import * as React from 'react'
 import * as $ from 'jquery'
 import { Modal } from './modal'
 
-import { AnimNode, AnimObject } from '../timeline'
+import { Tween, Animation } from '../timeline'
 
 const CONTAINER_STYLE = {
     padding: 10,

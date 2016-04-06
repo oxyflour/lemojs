@@ -9,7 +9,7 @@
     {
       "name": "ball",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 0,
           "duration": 45,
@@ -266,7 +266,7 @@
     {
       "name": "path",
       "animType": "motion-path",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2089,
           "duration": 901,
@@ -328,7 +328,7 @@
     {
       "name": "trail1",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 0,
           "duration": 1000,
@@ -368,7 +368,7 @@
     {
       "name": "trail2",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 1100,
           "duration": 486,
@@ -408,7 +408,7 @@
     {
       "name": "trail3",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 1586,
           "duration": 475,
@@ -448,7 +448,7 @@
     {
       "name": "trail4m",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2081,
           "duration": 921,
@@ -473,7 +473,7 @@
     {
       "name": "trail4",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2141,
           "duration": 511,
@@ -503,7 +503,7 @@
     {
       "name": "trail5m",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3022,
           "duration": 913,
@@ -528,7 +528,7 @@
     {
       "name": "trail5",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3042,
           "duration": 569,
@@ -558,7 +558,7 @@
     {
       "name": "trail6m",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3996,
           "duration": 982,
@@ -583,7 +583,7 @@
     {
       "name": "trail6",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 4076,
           "duration": 502,
@@ -613,7 +613,7 @@
     {
       "name": "trail7m",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 5058,
           "duration": 1013,
@@ -638,7 +638,7 @@
     {
       "name": "trail7",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 5108,
           "duration": 533,
@@ -668,7 +668,7 @@
     {
       "name": "trail8m",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 6131,
           "duration": 1078,
@@ -693,7 +693,7 @@
     {
       "name": "trail8",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 6191,
           "duration": 598,
@@ -723,7 +723,7 @@
     {
       "name": "burst",
       "animType": "burst",
-      "nodes": [
+      "tweens": [
         {
           "delay": 1000,
           "duration": 269,
@@ -840,7 +840,7 @@
     {
       "name": "burst",
       "animType": "burst",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3543,
           "duration": 249,
@@ -860,7 +860,7 @@
     {
       "name": "semicircle",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 1000,
           "duration": 352,
@@ -890,7 +890,7 @@
     {
       "name": "semicircle",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 7815,
           "duration": 370,
@@ -920,7 +920,7 @@
     {
       "name": "dot",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3393,
           "duration": 513,
@@ -939,7 +939,7 @@
     {
       "name": "circle",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 6656,
           "duration": 573,
@@ -980,7 +980,7 @@
     {
       "name": "circle",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 7189,
           "duration": 510,
@@ -1021,7 +1021,7 @@
     {
       "name": "circle",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 6656,
           "duration": 573,
@@ -1062,7 +1062,7 @@
     {
       "name": "circle",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 7189,
           "duration": 510,
@@ -1103,7 +1103,7 @@
     {
       "name": "motiOn",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2151,
           "duration": 1952,
@@ -1143,7 +1143,7 @@
     {
       "name": "motiOn",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2151,
           "duration": 1922,
@@ -1183,7 +1183,7 @@
     {
       "name": "mOtion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3112,
           "duration": 921,
@@ -1221,7 +1221,7 @@
     {
       "name": "mOtion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 4046,
           "duration": 1270,
@@ -1262,7 +1262,7 @@
     {
       "name": "mOtion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 4036,
           "duration": 1230,
@@ -1303,7 +1303,7 @@
     {
       "name": "motioN",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 4046,
           "duration": 2183,
@@ -1344,7 +1344,7 @@
     {
       "name": "motioN",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 4046,
           "duration": 2183,
@@ -1385,7 +1385,7 @@
     {
       "name": "moTion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 5018,
           "duration": 2089,
@@ -1424,7 +1424,7 @@
     {
       "name": "moTion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 5178,
           "duration": 1909,
@@ -1463,7 +1463,7 @@
     {
       "name": "moTion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 5188,
           "duration": 1879,
@@ -1502,7 +1502,7 @@
     {
       "name": "Motion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 6071,
           "duration": 1976,
@@ -1544,7 +1544,7 @@
     {
       "name": "Motion",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 6071,
           "duration": 1946,
@@ -1586,7 +1586,7 @@
     {
       "name": "motIon",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 7239,
           "duration": 1399,
@@ -1625,7 +1625,7 @@
     {
       "name": "motIon",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 7380,
           "duration": 1429,
@@ -1664,7 +1664,7 @@
     {
       "name": "motIon",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 7239,
           "duration": 1399,

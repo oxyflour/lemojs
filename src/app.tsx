@@ -10,10 +10,10 @@ import { Slider } from './components/slider'
 import { CanvasMain } from './components/canvas-main'
 import { PathEditor } from './components/canvas-path-editor'
 import { TimelineTable } from './components/timeline-table'
-import { NodeEditor, ObjectEditor } from './components/anim-editor'
+import { TweenEditor, ObjectEditor } from './components/anim-editor'
 import { Modal } from './components/modal'
 
-import { AnimNode, AnimObject, AnimManager } from './timeline'
+import { Tween, Animation, AnimManager } from './timeline'
 
 import { clone, debounce } from './utils'
 
@@ -42,7 +42,7 @@ class ObjectPool {
 
 interface ProjectObject {
     version: string,
-    timeline: AnimObject[],
+    timeline: Animation[],
     canvasStyle: { width:number, height:number, background:string },
     timelineState: boolean[],
 }
@@ -53,11 +53,11 @@ export class App extends React.Component<{}, {}> {
     unsubscribe: Function
 
     state = {
-        activeAnimNode: null as AnimNode,
-        activeAnimObject: null as AnimObject,
+        activeTween: null as Tween,
+        activeAnimation: null as Animation,
         cursorPosition: 0,
 
-        activePathEditorNode: null as AnimNode,
+        activePathEditorTween: null as Tween,
         activePathEditorKey: '',
 
         canvasStyle: $.extend({}, CANVAS_STYLE),
@@ -65,11 +65,11 @@ export class App extends React.Component<{}, {}> {
     }
 
     getTimeline() {
-        return this.timeline.getState() as AnimObject[]
+        return this.timeline.getState() as Animation[]
     }
 
-    getAnimObjectFromNode(node: AnimNode) {
-        return this.getTimeline().filter(anim => anim.nodes.indexOf(node) >= 0)[0]
+    getAnimationFromTween(tween: Tween) {
+        return this.getTimeline().filter(anim => anim.tweens.indexOf(tween) >= 0)[0]
     }
 
     syncTweenDebounced = debounce(() => this.tween.sync(this.getTimeline()), 200)
@@ -133,11 +133,11 @@ export class App extends React.Component<{}, {}> {
         var pool = new ObjectPool()
         // FIXME: it might be slow
         this.getTimeline().forEach(anim => {
-            pool.put(anim) && anim.nodes.forEach(node => pool.put(node))
+            pool.put(anim) && anim.tweens.forEach(tween => pool.put(tween))
         })
-        this.state.activeAnimNode = pool.get(this.state.activeAnimNode)
-        this.state.activeAnimObject = pool.get(this.state.activeAnimObject)
-        this.state.activePathEditorNode = pool.get(this.state.activePathEditorNode)
+        this.state.activeTween = pool.get(this.state.activeTween)
+        this.state.activeAnimation = pool.get(this.state.activeAnimation)
+        this.state.activePathEditorTween = pool.get(this.state.activePathEditorTween)
     }
 
     componentDidMount() {
@@ -214,54 +214,52 @@ export class App extends React.Component<{}, {}> {
             canvasStyle={ this.state.canvasStyle }
             updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
             <div ref="anim-pool"></div>
-            { this.state.activePathEditorNode === this.state.activeAnimNode &&
+            { this.state.activePathEditorTween === this.state.activeTween &&
                 this.state.activePathEditorKey &&
-                <PathEditor data={ this.state.activeAnimNode[this.state.activePathEditorKey] || '' }
+                <PathEditor data={ this.state.activeTween[this.state.activePathEditorKey] || '' }
                     onClose={ () => this.setState({ activePathEditorKey:'' }) }
-                    onChange={
-                        path => this.timeline.dispatch(Action.updateAnimNode.create({
-                            node: this.state.activeAnimNode,
-                            update: { [this.state.activePathEditorKey]: path }
-                        }))
-                    } /> }
+                    onChange={ path => this.timeline.dispatch(Action.updateTween.create({
+                        tween: this.state.activeTween,
+                        update: { [this.state.activePathEditorKey]: path }
+                    })) } /> }
         </CanvasMain>
     }
 
     renderEditor() {
         return <div style={{ padding:15 }}>
         {
-            this.state.activeAnimNode ?
-                <NodeEditor data={ this.state.activeAnimNode }
+            this.state.activeTween ?
+                <TweenEditor data={ this.state.activeTween }
                     motionNames={ this.getTimeline().map(a => a.name) }
                     selectPathToEdit={ (key) => this.setState({
-                        activePathEditorNode: this.state.activeAnimNode,
+                        activePathEditorTween: this.state.activeTween,
                         activePathEditorKey: this.state.activePathEditorKey === key ? '' : key,
                     })}
-                    cloneActiveAnimNode={ () => this.timeline.dispatch(Action.addAnimNode.create({
-                        anim: this.getAnimObjectFromNode(this.state.activeAnimNode),
-                        node: this.state.activeAnimNode
+                    cloneActiveTween={ () => this.timeline.dispatch(Action.addTween.create({
+                        anim: this.getAnimationFromTween(this.state.activeTween),
+                        tween: this.state.activeTween
                     })) }
-                    removeActiveAnimNode={ () => this.timeline.dispatch(Action.removeAnimNode.create({
-                        node: this.state.activeAnimNode
+                    removeActiveTween={ () => this.timeline.dispatch(Action.removeTween.create({
+                        tween: this.state.activeTween
                     })) }
-                    onChange={ (update) => this.timeline.dispatch(Action.updateAnimNode.create({
-                        node: this.state.activeAnimNode,
+                    onChange={ (update) => this.timeline.dispatch(Action.updateTween.create({
+                        tween: this.state.activeTween,
                         update: update
                     })) } /> :
-            this.state.activeAnimObject ?
-                <ObjectEditor data={ this.state.activeAnimObject }
-                    addAnimNode={ () => this.timeline.dispatch(Action.addAnimNode.create({
-                        anim: this.state.activeAnimObject,
-                        node: { delay: 0, duration: 1000, animType: this.state.activeAnimObject.animType }
+            this.state.activeAnimation ?
+                <ObjectEditor data={ this.state.activeAnimation }
+                    addTween={ () => this.timeline.dispatch(Action.addTween.create({
+                        anim: this.state.activeAnimation,
+                        tween: { delay: 0, duration: 1000, animType: this.state.activeAnimation.animType }
                     })) }
-                    cloneActiveAnimObject={ () => this.timeline.dispatch(Action.addAnimObject.create({
-                        anim: this.state.activeAnimObject,
+                    cloneActiveAnimation={ () => this.timeline.dispatch(Action.addAnimation.create({
+                        anim: this.state.activeAnimation,
                     })) }
-                    removeActiveAnimObject={ () => this.timeline.dispatch(Action.removeAnimObject.create({
-                        anim: this.state.activeAnimObject
+                    removeActiveAnimation={ () => this.timeline.dispatch(Action.removeAnimation.create({
+                        anim: this.state.activeAnimation
                     })) }
-                    onChange={ (anim) => this.timeline.dispatch(Action.updateAnimObject.create({
-                        anim: this.state.activeAnimObject,
+                    onChange={ (anim) => this.timeline.dispatch(Action.updateAnimation.create({
+                        anim: this.state.activeAnimation,
                         update: anim
                     })) }/> :
                 <p>Add an Animation Object or Load a Sample Project to Start</p>
@@ -282,8 +280,8 @@ export class App extends React.Component<{}, {}> {
                 { 'transit|burst|motion-path'.split('|').map(type =>
                     <li>
                         <a href="javascript:void(0)"
-                            onClick={ e => this.timeline.dispatch(Action.addAnimObject.create({
-                                anim: { animType:type, name:type + this.getTimeline().length, nodes:[ ] }
+                            onClick={ e => this.timeline.dispatch(Action.addAnimation.create({
+                                anim: { animType:type, name:type + this.getTimeline().length, tweens:[ ] }
                             })) }>{ type }</a>
                     </li>)
                 }
@@ -321,16 +319,15 @@ export class App extends React.Component<{}, {}> {
                 })) }
                 cursorPosition={ this.state.cursorPosition }
                 onCursorChange={ cursorPosition => this.setState({ cursorPosition }) }
-                activeNode={ this.state.activeAnimNode }
-                onActiveNodeChange={ activeAnimNode => this.setState({ activeAnimNode }) }
-                onActiveAnimChange={ activeAnimObject => this.setState({ activeAnimObject })}
-                onNodeUpdated={ (node, update) => this.timeline.dispatch(Action.updateAnimNode.create({
-                    node,
+                activeTween={ this.state.activeTween }
+                setActiveTween={ activeTween => this.setState({ activeTween }) }
+                updateTween={ (tween, update) => this.timeline.dispatch(Action.updateTween.create({
+                    tween,
                     update
                 })) }
-                addAnimNode={ (anim) => this.timeline.dispatch(Action.addAnimNode.create({
+                addTween={ (anim) => this.timeline.dispatch(Action.addTween.create({
                     anim,
-                    node: { delay: 0, duration: 1000, animType: anim.animType }
+                    tween: { delay: 0, duration: 1000, animType: anim.animType }
                 }))}
                 duration={ this.tween.getDuration() } />
         </div>

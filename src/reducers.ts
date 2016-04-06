@@ -1,6 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import { AnimObject, AnimNode } from './timeline'
+import { Animation, Tween } from './timeline'
 
 import { Action } from './actions'
 
@@ -15,42 +15,42 @@ function createRedux<S>(
     }
 }
 
-export const timelineReducer = createRedux<AnimObject[]>([ ], {
-    [Action.addAnimNode.type]: (state, action) => state.map(a => {
-        var { anim, node, index } = Action.addAnimNode.from(action)
+export const timelineReducer = createRedux<Animation[]>([ ], {
+    [Action.addTween.type]: (state, action) => state.map(a => {
+        var { anim, tween, index } = Action.addTween.from(action)
         if (a === anim) {
-            var nodes = a.nodes.slice()
-            nodes.splice(+index === index ? index : nodes.length, 0, clone(node))
-            a = clone(a, { nodes })
+            var tweens = a.tweens.slice()
+            tweens.splice(+index === index ? index : tweens.length, 0, clone(tween))
+            a = clone(a, { tweens })
         }
         return a
     }),
-    [Action.updateAnimNode.type]: (state, action) => state.map(a => {
-        var { node, update } = Action.updateAnimNode.from(action)
-        if (a.nodes.indexOf(node) >= 0) {
-            var nodes = a.nodes.map(n => n === node ? clone(n, update) : n)
-            a = clone(a, { nodes })
+    [Action.updateTween.type]: (state, action) => state.map(a => {
+        var { tween, update } = Action.updateTween.from(action)
+        if (a.tweens.indexOf(tween) >= 0) {
+            var tweens = a.tweens.map(n => n === tween ? clone(n, update) : n)
+            a = clone(a, { tweens })
         }
         return a
     }),
-    [Action.removeAnimNode.type]: (state, action) => state.map(a => {
-        var { node } = Action.removeAnimNode.from(action)
-        if (a.nodes.indexOf(node) >= 0) {
-            var nodes = a.nodes.filter(n => n !== node)
-            a = clone(a, { nodes })
+    [Action.removeTween.type]: (state, action) => state.map(a => {
+        var { tween } = Action.removeTween.from(action)
+        if (a.tweens.indexOf(tween) >= 0) {
+            var tweens = a.tweens.filter(n => n !== tween)
+            a = clone(a, { tweens })
         }
         return a
     }),
-    [Action.addAnimObject.type]: (state, action) => {
-        var { anim } = Action.addAnimObject.from(action)
+    [Action.addAnimation.type]: (state, action) => {
+        var { anim } = Action.addAnimation.from(action)
         return state.concat(clone(anim))
     },
-    [Action.updateAnimObject.type]: (state, action) => {
-        var { anim, update } = Action.updateAnimObject.from(action)
+    [Action.updateAnimation.type]: (state, action) => {
+        var { anim, update } = Action.updateAnimation.from(action)
         return state.map(a => a === anim ? clone(a, update) : a)
     },
-    [Action.removeAnimObject.type]: (state, action) => {
-        var { anim } = Action.removeAnimObject.from(action)
+    [Action.removeAnimation.type]: (state, action) => {
+        var { anim } = Action.removeAnimation.from(action)
         return state.filter(a => a !== anim)
     },
     [Action.replaceTimeline.type]: (state, action) => {

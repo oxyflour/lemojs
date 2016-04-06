@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, AnimManager,
+import { Tween, Animation, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 
 import { throttle, clone } from '../utils'

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimObject, AnimNode } from '../timeline'
+import { Animation, Tween } from '../timeline'
 
 import { Slider } from './slider'
 
@@ -39,26 +39,26 @@ const TIMELINE_ROWHEADER_STYLE = {
     width: 120,
 }
 
-const TIMELINE_NODE_STYLE = {
+const TIMELINE_TWEEN_STYLE = {
     display: 'inline-block',
     background: '#eee',
     border: 'solid 2px transparent',
     borderRight: 'none',
 }
 
-const TIMELINE_MOVE_NODE_STYLE = {
+const TIMELINE_MOVE_TWEEN_STYLE = {
     display: 'block',
     width: '100%',
 }
 
-const TIMELINE_SCALE_NODE_STYLE = {
+const TIMELINE_RESIZE_TWEEN_STYLE = {
     display: 'block',
     float: 'right',
     width: 8,
     borderRight: '3px solid #aaa',
 }
 
-const TIMELINE_ADD_NODE_STYLE = {
+const TIMELINE_ADD_TWEEN_STYLE = {
     paddingLeft: '1em',
     paddingRight: '1em',
     background: '#eee',
@@ -68,18 +68,16 @@ const TIMELINE_ADD_NODE_STYLE = {
 }
 
 export class TimelineTable extends React.Component<{
-    timeline: AnimObject[]
-    onTimelineChange: (timeline: AnimObject[]) => void
+    timeline: Animation[]
+    onTimelineChange: (timeline: Animation[]) => void
 
     cursorPosition: number
     onCursorChange: (cursorPosition: number) => void
 
-    activeNode: AnimNode
-    onActiveNodeChange: (activeNode: AnimNode) => void
-    onActiveAnimChange: (actionAnim: AnimObject) => void
-
-    onNodeUpdated: (node: AnimNode, update: any) => void
-    addAnimNode: (anim: AnimObject) => void
+    activeTween: Tween
+    addTween: (anim: Animation) => void
+    setActiveTween: (tween: Tween) => void
+    updateTween: (tween: Tween, update: any) => void
 
     duration: number
 
@@ -126,45 +124,45 @@ export class TimelineTable extends React.Component<{
         e.stopPropagation()
     }
 
-    renderRow(anim: AnimObject, index: number) {
-        var isActive = anim.nodes.indexOf(this.props.activeNode) >= 0,
+    renderRow(anim: Animation, index: number) {
+        var isActive = anim.tweens.indexOf(this.props.activeTween) >= 0,
             fontWeight = isActive ? 'bold' : 'normal'
         return <div style={ TIMELINE_ROW_STYLE } key={ index }>
             <div style={ TIMELINE_ROWHEADER_STYLE }
-                onClick={ e => this.props.onActiveAnimChange(anim) }
+                onClick={ e => this.props.setActiveTween(anim.tweens[0]) }
                 onMouseDown={ e => this.startRowSortting(index, e) }>
                 <span className="text-primary"
                     style={{ fontWeight }}>{ anim.name }</span>
             </div>
-            { anim.nodes.map((node, index) => this.renderNode(node, index)) }
-            { isActive && <span style={ TIMELINE_ADD_NODE_STYLE }
-                onClick={ e => this.props.addAnimNode(anim) }>+</span> }
+            { anim.tweens.map((tween, index) => this.renderTween(tween, index)) }
+            { isActive && <span style={ TIMELINE_ADD_TWEEN_STYLE }
+                onClick={ e => this.props.addTween(anim) }>+</span> }
         </div>
     }
 
-    renderNode(node: AnimNode, index: number) {
+    renderTween(tween: Tween, index: number) {
         var frameScale = this.state.frameScale,
-            width = node.duration * frameScale,
-            marginLeft = node.delay * frameScale,
-            borderColor = this.props.activeNode === node ? '#aaa' : 'transparent'
-        return <div style={ clone(TIMELINE_NODE_STYLE, { width, marginLeft, borderColor }) }>
+            width = tween.duration * frameScale,
+            marginLeft = tween.delay * frameScale,
+            borderColor = this.props.activeTween === tween ? '#aaa' : 'transparent'
+        return <div style={ clone(TIMELINE_TWEEN_STYLE, { width, marginLeft, borderColor }) }>
             <Slider
-                valueX={ node.duration }
+                valueX={ tween.duration }
                 valueY={ 0 }
-                range={{ minX:TIMELINE_SCALE_NODE_STYLE.width / frameScale }}
+                range={{ minX:TIMELINE_RESIZE_TWEEN_STYLE.width / frameScale }}
                 scale={ 1 / frameScale }
-                style={ TIMELINE_SCALE_NODE_STYLE }
+                style={ TIMELINE_RESIZE_TWEEN_STYLE }
                 openHandCursor="ew-resize"
-                onChange={ (x, y) => this.props.onNodeUpdated(node, { duration:x }) }>&nbsp;</Slider>
+                onChange={ (x, y) => this.props.updateTween(tween, { duration:x }) }>&nbsp;</Slider>
             <Slider
-                valueX={ node.delay }
+                valueX={ tween.delay }
                 valueY={ 0 }
                 range={{ minX:0 }}
                 scale={ 1 / frameScale }
-                style={ TIMELINE_MOVE_NODE_STYLE }
-                tooltip={ node.delay + ' : ' + node.duration }
-                onStart={ (x, y) => this.props.onActiveNodeChange(node) }
-                onChange={ (x, y) => this.props.onNodeUpdated(node, { delay:x }) }>&nbsp;</Slider>
+                style={ TIMELINE_MOVE_TWEEN_STYLE }
+                tooltip={ tween.delay + ' : ' + tween.duration }
+                onStart={ (x, y) => this.props.setActiveTween(tween) }
+                onChange={ (x, y) => this.props.updateTween(tween, { delay:x }) }>&nbsp;</Slider>
         </div>
     }
 
