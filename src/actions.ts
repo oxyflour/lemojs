@@ -1,13 +1,15 @@
 // TODO: split it into seperated files
 
+import { Store } from 'redux'
+
 import { Animation, Tween } from './timeline'
 
 var typeIdCount = 1
 function createAction<T extends Action>() {
     var type = typeIdCount ++,
         from = (data: any) => data as T,
-        create = (data: T) => (data.type = type, data)
-    return { create, type, from }
+        dispatch = (store: Store, data: T) => (data.type = type, store.dispatch(data))
+    return { dispatch, type, from }
 }
 
 export interface Action {

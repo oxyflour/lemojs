@@ -112,7 +112,7 @@ export class App extends React.Component<{}, {}> {
     updateProject(proj: ProjectObject) {
         // compare major version string only
         if (proj.version.replace(/.\w+$/, '') === VERSION_STRING.replace(/.\w+$/, '')) {
-            this.timeline.dispatch(Action.replaceTimeline.create(proj))
+            Action.replaceTimeline.dispatch(this.timeline, proj)
             this.setState(proj)
         }
         else {
@@ -218,10 +218,10 @@ export class App extends React.Component<{}, {}> {
                 this.state.activePathEditorKey &&
                 <PathEditor data={ this.state.activeTween[this.state.activePathEditorKey] || '' }
                     onClose={ () => this.setState({ activePathEditorKey:'' }) }
-                    onChange={ path => this.timeline.dispatch(Action.updateTween.create({
+                    onChange={ path => Action.updateTween.dispatch(this.timeline, {
                         tween: this.state.activeTween,
                         update: { [this.state.activePathEditorKey]: path }
-                    })) } /> }
+                    }) } /> }
         </CanvasMain>
     }
 
@@ -235,33 +235,33 @@ export class App extends React.Component<{}, {}> {
                         activePathEditorTween: this.state.activeTween,
                         activePathEditorKey: this.state.activePathEditorKey === key ? '' : key,
                     })}
-                    cloneActiveTween={ () => this.timeline.dispatch(Action.addTween.create({
+                    cloneActiveTween={ () => Action.addTween.dispatch(this.timeline, {
                         anim: this.getAnimationFromTween(this.state.activeTween),
                         tween: this.state.activeTween
-                    })) }
-                    removeActiveTween={ () => this.timeline.dispatch(Action.removeTween.create({
+                    }) }
+                    removeActiveTween={ () => Action.removeTween.dispatch(this.timeline, {
                         tween: this.state.activeTween
-                    })) }
-                    onChange={ (update) => this.timeline.dispatch(Action.updateTween.create({
+                    }) }
+                    onChange={ (update) => Action.updateTween.dispatch(this.timeline, {
                         tween: this.state.activeTween,
                         update: update
-                    })) } /> :
+                    }) } /> :
             this.state.activeAnimation ?
                 <ObjectEditor data={ this.state.activeAnimation }
-                    addTween={ () => this.timeline.dispatch(Action.addTween.create({
+                    addTween={ () => Action.addTween.dispatch(this.timeline, {
                         anim: this.state.activeAnimation,
                         tween: { delay: 0, duration: 1000, animType: this.state.activeAnimation.animType }
-                    })) }
-                    cloneActiveAnimation={ () => this.timeline.dispatch(Action.addAnimation.create({
+                    }) }
+                    cloneActiveAnimation={ () => Action.addAnimation.dispatch(this.timeline, {
                         anim: this.state.activeAnimation,
-                    })) }
-                    removeActiveAnimation={ () => this.timeline.dispatch(Action.removeAnimation.create({
+                    }) }
+                    removeActiveAnimation={ () => Action.removeAnimation.dispatch(this.timeline, {
                         anim: this.state.activeAnimation
-                    })) }
-                    onChange={ (anim) => this.timeline.dispatch(Action.updateAnimation.create({
+                    }) }
+                    onChange={ (anim) => Action.updateAnimation.dispatch(this.timeline, {
                         anim: this.state.activeAnimation,
                         update: anim
-                    })) }/> :
+                    }) }/> :
                 <p>Add an Animation Object or Load a Sample Project to Start</p>
         }
         </div>
@@ -280,9 +280,9 @@ export class App extends React.Component<{}, {}> {
                 { 'transit|burst|motion-path'.split('|').map(type =>
                     <li>
                         <a href="javascript:void(0)"
-                            onClick={ e => this.timeline.dispatch(Action.addAnimation.create({
+                            onClick={ e => Action.addAnimation.dispatch(this.timeline, {
                                 anim: { animType:type, name:type + this.getTimeline().length, tweens:[ ] }
-                            })) }>{ type }</a>
+                            }) }>{ type }</a>
                     </li>)
                 }
                 </ul>
@@ -314,21 +314,21 @@ export class App extends React.Component<{}, {}> {
         return <div style={{ height:'100%', paddingTop:'50px' }}>
             <TimelineTable ref="table"
                 timeline={ this.getTimeline() }
-                onTimelineChange={ timeline => this.timeline.dispatch(Action.replaceTimeline.create({
+                onTimelineChange={ timeline => Action.replaceTimeline.dispatch(this.timeline, {
                     timeline
-                })) }
+                }) }
                 cursorPosition={ this.state.cursorPosition }
                 onCursorChange={ cursorPosition => this.setState({ cursorPosition }) }
                 activeTween={ this.state.activeTween }
                 setActiveTween={ activeTween => this.setState({ activeTween }) }
-                updateTween={ (tween, update) => this.timeline.dispatch(Action.updateTween.create({
+                updateTween={ (tween, update) => Action.updateTween.dispatch(this.timeline, {
                     tween,
                     update
-                })) }
-                addTween={ (anim) => this.timeline.dispatch(Action.addTween.create({
+                }) }
+                addTween={ (anim) => Action.addTween.dispatch(this.timeline, {
                     anim,
                     tween: { delay: 0, duration: 1000, animType: anim.animType }
-                }))}
+                }) }
                 duration={ this.tween.getDuration() } />
         </div>
     }
