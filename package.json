@@ -1,6 +1,6 @@
 {
   "name": "lemojs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "a light editor for mojs",
   "repository": "https://github.com/oxyflour/lemojs",
   "main": "index.js",
@@ -15,6 +15,7 @@
     "bootstrap": "^3.3.6",
     "flat-ui": "designmodo/Flat-UI",
     "jquery": "^2.1.4",
+    "json-loader": "^0.5.4",
     "mo-js": "legomushroom/mojs",
     "react": "latest",
     "react-dom": "^0.14.3",

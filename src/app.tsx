@@ -20,7 +20,10 @@ import { clone, debounce } from './utils'
 import { timelineReducer } from './reducers'
 import { Action } from './actions'
 
-const VERSION_STRING = '0.0.1'
+declare function require(path: string): any;
+
+const PACKAGE_JSON = require('json!../package.json')
+const VERSION_STRING = PACKAGE_JSON.version
 const CANVAS_STYLE = { width:480, height:320, background:'#eeeeee' }
 
 class ObjectPool {
@@ -116,7 +119,7 @@ export class App extends React.Component<{}, {}> {
             this.setState(proj)
         }
         else {
-            throw 'version mismatch'
+            alert('the project version does not mismatch')
         }
     }
 
