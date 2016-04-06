@@ -26,6 +26,7 @@ export class Slider extends React.Component<{
 
     openHandCursor?: string
     closeHandCursor?: string
+    tooltip?: string
 
     title?: string
     className?: string
@@ -67,7 +68,8 @@ export class Slider extends React.Component<{
         $('body').css('cursor', this.props.closeHandCursor || CLOSEDHAND_URL)
         $(this.refs['elem']).css('cursor', this.props.closeHandCursor || CLOSEDHAND_URL)
 
-        if (this.props.title) $(this.refs['elem'])
+        if (this.props.tooltip) $(this.refs['elem'])
+            .attr('title', this.props.tooltip)
             .addClass('mouse-is-down')
             .tooltip({ container:'body', animation:false })
         setTimeout(() => $(this.refs['elem']).filter('.mouse-is-down').tooltip('show'), 200)
@@ -80,8 +82,8 @@ export class Slider extends React.Component<{
         var { x, y } = this.getValues(e.pageX, e.pageY)
         this.props.onChange && this.props.onChange(x, y, e)
 
-        if (this.props.title) $(this.refs['elem'])
-            .attr('data-original-title', this.props.title)
+        if (this.props.tooltip) $(this.refs['elem'])
+            .attr('data-original-title', this.props.tooltip)
             .tooltip('show')
 
         e.preventDefault()
@@ -96,7 +98,8 @@ export class Slider extends React.Component<{
         $('body').css('cursor', 'auto')
         $(this.refs['elem']).css('cursor', this.props.openHandCursor || OPENHAND_URL)
 
-        if (this.props.title) $(this.refs['elem'])
+        if (this.props.tooltip) $(this.refs['elem'])
+            .attr('title', this.props.title)
             .removeClass('mouse-is-down')
             .tooltip('destroy')
     }

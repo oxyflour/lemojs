@@ -162,7 +162,7 @@ export class TimelineTable extends React.Component<{
                 range={{ minX:0 }}
                 scale={ 1 / frameScale }
                 style={ TIMELINE_MOVE_NODE_STYLE }
-                title={ node.delay + ' : ' + node.duration }
+                tooltip={ node.delay + ' : ' + node.duration }
                 onStart={ (x, y) => this.props.onActiveNodeChange(node) }
                 onChange={ (x, y) => this.props.onNodeUpdated(node, { delay:x }) }>&nbsp;</Slider>
         </div>
@@ -181,6 +181,7 @@ export class TimelineTable extends React.Component<{
             scale={ 1 / frameScale }
             openHandCursor="ew-resize"
             style={ clone(TIMELINE_CURSOR_STYLE, { left, marginLeft }) }
+            tooltip={ '' + this.props.cursorPosition }
             onChange={ (x, y) => this.props.onCursorChange(x) }>
             <span ref="cursor"></span>
         </Slider>
