@@ -3,210 +3,79 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import { createStore } from 'redux'
 
 import { Splitter } from './components/splitter'
 import { Slider } from './components/slider'
-import { ObjectEditor, NodeEditor } from './components/anim-editor'
 import { CanvasMain } from './components/canvas-main'
 import { PathEditor } from './components/canvas-path-editor'
 import { TimelineTable } from './components/timeline-table'
+import { TweenEditor, ObjectEditor } from './components/anim-editor'
 import { Modal } from './components/modal'
 
-import { AnimNode, AnimObject, AnimManager, Timeline } from './timeline'
+import { Tween, Animation, AnimManager } from './timeline'
 
-import { debounce } from './utils'
+import { clone, debounce } from './utils'
 
-const VERSION_STRING = '0.0.1'
+import { timelineReducer } from './reducers'
+import { Action } from './actions'
+
+declare function require(path: string): any;
+
+const PACKAGE_JSON = require('json!../package.json')
+const VERSION_STRING = PACKAGE_JSON.version
 const CANVAS_STYLE = { width:480, height:320, background:'#eeeeee' }
+
+class ObjectPool {
+    map = { }
+    guid() {
+        return Math.random() + '@' + Date.now()
+    }
+    clear() {
+        this.map = { }
+    }
+    put(obj) {
+        var id = obj && obj['_id'] || (obj['_id'] = this.guid())
+        return id && (this.map[id] = obj)
+    }
+    get<T>(obj: T) {
+        return obj && this.map[ obj['_id'] ] as T
+    }
+}
 
 interface ProjectObject {
     version: string,
-    timeline: AnimObject[],
+    timeline: Animation[],
     canvasStyle: { width:number, height:number, background:string },
     timelineState: boolean[],
 }
 
-export class App extends React.Component<{}, {}> implements Timeline {
+export class App extends React.Component<{}, {}> {
+    timeline = createStore(timelineReducer)
     tween = new AnimManager(null)
+    unsubscribe: Function
+
     state = {
-        activeAnimNode: null as AnimNode,
-        activeAnimObject: null as AnimObject,
+        activeTween: null as Tween,
+        activeAnimation: null as Animation,
         cursorPosition: 0,
 
-        pathToEdit: null as { node:AnimNode, key:string },
+        activePathEditorTween: null as Tween,
+        activePathEditorKey: '',
 
-        timeline: [ ] as AnimObject[],
         canvasStyle: $.extend({}, CANVAS_STYLE),
         timelineState: null as boolean[ ]
     }
 
-    shiftAnimObjectToCursor(newCursor: number) {
-        var cursor = this.state.cursorPosition,
-            cursorMin = 0,
-            animsToShift = [ ] as AnimObject[],
-            nodesToShiftDelay = [ ] as AnimNode[],
-            nodesToShiftDuration = [ ] as AnimNode[]
-
-        this.state.timeline.forEach(anim => {
-            var start = 0
-            anim.nodes.some(node => {
-                if (start <= cursor && cursor < start + node.delay) {
-                    cursorMin = Math.max(cursorMin, start)
-                    nodesToShiftDelay.push(node)
-                    animsToShift.push(anim)
-                    return true
-                }
-                start += node.delay
-                if (start <= cursor && cursor < start + node.duration) {
-                    cursorMin = Math.max(cursorMin, start)
-                    nodesToShiftDuration.push(node)
-                    animsToShift.push(anim)
-                    return true
-                }
-                start += node.duration
-                cursorMin = Math.max(cursorMin, start)
-                return false
-            })
-        })
-
-        newCursor = Math.max(cursorMin + 1, newCursor)
-        if (newCursor !== cursor) {
-            var delta = newCursor - cursor
-            nodesToShiftDelay.forEach(node => node.delay = Math.floor(node.delay + delta))
-            nodesToShiftDuration.forEach(node => node.duration = Math.floor(node.duration + delta))
-            animsToShift.forEach(anim => this.refreshAnimObject(anim))
-            this.cursorPosition = newCursor
-            this.forceUpdate()
-        }
-    }
-
-    toggleAnimObjectEnableDisable(anim: AnimObject) {
-        var timeline = this.state.timeline
-        if (this.state.timelineState) {
-            if (timeline.length === this.state.timelineState.length)
-                this.state.timelineState.forEach((b, i) => timeline[i].disabled = b)
-            this.setState({ timelineState: null })
-        }
-        else {
-            var timelineState = timeline.map(a => a.disabled)
-            timeline.forEach(a => a.disabled = a !== anim)
-            this.setState({ timelineState })
-        }
-        this.forceUpdate()
-        timeline.forEach(anim => this.refreshAnimObject(anim))
-    }
-
     getTimeline() {
-        return this.state.timeline
+        return this.timeline.getState() as Animation[]
     }
 
-    getAnimObjectFromNode(node: AnimNode) {
-        return this.state.timeline.filter(anim => anim.nodes.indexOf(node) >= 0)[0]
+    getAnimationFromTween(tween: Tween) {
+        return this.getTimeline().filter(anim => anim.tweens.indexOf(tween) >= 0)[0]
     }
 
-    setPathToEdit(node: AnimNode, key: string) {
-        this.setState({ pathToEdit:{ node, key } })
-    }
-
-    // timeline implement
-
-    get activeAnimNode() { return this.state.activeAnimNode }
-    set activeAnimNode(activeAnimNode) { this.setState({ activeAnimNode }) }
-
-    get activeAnimObject() { return this.state.activeAnimObject }
-    set activeAnimObject(activeAnimObject) { this.setState({ activeAnimObject }) }
-
-    get cursorPosition() { return this.state.cursorPosition }
-    set cursorPosition(cursorPosition) {
-        this.tween.setProgress(cursorPosition / this.tween.getDuration())
-        this.setState({ cursorPosition })
-    }
-
-    removeActiveAnimNode() {
-        var anim = this.getAnimObjectFromNode(this.activeAnimNode)
-        this.state.timeline.forEach(anim =>
-            anim.nodes = anim.nodes.filter(node => node !== this.state.activeAnimNode))
-        this.refreshAnimObject(anim)
-        this.activeAnimNode = null
-    }
-
-    cloneActiveAnimNode() {
-        if (!this.activeAnimNode) return
-        var node = JSON.parse(JSON.stringify(this.activeAnimNode)),
-            anim = this.getAnimObjectFromNode(this.activeAnimNode)
-        if (!anim) return
-        anim.nodes.splice(anim.nodes.indexOf(this.activeAnimNode), 0, node)
-        this.refreshAnimObject(anim)
-        this.activeAnimNode = node
-        this.cursorPosition = this.getAnimNodeStart(node)
-    }
-
-    addAnimNode(index?: number) {
-        if (index >= 0 && this.state.timeline[index])
-            this.activeAnimObject = this.state.timeline[index]
-        if (!this.activeAnimObject) return
-        var animType = this.activeAnimObject.animType,
-            node = { delay:0, duration:1000, animType }
-        this.activeAnimObject.nodes.push(node)
-        this.refreshAnimObject(this.activeAnimObject)
-        this.activeAnimNode = node
-    }
-
-    getAnimNodeStart(node: AnimNode) {
-        var anim = this.getAnimObjectFromNode(node),
-            start = 0
-        if (anim) anim.nodes.some(n => {
-            start += n.delay
-            if (n === node)
-                return true
-            else
-                start += n.duration
-        })
-        return start
-    }
-
-    //
-
-    removeActiveAnimObject() {
-        if (!this.activeAnimObject) return
-        if (this.activeAnimObject.nodes.indexOf(this.activeAnimNode) >= 0)
-            this.activeAnimNode = null
-        this.activeAnimObject.nodes = []
-        this.refreshAnimObject(this.activeAnimObject)
-
-        this.state.timeline = this.state.timeline.filter(anim =>
-            anim !== this.activeAnimObject)
-        this.activeAnimObject = null
-    }
-
-    cloneActiveAnimObject() {
-        if (!this.activeAnimObject) return
-        var anim = JSON.parse(JSON.stringify(this.activeAnimObject))
-        this.state.timeline.splice(this.state.timeline.indexOf(this.activeAnimObject), 0, anim)
-        this.refreshAnimObject(anim)
-        this.activeAnimObject = anim
-    }
-
-    addAnimObject(type: string) {
-        var anim = {
-            name: type + this.state.timeline.length,
-            animType: type,
-            nodes: [ ],
-        }
-        this.state.timeline.push(anim)
-        this.activeAnimObject = anim
-        this.setState({}, this.addAnimNode.bind(this))
-    }
-
-    refreshAnimObject(node: AnimNode | AnimObject) {
-        var anim = node['nodes'] ? node as AnimObject : this.getAnimObjectFromNode(node as AnimNode)
-        if (anim) {
-            this.tween.update(anim)
-            this.tween.setProgress(this.cursorPosition / this.tween.getDuration())
-        }
-    }
-
-    refreshAnimObjectDebounced = debounce(() => this.refreshAnimObject(this.activeAnimNode), 300)
+    syncTweenDebounced = debounce(() => this.tween.sync(this.getTimeline()), 200)
 
     // project
 
@@ -214,7 +83,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
         var proj: ProjectObject = {
             version: VERSION_STRING,
             canvasStyle: this.state.canvasStyle,
-            timeline: this.state.timeline,
+            timeline: this.getTimeline(),
             timelineState: this.state.timelineState,
         }
         var content = JSON.stringify(proj, null, 2)
@@ -246,13 +115,11 @@ export class App extends React.Component<{}, {}> implements Timeline {
     updateProject(proj: ProjectObject) {
         // compare major version string only
         if (proj.version.replace(/.\w+$/, '') === VERSION_STRING.replace(/.\w+$/, '')) {
-            this.state.timeline.forEach(anim => (anim.disabled = true) && this.refreshAnimObject(anim))
-            this.state.activeAnimNode = this.state.activeAnimObject = null
+            Action.replaceTimeline.dispatch(this.timeline, proj)
             this.setState(proj)
-            proj.timeline.forEach(anim => this.refreshAnimObject(anim))
         }
         else {
-            throw 'version mismatch'
+            alert('the project version does not mismatch')
         }
     }
 
@@ -265,10 +132,30 @@ export class App extends React.Component<{}, {}> implements Timeline {
         })
     }
 
+    updateStateObjects() {
+        var pool = new ObjectPool()
+        // FIXME: it might be slow
+        this.getTimeline().forEach(anim => {
+            pool.put(anim) && anim.tweens.forEach(tween => pool.put(tween))
+        })
+        this.state.activeTween = pool.get(this.state.activeTween)
+        this.state.activeAnimation = pool.get(this.state.activeAnimation)
+        this.state.activePathEditorTween = pool.get(this.state.activePathEditorTween)
+    }
+
     componentDidMount() {
         this.tween = new AnimManager(this.refs['anim-pool'] as HTMLElement, {
             onUpdate: (p) => this.setState({ cursorPosition:p * this.tween.getDuration() }),
         })
+        this.unsubscribe = this.timeline.subscribe(() => {
+            this.syncTweenDebounced()
+            this.updateStateObjects()
+            this.forceUpdate()
+        })
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe()
     }
 
     // view
@@ -303,10 +190,10 @@ export class App extends React.Component<{}, {}> implements Timeline {
                     </a>
                     <ul className="dropdown-menu">
                         <li><a href="javascript:void(0)"
-                            onClick={ e => $.getJSON('proj-mojs.json', (proj) => this.updateProject(proj)) }>
+                            onClick={ e => $.getJSON('samples/mojs.json', (proj) => this.updateProject(proj)) }>
                                 <span className="glyphicon glyphicon-save" />&nbsp;mojs</a></li>
                         <li><a href="javascript:void(0)"
-                            onClick={ e => $.getJSON('proj-nsdn.json', (proj) => this.updateProject(proj)) }>
+                            onClick={ e => $.getJSON('samples/nsdn.json', (proj) => this.updateProject(proj)) }>
                                 <span className="glyphicon glyphicon-save" />&nbsp;nsdn</a></li>
                     </ul>
                 </li>
@@ -324,6 +211,65 @@ export class App extends React.Component<{}, {}> implements Timeline {
         </div>
     }
 
+    renderCanvas() {
+        return <CanvasMain
+            cursorPosition={ this.state.cursorPosition }
+            canvasStyle={ this.state.canvasStyle }
+            updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
+            <div ref="anim-pool"></div>
+            { this.state.activePathEditorTween === this.state.activeTween &&
+                this.state.activePathEditorTween && this.state.activePathEditorKey &&
+                <PathEditor data={ this.state.activeTween[this.state.activePathEditorKey] || '' }
+                    onClose={ () => this.setState({ activePathEditorKey:'' }) }
+                    onChange={ path => Action.updateTween.dispatch(this.timeline, {
+                        tween: this.state.activeTween,
+                        update: { [this.state.activePathEditorKey]: path }
+                    }) } /> }
+        </CanvasMain>
+    }
+
+    renderEditor() {
+        return <div style={{ padding:15 }}>
+        {
+            this.state.activeTween ?
+                <TweenEditor data={ this.state.activeTween }
+                    motionNames={ this.getTimeline().map(a => a.name) }
+                    selectPathToEdit={ (key) => this.setState({
+                        activePathEditorTween: this.state.activeTween,
+                        activePathEditorKey: this.state.activePathEditorKey === key ? '' : key,
+                    })}
+                    cloneActiveTween={ () => Action.addTween.dispatch(this.timeline, {
+                        anim: this.getAnimationFromTween(this.state.activeTween),
+                        tween: this.state.activeTween
+                    }) }
+                    removeActiveTween={ () => Action.removeTween.dispatch(this.timeline, {
+                        tween: this.state.activeTween
+                    }) }
+                    onChange={ (update) => Action.updateTween.dispatch(this.timeline, {
+                        tween: this.state.activeTween,
+                        update: update
+                    }) } /> :
+            this.state.activeAnimation ?
+                <ObjectEditor data={ this.state.activeAnimation }
+                    addTween={ () => Action.addTween.dispatch(this.timeline, {
+                        anim: this.state.activeAnimation,
+                        tween: { delay: 0, duration: 1000, animType: this.state.activeAnimation.animType }
+                    }) }
+                    cloneActiveAnimation={ () => Action.addAnimation.dispatch(this.timeline, {
+                        anim: this.state.activeAnimation,
+                    }) }
+                    removeActiveAnimation={ () => Action.removeAnimation.dispatch(this.timeline, {
+                        anim: this.state.activeAnimation
+                    }) }
+                    onChange={ (anim) => Action.updateAnimation.dispatch(this.timeline, {
+                        anim: this.state.activeAnimation,
+                        update: anim
+                    }) }/> :
+                <p>Add an Animation Object or Load a Sample Project to Start</p>
+        }
+        </div>
+    }
+
     renderToolbar() {
         return <div style={{ height:'50px', lineHeight:'50px',
                 position:'absolute', width:'100%', padding:'0 0.5em',
@@ -334,12 +280,14 @@ export class App extends React.Component<{}, {}> implements Timeline {
                     <span className="glyphicon glyphicon-plus"></span>
                 </a>
                 <ul className="dropdown-menu">
-                    <li><a href="javascript:void(0)"
-                        onClick={ e => this.addAnimObject('transit') }>transit</a></li>
-                    <li><a href="javascript:void(0)"
-                        onClick={ e => this.addAnimObject('burst') }>burst</a></li>
-                    <li><a href="javascript:void(0)"
-                        onClick={ e => this.addAnimObject('motion-path') }>motion path</a></li>
+                { 'transit|burst|motion-path'.split('|').map(type =>
+                    <li>
+                        <a href="javascript:void(0)"
+                            onClick={ e => Action.addAnimation.dispatch(this.timeline, {
+                                anim: { animType:type, name:type + this.getTimeline().length, tweens:[ ] }
+                            }) }>{ type }</a>
+                    </li>)
+                }
                 </ul>
             </div>
             <div className="btn-group" style={{ boxShadow:'none' }}>
@@ -365,35 +313,40 @@ export class App extends React.Component<{}, {}> implements Timeline {
         </div>
     }
 
+    renderTimeline() {
+        return <div style={{ height:'100%', paddingTop:'50px' }}>
+            <TimelineTable ref="table"
+                timeline={ this.getTimeline() }
+                onTimelineChange={ timeline => Action.replaceTimeline.dispatch(this.timeline, {
+                    timeline
+                }) }
+                cursorPosition={ this.state.cursorPosition }
+                onCursorChange={ cursorPosition => this.setState({ cursorPosition }) }
+                activeTween={ this.state.activeTween }
+                setActiveTween={ activeTween => this.setState({ activeTween }) }
+                updateTween={ (tween, update) => Action.updateTween.dispatch(this.timeline, {
+                    tween,
+                    update
+                }) }
+                addTween={ (anim) => Action.addTween.dispatch(this.timeline, {
+                    anim,
+                    tween: { delay: 0, duration: 1000, animType: anim.animType }
+                }) }
+                duration={ this.tween.getDuration() } />
+        </div>
+    }
+
     render() {
         return <div style={{ height:'100%', paddingTop:50 }}>
             { this.renderNavBar() }
             <div style={{ height:'70%' }}>
                 <div style={{ height:'100%' }}>
                     <div style={{ width:'60%' }}>
-                        <CanvasMain timeline={ this }
-                            canvasStyle={ this.state.canvasStyle }
-                            updateCanvas={ (data) => this.setState({ canvasStyle:data }) }>
-                            <div ref="anim-pool"></div>
-                            { this.state.pathToEdit && this.activeAnimNode &&
-                                this.state.pathToEdit.node === this.activeAnimNode &&
-                                <PathEditor data={ this.activeAnimNode[this.state.pathToEdit.key] || '' }
-                                    onChange={ d => {
-                                        this.activeAnimNode[this.state.pathToEdit.key] = d
-                                        this.forceUpdate()
-                                        this.refreshAnimObjectDebounced()
-                                    } } /> }
-                        </CanvasMain>
+                        { this.renderCanvas() }
                     </div>
                     <div style={{ width:'40%', background:'#eee' }}>
                         <Splitter orientation="vertical" />
-                        <div style={{ padding:15 }}> {
-                            this.activeAnimNode ?
-                                <NodeEditor data={ this.activeAnimNode } timeline={ this } /> :
-                            this.activeAnimObject ?
-                                <ObjectEditor data={ this.activeAnimObject } timeline={ this } /> :
-                                <p>Add an Animation Object or Load a Sample Project to Start</p>}
-                        </div>
+                        { this.renderEditor() }
                     </div>
                 </div>
             </div>
@@ -401,10 +354,7 @@ export class App extends React.Component<{}, {}> implements Timeline {
                 <Splitter orientation="horizontal" />
                 <div></div>
                 { this.renderToolbar() }
-                <div style={{ height:'100%', paddingTop:'50px' }}>
-                    <TimelineTable ref="table" data={ this.state.timeline } timeline={ this }
-                        duration={ this.tween.getDuration() } />
-                </div>
+                { this.renderTimeline() }
             </div>
             <Modal ref="saveModelDialog" title="Save Project">
                 <p>Click <a ref="saveProjectLink" download="project.json">here</a> to download project</p>

@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.1.0",
   "canvasStyle": {
     "width": 640,
     "height": 480,
@@ -9,7 +9,7 @@
     {
       "name": "outer",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 0,
           "duration": 1910,
@@ -51,7 +51,7 @@
     {
       "name": "inner",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 10,
           "duration": 1880,
@@ -88,7 +88,7 @@
     {
       "name": "fill",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2130,
           "duration": 1830,
@@ -125,7 +125,7 @@
     {
       "name": "tip",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 1920,
           "duration": 2460,
@@ -149,7 +149,7 @@
     {
       "name": "border",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 2600,
           "duration": 880,
@@ -191,7 +191,7 @@
     {
       "name": "bottom",
       "animType": "transit",
-      "nodes": [
+      "tweens": [
         {
           "delay": 3350,
           "duration": 200,

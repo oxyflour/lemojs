@@ -3,16 +3,20 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline, AnimManager,
+import { Tween, Animation, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 import { BaseEditor } from './anim-base-editor'
 import { Slider } from './slider'
 
 import * as SVGPathData from 'svg-pathdata'
 
-export class NodeEditor extends BaseEditor<{
-    data: AnimNode
-    timeline: Timeline
+export class TweenEditor extends BaseEditor<{
+    data: Tween
+    motionNames: string[]
+    onChange: (data: Tween) => void
+    removeActiveTween: () => void
+    cloneActiveTween: () => void
+    selectPathToEdit: (key: string) => void
 }> {
     transitFields = {
         type:                   k => this.getSelectInput(k, ['', 'circle', 'line']),
@@ -125,18 +129,10 @@ export class NodeEditor extends BaseEditor<{
     attachedPath: string
     getEditablePathInput(key: string, holderText: string) {
         return <div className="input-group">
-            <Slider valueX={ 0 } valueY={ 0 }
-                onStart={ (x, y, e) => (this.attachedPath = this.props.data[key],
-                    e.preventDefault(), $(e.target).parent().addClass('active-input has-warning')) }
-                onEnd={ (x, y) => $('.active-input').removeClass('active-input has-warning') }
-                onChange={ (x, y) => this.attachedPath &&
-                    this.handleValueChange(key, new SVGPathData(this.attachedPath).translate(x, y).encode()) }
-                className="input-group-addon" style={{ cursor:'pointer' }}
-                title="drag to translate path">@</Slider>
+            <span className="input-group-addon" style={{ cursor:'pointer' }} title="click to edit"
+                onClick={ e => this.props.selectPathToEdit(key) }>#</span>
             <input type="text" className="form-control" placeholder={ holderText }
                 value={ this.props.data[key] }
-                onFocus={ e => this.props.timeline.setPathToEdit(this.props.data, key) }
-                onBlur={ e => this.props.timeline.setPathToEdit(null, key) }
                 onChange={ e => this.handleValueChange(key, $(e.target).val()) } />
         </div>
     }
@@ -146,12 +142,10 @@ export class NodeEditor extends BaseEditor<{
                 transit: this.transitFields,
                 burst: this.burstFields,
                 'motion-path': this.motionPathFields,
-            }[this.props.data.animType] || { },
-            timeline = this.props.timeline
+            }[this.props.data.animType] || { }
 
         if (this.props.data.animType === 'motion-path') {
-            var names = ['']
-            this.props.timeline.getTimeline().forEach(anim => names.push(anim.name))
+            var names = [''].concat(this.props.motionNames)
             fields.element.elemName = k => this.getSelectInput(k, names)
             fields.element.pathName = k => this.getSelectInput(k, names)
         }
@@ -160,11 +154,11 @@ export class NodeEditor extends BaseEditor<{
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => timeline.removeActiveAnimNode() }
+                        onClick={ e => this.props.removeActiveTween() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => timeline.cloneActiveAnimNode() }
+                        onClick={ e => this.props.cloneActiveTween() }
                         title="shortcut: Ctrl-C">Clone</a>
                     <label className="pull-right" style={{ cursor:'pointer' }}>
                         <input type="checkbox" checked={ this.state.showUnsetFields }
@@ -181,8 +175,11 @@ export class NodeEditor extends BaseEditor<{
 }
 
 export class ObjectEditor extends BaseEditor<{
-    data: AnimObject
-    timeline: Timeline
+    data: Animation
+    onChange: (data: Animation) => void
+    removeActiveAnimation: () => void
+    cloneActiveAnimation: () => void
+    addTween: () => void
 }> {
     commonFields = {
         name:       k => this.getSimpleInput(k, 'text', 'animation name'),
@@ -197,22 +194,21 @@ export class ObjectEditor extends BaseEditor<{
     render() {
         var fields = {
                 transit: this.transitFields,
-            }[this.props.data.animType] || { },
-            timeline = this.props.timeline
+            }[this.props.data.animType] || { }
 
         return <form className="form-horizontal">
             <div className="form-group">
                 <div className="col-xs-12">
                     <a className="btn btn-danger"
-                        onClick={ e => timeline.removeActiveAnimObject() }
+                        onClick={ e => this.props.removeActiveAnimation() }
                         title="shortcut: Del">Remove</a>
                     &nbsp;
                     <a className="btn btn-primary"
-                        onClick={ e => timeline.cloneActiveAnimObject() }
+                        onClick={ e => this.props.cloneActiveAnimation() }
                         title="shortcut: Ctrl-C">Clone</a>
                     &nbsp;
                     <a className="btn btn-default"
-                        onClick={ e => timeline.addAnimNode() }>Add Node</a>
+                        onClick={ e => this.props.addTween() }>Add Tween</a>
                 </div>
             </div>
             { this.getInputs(this.commonFields) }
@@ -220,3 +216,4 @@ export class ObjectEditor extends BaseEditor<{
         </form>
     }
 }
+

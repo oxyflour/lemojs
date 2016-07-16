@@ -3,32 +3,35 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { clamp } from '../utils'
+import { clamp, clone } from '../utils'
 
 const OPENHAND_URL = 'url(http://cdn.bootcss.com/diva.js/BETA-3.0.0/img/openhand.cur), pointer'
 const CLOSEDHAND_URL = 'url(http://cdn.bootcss.com/diva.js/BETA-3.0.0/img/closedhand.cur), pointer'
 
 export class Slider extends React.Component<{
-    valueX: number,
-    valueY: number,
-    scale?: number,
-    step?: number,
+    valueX: number
+    valueY: number
+    scale?: number
+    step?: number
     range?: {
-        minX?: number,
-        maxX?: number,
-        minY?: number,
-        maxY?: number,
-    },
-    onChange?: (x: number, y: number, e?: React.MouseEvent) => void,
-    onStart?: (x: number, y: number, e?: React.MouseEvent) => void,
-    onEnd?: (x: number, y: number, e?: React.MouseEvent) => void,
-    onDoubleClick?: (e?: React.MouseEvent) => void,
+        minX?: number
+        maxX?: number
+        minY?: number
+        maxY?: number
+    }
+    onChange?: (x: number, y: number, e?: React.MouseEvent) => void
+    onStart?: (x: number, y: number, e?: React.MouseEvent) => void
+    onEnd?: (x: number, y: number, e?: React.MouseEvent) => void
+    onDoubleClick?: (e?: React.MouseEvent) => void
 
-    title?: string,
-    className?: string,
-    style?: React.CSSProperties,
-    children?: React.ReactElement<any>,
-    key?: number,
+    cursor?: { hover?:string, down?:string }
+    tooltip?: string
+
+    title?: string
+    className?: string
+    style?: React.CSSProperties
+    children?: React.ReactElement<any>
+    key?: number
 }, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
     onMouseUp = this.handleMouseUp.bind(this)
@@ -60,9 +63,16 @@ export class Slider extends React.Component<{
             vx: this.props.valueX, vy: this.props.valueY,
             scale: (this.props.scale || 1) * (e.shiftKey ? 0.5 : 1)
         }
+
+        var cursor = this.props.cursor && this.props.cursor.down || CLOSEDHAND_URL
         $(document).on('mousemove', this.onMouseMove).on('mouseup', this.onMouseUp)
-        $('body').css('cursor', CLOSEDHAND_URL)
-        $(this.refs['elem']).css('cursor', CLOSEDHAND_URL)
+        $('body').css('cursor', cursor)
+
+        var elem = $(this.refs['elem'])
+        elem.css('cursor', cursor)
+        this.props.tooltip && elem.attr('title', this.props.tooltip)
+            .addClass('mouse-is-down').tooltip({ container:'body', animation:false })
+        setTimeout(() => elem.hasClass('mouse-is-down') && elem.tooltip('show'), 200)
 
         e.preventDefault()
         e.stopPropagation()
@@ -70,7 +80,11 @@ export class Slider extends React.Component<{
 
     handleMouseMove(e: React.MouseEvent) {
         var { x, y } = this.getValues(e.pageX, e.pageY)
-        this.props.onChange(x, y, e)
+        this.props.onChange && this.props.onChange(x, y, e)
+
+        var elem = $(this.refs['elem'])
+        this.props.tooltip && elem
+            .attr('data-original-title', this.props.tooltip).tooltip('show')
 
         e.preventDefault()
         e.stopPropagation()
@@ -80,14 +94,20 @@ export class Slider extends React.Component<{
         var { x, y } = this.getValues(e.pageX, e.pageY)
         this.props.onEnd && this.props.onEnd(x, y, e)
 
+        var cursor = this.props.cursor && this.props.cursor.hover || OPENHAND_URL
         $(document).off('mousemove', this.onMouseMove).off('mouseup', this.onMouseUp)
         $('body').css('cursor', 'auto')
-        $(this.refs['elem']).css('cursor', OPENHAND_URL)
+
+        var elem = $(this.refs['elem'])
+        elem.css('cursor', cursor)
+        this.props.tooltip && elem.attr('title', this.props.title)
+            .removeClass('mouse-is-down').tooltip('destroy')
     }
 
     render() {
+        var cursor = this.props.cursor && this.props.cursor.hover || OPENHAND_URL
         return <span ref="elem" className={ this.props.className}
-            style={ $.extend({ cursor:OPENHAND_URL }, this.props.style || { })}
+            style={ clone({ cursor }, this.props.style || { })}
             title={ this.props.title || 'drag to alter' }
             onDoubleClick={ e => this.props.onDoubleClick(e) }
             onMouseDown={ e => this.handleMouseDown(e) }>

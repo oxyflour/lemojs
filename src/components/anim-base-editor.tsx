@@ -3,38 +3,35 @@
 import * as React from 'react'
 import * as $ from 'jquery'
 
-import { AnimNode, AnimObject, Timeline, AnimManager,
+import { Tween, Animation, AnimManager,
     EASING_OPTIONS, LINECAP_STYLES } from '../timeline'
 
-import { throttle } from '../utils'
+import { throttle, clone } from '../utils'
 
 import { Slider } from './slider'
 import { Switch } from './switch'
 
 export class BaseEditor<P extends {
     data: any
-    timeline: Timeline
+    onChange: (data) => void
 }> extends React.Component<P, {}> {
     state = {
         showUnsetFields: true,
     }
 
-    refreshAnimObjectThrottled = throttle(() =>
-        this.props.timeline.refreshAnimObject(this.props.data), 50)
-
     handleValueChange(key: string | string[], val: any) {
+        var data = clone(this.props.data)
         if (Array.isArray(key))
-            key.forEach((k, i) => this.props.data[k] = val[i])
+            key.forEach((k, i) => data[k] = val[i])
         else
-            this.props.data[key] = val
-        this.props.timeline.forceUpdate()
-        this.refreshAnimObjectThrottled()
+            data[key] = val
+        this.props.onChange(data)
     }
 
     unsetValue(key: string) {
-        delete this.props.data[key]
-        this.props.timeline.forceUpdate()
-        this.refreshAnimObjectThrottled()
+        var data = clone(this.props.data)
+        data[key] = undefined
+        this.props.onChange(data)
     }
 
     allowToShow(key: string) {
@@ -51,14 +48,14 @@ export class BaseEditor<P extends {
                         <hr />
                     </div>
                 }
-                else if ((key in this.props.data || this.state.showUnsetFields) && this.allowToShow(key)) {
+                else if ((this.props.data[key] !== undefined || this.state.showUnsetFields) && this.allowToShow(key)) {
                     var elem = fields[key].call(this, key, index)
                     return elem.props.role === 'editor-field' ? elem :
                     <div className="form-group" key={ index }>
                         <label className="col-xs-4 control-label"
                             title="click to unset" style={{ cursor:'pointer' }}
                             onClick={ e => this.unsetValue(key) }>
-                            { key in this.props.data ? <b>* { key }</b> : key }
+                            { this.props.data[key] !== undefined ? <b>* { key }</b> : key }
                         </label>
                         <div className="col-xs-8">
                             { elem }
@@ -149,15 +146,14 @@ export class BaseEditor<P extends {
         return val && val.err ? val.err : JSON.stringify(val)
     }
 
-    handleJsonChange(key: string, val: string) {
+    handleJsonChange(key: string, val: any) {
         try {
             val = JSON.parse(val)
-            this.handleValueChange(key, val)
         }
         catch (e) {
-            this.props.data[key] = { err:val }
-            this.props.timeline.forceUpdate()
+            val = { err: val }
         }
+        this.handleValueChange(key, val)
     }
 
     getJsonInput(key: string, holderText: string) {
@@ -236,7 +232,7 @@ export class BaseEditor<P extends {
             <label className="col-xs-4 control-label"
                 title="click to unset" style={{ cursor:'pointer' }}
                 onClick={ e => void(this.unsetValue(kx), this.unsetValue(ky)) }>
-                { kx in this.props.data || ky in this.props.data ? <b>* { key }</b> : key }
+                { this.props.data[kx] !== undefined || this.props.data[ky] !== undefined ? <b>* { key }</b> : key }
             </label>
             <div className="col-xs-8">
                 <div className={ 'input-group' + ((vx && vx.err) || (vy && vy.err) ? ' has-error' : '') }>
@@ -274,3 +270,4 @@ export class BaseEditor<P extends {
         </div>
     }
 }
+

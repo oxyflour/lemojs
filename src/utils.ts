@@ -1,8 +1,8 @@
-export class FakeHash {
-    private keys = [ ]
-    private vals = [ ]
+export class FakeHash<K, V> {
+    private keys: K[] = [ ]
+    private vals: V[] = [ ]
 
-    put(key: any, val: any) {
+    put(key: K, val: V) {
         var idx = this.keys.indexOf(key)
         if (idx < 0) {
             this.keys.push(key)
@@ -14,17 +14,26 @@ export class FakeHash {
         return val
     }
 
-    get(key: any) {
+    get(key: K) {
         return this.vals[this.keys.indexOf(key)]
     }
 
-    key(i: number = undefined) {
-        return typeof i === 'number' ? this.keys[i] : this.keys.slice()
+    remove(key: K) {
+        var i = this.keys.indexOf(key)
+        if (i >= 0) {
+          this.keys.splice(i, 1)
+          var vals = this.vals.splice(i, 1)
+          return vals[0]
+        }
     }
 
-    val(i: number = undefined) {
-        return typeof i === 'number' ? this.vals[i] : this.vals.slice()
+    each(fn: (key: K, val?: V) => void) {
+        return this.keys.forEach((k, i) => fn(this.keys[i], this.vals[i]))
     }
+}
+
+export function clone(...args) {
+    return args.reduce((d, a) => (Object.keys(a).forEach(k => d[k] = a[k]), d), { })
 }
 
 export function debounce<T extends Function>(func: T, delay: number): T {

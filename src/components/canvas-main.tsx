@@ -2,10 +2,9 @@
 
 import * as React from 'react'
 import * as $ from 'jquery'
-
 import { Modal } from './modal'
 
-import { AnimNode, AnimObject, Timeline } from '../timeline'
+import { Tween, Animation } from '../timeline'
 
 const CONTAINER_STYLE = {
     padding: 10,
@@ -28,7 +27,7 @@ interface CanvasStyle {
 }
 
 export class CanvasMain extends React.Component<{
-    timeline: Timeline,
+    cursorPosition: number,
 
     canvasStyle: CanvasStyle,
     updateCanvas: (data: CanvasStyle) => void,
@@ -99,7 +98,7 @@ export class CanvasMain extends React.Component<{
                         { this.props.canvasStyle.width }x{ this.props.canvasStyle.height }
                     </a>
                     &nbsp;
-                    <span>@{ Math.floor(this.props.timeline.cursorPosition) }ms</span>
+                    <span>@{ Math.floor(this.props.cursorPosition) }ms</span>
                     &nbsp;
                     <span ref="coords"></span>
                 </div>

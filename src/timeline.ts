@@ -1,46 +1,20 @@
-import { FakeHash, generateBezier } from './utils'
+import { clone, FakeHash, generateBezier } from './utils'
 
 export const EASING_OPTIONS = ['cubic.in', 'cubic.out', 'sin.in', 'sin.out', 'elastic.in', 'elastic.out']
 
 export const LINECAP_STYLES = ['normal', 'round']
 
-export interface AnimNode {
+export interface Tween {
     delay: number,
     duration: number,
     animType: string,
 }
 
-export interface AnimObject {
+export interface Animation {
     name: string,
     animType: string,
-    nodes: AnimNode[],
+    tweens: Tween[],
     disabled?: boolean,
-}
-
-export interface Timeline {
-    activeAnimNode: AnimNode
-    activeAnimObject: AnimObject
-    cursorPosition: number
-
-    toggleAnimObjectEnableDisable(anim: AnimObject)
-    shiftAnimObjectToCursor(delta: number)
-
-    getTimeline(): AnimObject[]
-    getAnimObjectFromNode(node: AnimNode): AnimObject
-    getAnimNodeStart(node: AnimNode): number
-
-    removeActiveAnimNode()
-    cloneActiveAnimNode()
-    addAnimNode()
-
-    removeActiveAnimObject(anim?: AnimObject)
-    cloneActiveAnimObject()
-    addAnimObject(type: string)
-
-    refreshAnimObject(node: AnimNode | AnimObject)
-    forceUpdate()
-
-    setPathToEdit(node: AnimNode, key: string)
 }
 
 const SVG_STYLE = {
@@ -52,21 +26,90 @@ const SVG_STYLE = {
     top: '0px',
 }
 
-function array(size: number) {
-    return Array.apply(null, new Array(size))
-}
-
 export class AnimManager {
-    tween: mojs.Timeline
-    hash: FakeHash
+    timeline: mojs.Timeline
+    anims: Animation[] = [ ]
+    hash = new FakeHash<Animation, mojs.Tweenable[]>()
 
     constructor(private element: HTMLElement, options?: mojs.Timeline.InitOptions) {
-        this.tween = new mojs.Timeline(options)
-        this.hash = new FakeHash()
+        this.timeline = new mojs.Timeline(options)
     }
 
-    parseOptions(node: AnimNode) {
-        var opt = JSON.parse(JSON.stringify(node)) as mojs.Transit.InitOptions
+    sync(timeline: Animation[]) {
+        timeline.forEach(anim => anim['to-add'] = true)
+        this.anims.forEach(anim => anim['has-added'] = true)
+
+        var animsToAdd = timeline.filter(anim => anim['to-add'] && !anim['has-added']),
+            animsToRemove = this.anims.filter(anim => !anim['to-add'] && anim['has-added'])
+
+        // must add motion-path at last as it depends on other objects
+        animsToAdd = animsToAdd.sort((a, b) => a.animType === 'motion-path' ? 1 : 0)
+        // refresh motion-path if it depends on new added objects
+        var animsToAddMap = { }
+        animsToAdd.filter(anim => anim.animType !== 'motion-path')
+            .forEach(anim => animsToAddMap[anim.name] = anim)
+        this.anims.filter(anim => {
+                return anim.animType === 'motion-path' && anim.tweens.some(tween =>
+                    animsToAddMap[tween['elemName']] || animsToAddMap[tween['pathName']])
+            })
+            .forEach(anim => {
+                if (animsToAdd.indexOf(anim) === -1)
+                    animsToAdd.push(anim)
+                if (animsToRemove.indexOf(anim) === -1)
+                    animsToRemove.push(anim)
+            })
+
+        animsToRemove.forEach(anim => {
+            var tls = this.hash.remove(anim)
+            if (tls) tls.forEach(tl => {
+                // cleanup
+                if (anim.animType === 'motion-path') {
+                    // elem of motion-path are borrowed, so we just do noting
+                }
+                else {
+                    var el = tl['el'] as HTMLElement,
+                        pt = el && el.parentNode
+                    el && pt && pt.removeChild(el)
+                    // remember to remove dynamically created svg
+                    el && el['parent-is-dynamic'] && pt && pt.parentNode.removeChild(pt)
+                }
+                // weird?
+                this.timeline.remove(tl['timeline'])
+                this.timeline.remove(tl)
+            })
+            console.log('remove', anim)
+        })
+
+        animsToAdd.forEach(anim => {
+            if (anim.disabled) return
+
+            var objs: mojs.Tweenable[]
+            if (anim.animType === 'transit')
+                objs = this.addTransit(anim)
+            else if (anim.animType === 'burst')
+                objs = this.addBurst(anim)
+            else if (anim.animType === 'motion-path')
+                objs = this.addMotionPath(anim)
+            else
+                throw 'not implemented'
+
+            this.hash.put(anim, objs)
+            this.timeline.add(objs)
+            console.log('add', anim)
+        })
+
+        timeline.forEach(anim => delete anim['to-add'])
+        this.anims.forEach(anim => delete anim['has-added'])
+
+        this.anims = timeline.slice()
+
+        // important to refresh animation object
+        this.timeline.recalcDuration()
+        this.timeline.setStartTime(this.timeline.props.time)
+    }
+
+    parseOptions(tween: Tween) {
+        var opt = JSON.parse(JSON.stringify(tween)) as mojs.Transit.InitOptions
 
         // don't start when added
         opt.isRunLess = true
@@ -83,40 +126,18 @@ export class AnimManager {
 
         opt.parent = this.element
 
-        opt.onUpdate = node['onUpdate']
-        opt.onStart = node['onStart']
-        opt.onComplete = node['onComplete']
+        opt.onUpdate = tween['onUpdate']
+        opt.onStart = tween['onStart']
+        opt.onComplete = tween['onComplete']
 
-        return opt as any
+        return opt
     }
 
-    // manage animations
-
-    remove(anim: AnimObject) {
-        var oldNodes = this.hash.get(anim) as mojs.Timeline[]
-        if (oldNodes) oldNodes.forEach(tl => {
-            // cleanup
-            if (anim.animType === 'motion-path') {
-                // elem of motion-path are borrowed, so we just do noting
-            }
-            else {
-                var el = tl['el'] as HTMLElement,
-                    pt = el && el.parentNode
-                el && pt && pt.removeChild(el)
-                // remember to remove dynamically created svg
-                el && el['parent-is-dynamic'] && pt && pt.parentNode.removeChild(pt)
-            }
-            // weird?
-            this.tween.remove(tl['timeline'])
-            this.tween.remove(tl)
-        })
-    }
-
-    getTransit(anim: AnimObject) {
+    getTransit(anim: Animation) {
         var transit: mojs.Transit = null,
             firstOpt: mojs.Transit.InitOptions = null
-        anim.nodes.forEach(node => {
-            var opt = this.parseOptions(node) as mojs.Transit.InitOptions
+        anim.tweens.forEach(tween => {
+            var opt = this.parseOptions(tween) as mojs.Transit.InitOptions
 
             if (!transit) {
                 // use bitPath to create bit element
@@ -145,7 +166,7 @@ export class AnimManager {
                 }
             }
             else {
-                // for nodes other than first, use shiftX/shiftY instead of x/y
+                // for tweens other than first, use shiftX/shiftY instead of x/y
                 if (opt.shiftX === undefined && opt.x !== undefined)
                     opt.shiftX = opt.x - firstOpt.x
                 if (opt.shiftY === undefined && opt.y !== undefined)
@@ -159,31 +180,31 @@ export class AnimManager {
         return transit
     }
 
-    addTransit(anim: AnimObject) {
+    addTransit(anim: Animation) {
         var stagger = anim['stagger'],
             transits: mojs.Transit[] = [ ]
         if (stagger) {
             var delay = anim['delayDelta'],
-                node0 = anim.nodes[0],
+                tween0 = anim.tweens[0],
                 keys = Object.keys(stagger),
                 len = Math.max(...keys.map(k => stagger[k].length || 0))
 
-            if (node0) array(len).map((x, i) => {
-                var newAnim: AnimObject = JSON.parse(JSON.stringify(anim)),
-                    newNode0: mojs.Transit.InitOptions = newAnim.nodes[0]
-                keys.forEach(k => newNode0[k] = stagger[k][i])
+            if (tween0) Array.apply(0, Array(len)).map((x, i) => {
+                var newAnim: Animation = JSON.parse(JSON.stringify(anim)),
+                    newTween0: mojs.Transit.InitOptions = newAnim.tweens[0]
+                keys.forEach(k => newTween0[k] = stagger[k][i])
                 if (delay)
-                    newNode0.delay = node0.delay + delay * i
+                    newTween0.delay = tween0.delay + delay * i
 
                 // keep positions sync with the first one
                 if (i) {
                     // disable position animation
-                    delete newNode0['shiftX']
-                    delete newNode0['shiftY']
-                    delete newNode0['angle']
+                    delete newTween0['shiftX']
+                    delete newTween0['shiftY']
+                    delete newTween0['angle']
                     // override onUpdate to sync position
-                    var onUpdate = newNode0.onUpdate
-                    newNode0.onUpdate = (p) => {
+                    var onUpdate = newTween0.onUpdate
+                    newTween0.onUpdate = (p) => {
                         onUpdate && onUpdate(p)
                         transits[i].el.style.transform = transits[0].el.style.transform
                     }
@@ -197,22 +218,14 @@ export class AnimManager {
             if (transit) transits.push(transit)
         }
 
-        // update connected motion-paths
-        this.hash.key().forEach((a: AnimObject) => {
-            if (a.animType === 'motion-path') {
-                if (a.nodes.some(n => n['elemName'] === anim.name || n['pathName'] === anim.name))
-                    setTimeout(() => this.update(a), 0)
-            }
-        })
-
         return transits
     }
 
-    addBurst(anim: AnimObject) {
+    addBurst(anim: Animation) {
         var delay = 0,
             bursts: mojs.Burst[] = []
-        anim.nodes.forEach(node => {
-            var opt = this.parseOptions(node) as mojs.Burst.InitOptions
+        anim.tweens.forEach(tween => {
+            var opt = this.parseOptions(tween) as mojs.Burst.InitOptions
 
             // Note: bursts only use x/y and setting shiftX/Y is not working at all
             var { shiftX, shiftY } = opt
@@ -232,11 +245,11 @@ export class AnimManager {
         return bursts
     }
 
-    addMotionPath(anim: AnimObject) {
+    addMotionPath(anim: Animation) {
         var motionPath: mojs.MotionPath = null,
             lastOpt: mojs.MotionPath.InitOptions = { }
-        anim.nodes.forEach(node => {
-            var opt: mojs.MotionPath.InitOptions = this.parseOptions(node)
+        anim.tweens.forEach(tween => {
+            var opt = this.parseOptions(tween) as mojs.MotionPath.InitOptions
             Object.keys(lastOpt).forEach(k => {
                 if (opt[k] === undefined)
                     opt[k] = lastOpt[k]
@@ -265,46 +278,24 @@ export class AnimManager {
         return motionPath ? [motionPath] : []
     }
 
-    update(anim: AnimObject) {
-        this.remove(anim)
-        if (anim.disabled) return
-
-        var objs: mojs.Tweenable[]
-        if (anim.animType === 'transit')
-            objs = this.addTransit(anim)
-        else if (anim.animType === 'burst')
-            objs = this.addBurst(anim)
-        else if (anim.animType === 'motion-path')
-            objs = this.addMotionPath(anim)
-        else
-            throw 'not implemented'
-
-        this.tween.add(objs)
-        this.hash.put(anim, objs)
-
-        this.tween.recalcDuration()
-        // important to refresh animation object
-        this.tween.setStartTime(this.tween.props.time)
-    }
-
     // controls
 
     start() {
-        this.tween.restart()
+        this.timeline.restart()
     }
 
     pause() {
-        this.tween.pause()
+        this.timeline.pause()
     }
 
     // query
 
     getDuration() {
-        return this.tween.props.time
+        return this.timeline.props.time
     }
 
     setProgress(progress: number) {
-        this.tween.setProgress(progress)
+        this.timeline.setProgress(progress)
     }
 
     static getTweenableNumber(val: any) {

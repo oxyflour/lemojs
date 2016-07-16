@@ -15,7 +15,12 @@ const STYLE = {
     zIndex: 99,
 }
 
-export class Splitter extends React.Component<any, {}> {
+export class Splitter extends React.Component<{
+    orientation: string
+    splitterSize?: string
+    min?: string
+    max?: string
+}, {}> {
     onMouseMove = this.handleMouseMove.bind(this)
     onMouseUp = this.handleMouseUp.bind(this)
 
@@ -91,11 +96,11 @@ export class Splitter extends React.Component<any, {}> {
     render() {
         var style = { }
         if (this.props.orientation === 'horizontal') style = {
-            height: parseInt(this.props.splitterSize || 3),
+            height: parseInt(this.props.splitterSize || '3'),
             cursor: 'ns-resize',
         }
         else if (this.props.orientation === 'vertical') style = {
-            width: parseInt(this.props.splitterSize || 3),
+            width: parseInt(this.props.splitterSize || '3'),
             cursor: 'ew-resize',
         }
         return <div ref="elem" style={$.extend({}, STYLE, style)}

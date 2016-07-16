@@ -6,7 +6,7 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "react/react.d.ts": {
-      "commit": "7a3d6944036902996b87981e6150900952b35628"
+      "commit": "4f4cd97d1f23ad191bb489a04e94a3d6eb63ad4d"
     },
     "react/react-dom.d.ts": {
       "commit": "7a3d6944036902996b87981e6150900952b35628"
@@ -19,6 +19,15 @@
     },
     "bootstrap-switch/bootstrap-switch.d.ts": {
       "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+    },
+    "redux/redux.d.ts": {
+      "commit": "4f4cd97d1f23ad191bb489a04e94a3d6eb63ad4d"
+    },
+    "react-redux/react-redux.d.ts": {
+      "commit": "4f4cd97d1f23ad191bb489a04e94a3d6eb63ad4d"
+    },
+    "redux-actions/redux-actions.d.ts": {
+      "commit": "6eebd5e90a1cbd6b47b0705ba72dbcd5baf846f3"
     }
   }
 }
